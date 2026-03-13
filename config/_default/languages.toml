@@ -1,0 +1,79 @@
+[de]
+  languageName  = "Deutsch"
+  weight        = 1
+  contentDir    = "content"
+  languageCode  = "de-DE"
+  title         = "MingleMangleOfMyMind"
+
+  [de.params]
+    description = "PKM, Obsidian, MiYo, AI und anderes Gedöns"
+
+  [[de.menus.main]]
+    name   = "Blog"
+    url    = "/blog/"
+    weight = 10
+
+  [[de.menus.main]]
+    name   = "Videos"
+    url    = "/videos/"
+    weight = 20
+
+  [[de.menus.main]]
+    name   = "Jetzt"
+    url    = "/jetzt/"
+    weight = 30
+
+  [[de.menus.main]]
+    name   = "Über mich"
+    url    = "/ueber-mich/"
+    weight = 40
+
+  [[de.menus.footer]]
+    name   = "Impressum"
+    url    = "/impressum/"
+    weight = 10
+
+  [[de.menus.footer]]
+    name   = "Datenschutz"
+    url    = "/datenschutz/"
+    weight = 20
+
+[en]
+  languageName  = "English"
+  weight        = 2
+  contentDir    = "content.en"
+  languageCode  = "en-US"
+  title         = "MingleMangleOfMyMind"
+
+  [en.params]
+    description = "PKM, Obsidian, MiYo, AI and other stuff"
+
+  [[en.menus.main]]
+    name   = "Blog"
+    url    = "/en/blog/"
+    weight = 10
+
+  [[en.menus.main]]
+    name   = "Videos"
+    url    = "/en/videos/"
+    weight = 20
+
+  [[en.menus.main]]
+    name   = "Now"
+    url    = "/en/now/"
+    weight = 30
+
+  [[en.menus.main]]
+    name   = "About"
+    url    = "/en/about/"
+    weight = 40
+
+  [[en.menus.footer]]
+    name   = "Impressum"
+    url    = "/en/impressum/"
+    weight = 10
+
+  [[en.menus.footer]]
+    name   = "Privacy Policy"
+    url    = "/en/privacy-policy/"
+    weight = 20

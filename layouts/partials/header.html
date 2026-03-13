@@ -1,0 +1,49 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-logo" href="{{ .Site.BaseURL }}">
+      <img src="/img/logo.png" alt="{{ .Site.Title }}" width="120" height="40" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <span class="site-logo__text" style="display:none">{{ .Site.Title }}</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Hauptnavigation">
+      <ul class="site-nav__list">
+        {{- range .Site.Menus.main }}
+        <li class="site-nav__item">
+          <a class="site-nav__link{{ if eq $.RelPermalink .URL }} site-nav__link--active{{ end }}"
+             href="{{ .URL }}">{{ .Name }}</a>
+        </li>
+        {{- end }}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      {{- range .Translations }}
+      <a class="lang-switch" href="{{ .RelPermalink }}" lang="{{ .Language.Lang }}"
+         title="{{ i18n "language_switch" }}">{{ .Language.LanguageName }}</a>
+      {{- else }}
+      {{- /* No translation available – link to language root */}}
+      {{- if eq .Language.Lang "de" }}
+      <a class="lang-switch" href="/en/" lang="en">English</a>
+      {{- else }}
+      <a class="lang-switch" href="/" lang="de">Deutsch</a>
+      {{- end }}
+      {{- end }}
+
+      <button class="nav-toggle" aria-label="Menü" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      nav.classList.toggle('site-nav--open');
+    });
+  }
+</script>

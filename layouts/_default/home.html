@@ -1,0 +1,18 @@
+{{ define "main" }}
+<section class="home">
+  <div class="home__intro prose">
+    {{ .Content }}
+  </div>
+
+  <section class="home__posts">
+    <h2>{{ i18n "all_posts" }}</h2>
+    <div class="post-grid">
+      {{- $blog := where .Site.RegularPages "Section" "blog" }}
+      {{- range ($blog.ByDate.Reverse | first 6) }}
+      {{ partial "post-card.html" . }}
+      {{- end }}
+    </div>
+    <a class="btn" href="{{ .Site.BaseURL }}blog/">{{ i18n "all_posts" }} →</a>
+  </section>
+</section>
+{{ end }}

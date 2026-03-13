@@ -1,0 +1,22 @@
+{{ define "main" }}
+<section class="list-page">
+  <header class="list-page__header">
+    <h1 class="list-page__title">{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="list-page__description">{{ . }}</p>
+    {{- end }}
+  </header>
+
+  {{- if .Pages }}
+  <div class="post-grid">
+    {{- range .Pages.ByDate.Reverse }}
+    {{ partial "post-card.html" . }}
+    {{- end }}
+  </div>
+
+  {{- template "_internal/pagination.html" . }}
+  {{- else }}
+  <p>{{ i18n "no_posts" }}</p>
+  {{- end }}
+</section>
+{{ end }}

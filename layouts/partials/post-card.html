@@ -1,0 +1,26 @@
+<article class="post-card">
+  {{- with index .Params.images 0 }}
+  <a class="post-card__img-link" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
+    <img class="post-card__img" src="{{ . }}" alt="{{ $.Title }}" loading="lazy">
+  </a>
+  {{- end }}
+  <div class="post-card__body">
+    {{- with .Params.categories }}
+    <div class="post-card__cats">
+      {{- range . }}
+      <a class="tag" href="{{ ($.Site.GetPage (printf "categories/%s" .)).RelPermalink }}">{{ . }}</a>
+      {{- end }}
+    </div>
+    {{- end }}
+    <h2 class="post-card__title">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+    <p class="post-card__meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02.01.2006" }}</time>
+    </p>
+    {{- with .Description }}
+    <p class="post-card__excerpt">{{ . }}</p>
+    {{- end }}
+    <a class="post-card__read-more" href="{{ .RelPermalink }}">{{ i18n "read_more" }} →</a>
+  </div>
+</article>
