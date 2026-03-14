@@ -1,15 +1,40 @@
 # Blog Post Workflow — MingleMangleOfMyMind
 
-## Neuen Post erstellen
+## Neuen Post aus Obsidian importieren (empfohlen)
+
+Das Skript `scripts/new-post.sh` übernimmt alles automatisch:
+
+```bash
+# Wechsele in die Repo-Root
+cd ./mmomm
+
+# Post importieren (DE Obsidian-Datei + optionales Temp-Verzeichnis mit Bildern)
+./scripts/new-post.sh /pfad/zur/obsidian-datei.md mein-post-slug
+
+# Beispiel
+./scripts/new-post.sh ~/Desktop/neuer-post.md miyo-neues-konzept
+```
+
+Das Skript:
+- Konvertiert Obsidian-Embeds (`![[bild.jpg]]`) zu Standard-Markdown
+- Kopiert Bilder nach `./static/img/posts/[slug]/`
+- Erstellt den DE Post unter `./content/blog/[slug]/index.md`
+- Erstellt einen leeren EN Draft unter `./content.en/blog/[slug]/index.md`
+- Füllt Frontmatter vor (Titel, Datum, translationKey)
+
+---
+
+## Neuen Post manuell anlegen
 
 ### 1. Deutschen Post anlegen
 
 ```bash
-cd /Volumes/Moon/Coding/MMoMM.org/mmomm
+# Wechsele in die Repo-Root
+cd ./mmomm
 hugo new blog/mein-post-titel/index.md
 ```
 
-Öffnet `content/blog/mein-post-titel/index.md` — Frontmatter ist vorausgefüllt:
+Öffnet `./content/blog/mein-post-titel/index.md` — Frontmatter ist vorausgefüllt:
 
 ```yaml
 ---
@@ -44,10 +69,10 @@ translationKey: "mein-post-titel"   ← GLEICH wie DE!
 
 ### 3. Bilder einfügen
 
-Bilder in `static/img/posts/mein-post-titel/` ablegen:
+Bilder in `./static/img/posts/mein-post-titel/` ablegen:
 
 ```
-static/img/posts/mein-post-titel/
+./static/img/posts/mein-post-titel/
   hero.jpg        ← wird als Hero-Bild und OG-Image verwendet
   screenshot.png
 ```
@@ -71,6 +96,8 @@ Im Text:
 ### 5. Lokal testen
 
 ```bash
+# Wechsele in die Repo-Root
+cd ./mmomm
 hugo server -D    # -D zeigt auch draft:true Posts an
 ```
 
@@ -80,8 +107,8 @@ hugo server -D    # -D zeigt auch draft:true Posts an
 
 ```bash
 # draft: false setzen im Frontmatter, dann:
-git add content/blog/mein-post-titel/ content.en/blog/mein-post-titel/
-git add static/img/posts/mein-post-titel/
+git add ./content/blog/mein-post-titel/ ./content.en/blog/mein-post-titel/
+git add ./static/img/posts/mein-post-titel/
 git commit -m "Post: Mein Post Titel (DE + EN)"
 git push origin main
 ```
@@ -93,8 +120,10 @@ GitHub Actions baut und deployed automatisch → live auf www.mmomm.org in ~2 Mi
 ## Bestehenden Post bearbeiten
 
 ```bash
-# Einfach die index.md bearbeiten, dann:
-git add content/blog/post-slug/index.md
+# Wechsele in die Repo-Root
+cd ./mmomm
+# Datei bearbeiten, dann:
+git add ./content/blog/post-slug/index.md
 git commit -m "Update: Post-Slug"
 git push
 ```
@@ -107,12 +136,12 @@ git push
 
 Aktuell aktive Kategorien (slug → Label):
 
-| Slug       | Deutsch | English |
-|------------|---------|---------|
-| `pkm`      | PKM     | PKM     |
-| `miyo`     | MiYo    | MiYo    |
+| Slug       | Deutsch  | English  |
+|------------|----------|----------|
+| `pkm`      | PKM      | PKM      |
+| `miyo`     | MiYo     | MiYo     |
 | `obsidian` | Obsidian | Obsidian |
-| `ai`       | KI / AI | AI      |
+| `ai`       | KI / AI  | AI       |
 
 Neue Kategorie: einfach im Frontmatter eintragen — Hugo erstellt die Seite automatisch.
 
@@ -124,8 +153,8 @@ Neue Kategorie: einfach im Frontmatter eintragen — Hugo erstellt die Seite aut
 # Hugo installieren (macOS)
 brew install hugo
 
-# Projekt starten
-cd /Volumes/Moon/Coding/MMoMM.org/mmomm
+# Wechsele in die Repo-Root, dann starten
+cd ./mmomm
 hugo server -D
 
 # Produktionsbuild testen
@@ -137,6 +166,6 @@ hugo --minify --gc
 ## Deploy-Infra
 
 - **Trigger:** Push auf `main` → GitHub Actions → Hugo Build → GitHub Pages
-- **Domain:** www.mmomm.org (CNAME in `static/CNAME`)
+- **Domain:** www.mmomm.org (CNAME in `./static/CNAME`)
 - **HTTPS:** GitHub Pages stellt automatisch ein Let's-Encrypt-Zertifikat aus
 - **Build-Log:** GitHub → Repository → Actions
