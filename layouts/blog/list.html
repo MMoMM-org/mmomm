@@ -4,12 +4,16 @@
     <h1 class="blog-list__title">{{ .Title }}</h1>
   </header>
 
+  {{- $pages := .Paginator.Pages }}
+  {{- if $pages }}
   <div class="post-grid">
-    {{- range .Paginator.Pages }}
+    {{- range $pages }}
     {{ partial "post-card.html" . }}
     {{- end }}
   </div>
-
   {{- template "_internal/pagination.html" . }}
+  {{- else }}
+  <p style="padding: 2rem var(--gutter)">{{ i18n "no_posts" }}</p>
+  {{- end }}
 </section>
 {{ end }}

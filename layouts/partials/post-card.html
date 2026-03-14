@@ -8,7 +8,8 @@
     {{- with .Params.categories }}
     <div class="post-card__cats">
       {{- range . }}
-      <a class="tag" href="{{ ($.Site.GetPage (printf "categories/%s" .)).RelPermalink }}">{{ . }}</a>
+      {{- $catPage := $.Site.GetPage (printf "/categories/%s" .) }}
+      <a class="tag" href="{{ if $catPage }}{{ $catPage.RelPermalink }}{{ else }}/categories/{{ . }}/{{ end }}">{{ . }}</a>
       {{- end }}
     </div>
     {{- end }}

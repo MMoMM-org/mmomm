@@ -11,7 +11,8 @@
       {{- with .Params.categories }}
       <div class="post__cats">
         {{- range . }}
-        <a class="tag" href="{{ ($.Site.GetPage (printf "categories/%s" .)).RelPermalink }}">{{ . }}</a>
+        {{- $catPage := $.Site.GetPage (printf "/categories/%s" .) }}
+        <a class="tag" href="{{ if $catPage }}{{ $catPage.RelPermalink }}{{ else }}/categories/{{ . }}/{{ end }}">{{ . }}</a>
         {{- end }}
       </div>
       {{- end }}
@@ -54,7 +55,8 @@
       <div class="post__tags">
         {{ i18n "tags" }}:
         {{- range . }}
-        <a class="tag" href="{{ ($.Site.GetPage (printf "tags/%s" .)).RelPermalink }}">{{ . }}</a>
+        {{- $tagPage := $.Site.GetPage (printf "/tags/%s" .) }}
+        <a class="tag" href="{{ if $tagPage }}{{ $tagPage.RelPermalink }}{{ else }}/tags/{{ . }}/{{ end }}">{{ . }}</a>
         {{- end }}
       </div>
     </footer>

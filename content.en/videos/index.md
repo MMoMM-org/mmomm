@@ -1,11 +1,7 @@
 ---
-title: "Videos | MingleMangleOfMyMind"
-description: "Meine Videos über PWM, Obsidian und andere Dinge."
+title: "Videos"
+description: "My videos about PKM, Obsidian and other things."
 draft: false
 ---
 
-Falls ihr euch meine Videos mal anschauen wollt.
-
-## 
-
-[ / Impressum](impressum.html)
+If you want to check out my videos, head over to my [YouTube channel](https://www.youtube.com/@mmomm-org).
