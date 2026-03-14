@@ -1,6 +1,7 @@
 ---
 title: "Privacy Policy | MingleMangleOfMyMind"
 description: "Privacy Policy of MingleMangle Of My Mind."
+translationKey: "privacy"
 draft: false
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "Now | MingleMangleOfMyMind"
 description: ""
+translationKey: "now"
 draft: false
 ---
 

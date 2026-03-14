@@ -1,6 +1,7 @@
 ---
 title: "Datenschutzerklärung | MingleMangleOfMyMind"
 description: "Die Datenschutzerklärung von MingleMangle Of MyMind."
+translationKey: "privacy"
 draft: false
 ---
 

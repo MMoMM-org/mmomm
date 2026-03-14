@@ -13,9 +13,11 @@ enableEmoji     = true
   writeStats = true
 
 [outputs]
-  home    = ["HTML", "RSS"]
-  section = ["HTML", "RSS"]
-  page    = ["HTML"]
+  home     = ["HTML", "RSS"]
+  section  = ["HTML", "RSS"]
+  page     = ["HTML"]
+  taxonomy = ["HTML", "RSS"]
+  term     = ["HTML", "RSS"]
 
 [markup.goldmark.renderer]
   unsafe = true

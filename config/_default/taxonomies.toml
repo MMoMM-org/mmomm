@@ -1,3 +1,2 @@
-[taxonomies]
-  category = "categories"
-  tag      = "tags"
+category = "categories"
+tag      = "tags"

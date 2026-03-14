@@ -1,6 +1,7 @@
 ---
 title: "Über mich | MingleMangleOfMyMind"
 description: "Dinge über mich 😀"
+translationKey: "about"
 draft: false
 ---
 
