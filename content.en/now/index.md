@@ -4,48 +4,22 @@ description: ""
 draft: false
 ---
 
-What am I'm working on at the moment?
+# Now.
 
-​
+What am I working on at the moment?
 
-Good question, and you won't see any "Live" Updates here.
+Good question — you won't see any "Live" updates here. But this page should give you a better idea of what is on my bigger to-do list.
 
-But this page should give you a better Idea what is on my bigger ToDo List.
+## 2023 – Q1
 
-What am I'm working on at the moment?
+### Japanese · Constant Learning
 
-Good question, and you won't see any "Live" Updates here.
+I started learning Japanese again for 30 minutes a day. As I didn't do anything for the last 8 months it is almost like starting fresh. But at least everything is coming back quickly.
 
-But this page should give you a better Idea what is on my bigger ToDo List.
+### Content Creation · Sharing Knowledge
 
-I started learning Japanese again for 30 minutes a day.
+Content creation for my blog and YouTube. Giving more of what I've learned out to the world. That's the reason why this blog exists.
 
-​
+### Linking Your Thinking · PKM
 
-As I didn't do anything for the last 8 month it is almost as starting fresh. But at least everything is coming back speedy.
-
-I started learning Japanese again for 30 minutes a day.
-
-As I didn't do anything for the last 8 month it is almost as starting fresh. But at least everything is coming back speedy.
-
-Content Creation for my blog and youtube.
-
-Giving more out to the world of the knowledge I learned.  
-The reason why this blog exists.
-
-Content Creation for my blog and youtube.
-
-Giving more out to the world of the knowledge I learned.  
-The reason why this blog exists.
-
-Linking Your Thinking
-
-I'm just participating in the [Linking Your Thinking](https://www.linkingyourthinking.com/) 10 Workshop.
-
-Let's see how similar MiYo, BASB and LYT are and what I can learn from the workshop.
-
-Let's see how similar MiYo, BASB and LYT are and what I can learn from the workshop.
-
-## 
-
-[ / Impressum](impressum.html)
+I'm just participating in the [Linking Your Thinking](https://www.linkingyourthinking.com/) 10 Workshop. Let's see how similar MiYo, BASB and LYT are and what I can learn from the workshop.
