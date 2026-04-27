@@ -9,18 +9,33 @@ draft: false
 
 What am I working on at the moment?
 
-Good question — you won't see any "Live" updates here. But this page should give you a better idea of what is on my bigger to-do list.
+Good question — you won't see any "Live" updates here. But this page should
+give you a better idea of what's on my bigger to-do list. (Inspired by
+[nownownow.com](https://nownownow.com/about) — the "Now Page Movement".)
 
-## 2023 – Q1
+## 2026 – Q2
 
-### Japanese · Constant Learning
+### AI & Obsidian · Plugins and Workflows
 
-I started learning Japanese again for 30 minutes a day. As I didn't do anything for the last 8 months it is almost like starting fresh. But at least everything is coming back quickly.
+The current focus is squarely on the intersection of AI, Claude Code and
+Obsidian. Four projects running in parallel:
 
-### Content Creation · Sharing Knowledge
+- **MiYo Kado** — an Obsidian MCP client with RBAC.
+- **MiYo Tomo** — a Claude Code "integration" inside Obsidian.
+- **Obsidian Archivist** — a Dropbox backup plugin for Obsidian.
+- **The Custom Startup** — an opinionated skill / agent set for Claude Code.
 
-Content creation for my blog and YouTube. Giving more of what I've learned out to the world. That's the reason why this blog exists.
+Surrounding all of that: lots of Claude Code, lots of Obsidian, lots of
+Microsoft AI.
 
-### Linking Your Thinking · PKM
+### Japanese · Picking it up again
 
-I'm just participating in the [Linking Your Thinking](https://www.linkingyourthinking.com/) 10 Workshop. Let's see how similar MiYo, BASB and LYT are and what I can learn from the workshop.
+Back on the schedule for H2 2026 — roughly 30 minutes a day.
+
+### Vacation · Dresden and Czech Republic
+
+Some screen-free time. Dresden and the Czech Republic coming up.
+
+---
+
+*Last updated: April 2026.*
