@@ -22,3 +22,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+/claude-docker/
+/claude-docker-home/
+/begin-code.sh
+.mcp.json
+/generated-images/
