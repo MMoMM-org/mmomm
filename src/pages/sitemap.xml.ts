@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import { siteConfig } from "../config";
 import { shouldShowPost, shouldShowContent } from "../utils/markdown";
+import { DEFAULT_LOCALE, findTranslation, postUrl } from "../utils/i18n";
 
 function shouldExcludeFromSitemap(slug: string): boolean {
   const excludedSlugs = ["404", "sitemap", "rss"];
@@ -101,17 +102,46 @@ export const GET: APIRoute = async () => {
     `);
   }
 
-  // Individual posts
-  visiblePosts.forEach((post) => {
-    urls.push(`
+  // Build absolute URL from a path produced by postUrl() (which starts with '/').
+  const siteOrigin = siteUrl.replace(/\/$/, "");
+  const absolutePostUrl = (post: CollectionEntry<"posts">): string =>
+    `${siteOrigin}${postUrl(post)}/`;
+
+  // Individual posts (with hreflang annotations for translation pairs)
+  const postEntries = await Promise.all(
+    visiblePosts.map(async (post) => {
+      const counterpart = await findTranslation(post);
+      const selfHref = absolutePostUrl(post);
+      const selfLang = post.data.lang;
+
+      const altLinks: string[] = [
+        `        <xhtml:link rel="alternate" hreflang="${selfLang}" href="${selfHref}" />`,
+      ];
+
+      if (counterpart) {
+        const otherHref = absolutePostUrl(counterpart);
+        const otherLang = counterpart.data.lang;
+        altLinks.push(
+          `        <xhtml:link rel="alternate" hreflang="${otherLang}" href="${otherHref}" />`
+        );
+        const defaultHref = selfLang === DEFAULT_LOCALE ? selfHref : otherHref;
+        altLinks.push(
+          `        <xhtml:link rel="alternate" hreflang="x-default" href="${defaultHref}" />`
+        );
+      }
+
+      return `
       <url>
-        <loc>${siteUrl}posts/${(post as any).id}/</loc>
+        <loc>${selfHref}</loc>
         <lastmod>${post.data.date.toISOString()}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
+${altLinks.join("\n")}
       </url>
-    `);
-  });
+    `;
+    })
+  );
+  urls.push(...postEntries);
 
   // Individual pages
   visiblePages.forEach((page) => {
@@ -172,7 +202,8 @@ export const GET: APIRoute = async () => {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   ${urls.join("")}
 </urlset>`;
 
