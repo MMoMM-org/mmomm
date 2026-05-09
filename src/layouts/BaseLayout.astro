@@ -1,6 +1,7 @@
 ---
 import { siteConfig, getFontFamily, getGoogleFontsUrl, shouldLoadLocalFonts, shouldLoadCdnFonts, getFontDisplay, getThemeDisplayName } from '@/config';
-import type { SEOData } from '@/types';
+import type { SEOData, Post } from '@/types';
+import { DEFAULT_LOCALE, type Locale, postUrl, findTranslation } from '@/utils/i18n';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import CommandPalette from '@/components/CommandPalette.astro';
@@ -36,16 +37,37 @@ if (shouldLoadLocalFonts()) {
 export interface Props {
   seoData: SEOData;
   bodyClass?: string;
+  lang?: Locale;
+  post?: Post;
 }
 
-const { seoData, bodyClass = '' } = Astro.props;
+const { seoData, bodyClass = '', lang = DEFAULT_LOCALE, post } = Astro.props;
 
 // Determine scrollbar class based on configuration
 const scrollbarClass = siteConfig.hideScrollBar ? '' : 'show-scrollbars';
+
+// Resolve hreflang counterparts only when a post with a translationKey was passed.
+// Skip emission entirely otherwise — never fabricate alternates that don't exist.
+type HreflangEntry = { hreflang: string; href: string };
+let hreflangs: HreflangEntry[] = [];
+if (post?.data.translationKey) {
+  const counterpart = await findTranslation(post);
+  if (counterpart) {
+    const dePost = post.data.lang === 'de' ? post : counterpart;
+    const enPost = post.data.lang === 'en' ? post : counterpart;
+    const deHref = `${siteConfig.site}${postUrl(dePost)}/`;
+    const enHref = `${siteConfig.site}${postUrl(enPost)}/`;
+    hreflangs = [
+      { hreflang: 'de', href: deHref },
+      { hreflang: 'en', href: enHref },
+      { hreflang: 'x-default', href: deHref },
+    ];
+  }
+}
 ---
 
 <!DOCTYPE html>
-<html lang={siteConfig.language} class={`scrollbar-hide ${scrollbarClass}`} data-theme-config={siteConfig.theme} data-custom-theme-file={siteConfig.customThemeFile} data-available-themes={JSON.stringify(siteConfig.availableThemes)} data-command-palette-enabled={siteConfig.commandPalette.enabled} data-command-palette-change-theme={siteConfig.commandPalette.quickActions.changeTheme} data-feature-button={siteConfig.featureButton} data-favicon-theme-adaptive={siteConfig.faviconThemeAdaptive}>
+<html lang={lang} class={`scrollbar-hide ${scrollbarClass}`} data-theme-config={siteConfig.theme} data-custom-theme-file={siteConfig.customThemeFile} data-available-themes={JSON.stringify(siteConfig.availableThemes)} data-command-palette-enabled={siteConfig.commandPalette.enabled} data-command-palette-change-theme={siteConfig.commandPalette.quickActions.changeTheme} data-feature-button={siteConfig.featureButton} data-favicon-theme-adaptive={siteConfig.faviconThemeAdaptive}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,6 +76,10 @@ const scrollbarClass = siteConfig.hideScrollBar ? '' : 'show-scrollbars';
   <title>{seoData.title}</title>
   <meta name="description" content={seoData.description}>
   <link rel="canonical" href={seoData.canonical}>
+
+  {hreflangs.map((alt) => (
+    <link rel="alternate" hreflang={alt.hreflang} href={alt.href}>
+  ))}
 
   <!-- Robots meta tag -->
   {seoData.noIndex && (

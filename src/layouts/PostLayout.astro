@@ -104,7 +104,7 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
 }
 ---
 
-<BaseLayout seoData={seoData}>
+<BaseLayout seoData={seoData} lang={post.data.lang} post={post}>
   <Fragment slot="head">
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
