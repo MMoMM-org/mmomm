@@ -1,6 +1,14 @@
 import type { Post, WikilinkMatch } from "@/types";
 import { visit } from "unist-util-visit";
 
+// Inlined to avoid importing src/utils/i18n.ts (which imports `astro:content`)
+// from astro.config.mjs's load graph. Mirrors postUrl() in src/utils/i18n.ts.
+function postUrlFromPost(post: Post): string {
+  const prefix = post.data.lang === "de" ? "" : `/${post.data.lang}`;
+  const bareSlug = post.id.replace(/^(de|en)\//, "");
+  return `${prefix}/posts/${bareSlug}`;
+}
+
 // Global posts cache for build-time wikilink resolution
 let globalPostsCache: any[] = [];
 
@@ -1134,6 +1142,7 @@ export function findLinkedMentions(
         return {
           title: post.data.title,
           slug: post.id,
+          url: postUrlFromPost(post),
           excerpt: excerptResult,
         };
       }

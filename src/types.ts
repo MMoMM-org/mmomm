@@ -108,6 +108,7 @@ export interface WikilinkMatch {
 export interface LinkedMention {
   title: string;
   slug: string;
+  url: string;
   excerpt: string;
 }
 
