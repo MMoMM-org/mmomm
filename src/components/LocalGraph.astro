@@ -64,6 +64,7 @@ const shouldShowGraph = true;
     id: string;
     name: string;
     slug?: string;
+    url?: string;
     radius: number;
     group?: string;
     x?: number;
@@ -118,6 +119,7 @@ const shouldShowGraph = true;
         id: node.id,
         name: node.title || node.name,
         slug: node.slug,
+        url: node.url,
         radius: Math.max(3, Math.min(8, (node.connections || 0) + 3)),
         group: node.type
       })),
@@ -261,7 +263,9 @@ const shouldShowGraph = true;
               document.body.style.overflow = '';
               resetLocalGraph();
 
-              const url = `/posts/${d.slug}`;
+              // Prefer the precomputed locale-aware URL from graph-data.json;
+              // fall back to legacy /posts/<slug> if the field is absent.
+              const url = d.url || `/posts/${d.slug}`;
               if ((window as any).swup) {
                 (window as any).swup.navigate(url);
               } else {

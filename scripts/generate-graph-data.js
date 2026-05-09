@@ -15,10 +15,16 @@
  * This data is used by the LocalGraph component to render an Obsidian-like graph view.
  *
  * ID Generation Strategy:
- * - Uses path-based IDs (no frontmatter required)
+ * - Path-based IDs that match Astro's `post.id` (slash-separated, no extension)
  * - Single files: "my-post.md" → ID: "my-post"
  * - Folder-based: "my-folder/index.md" → ID: "my-folder"
- * - Nested content: "category/my-post.md" → ID: "category-my-post"
+ * - Nested content: "de/miyo-ace/index.md" → ID: "de/miyo-ace"
+ * - Nested files:   "category/my-post.md" → ID: "category/my-post"
+ *
+ * URL Strategy (locale-aware, see ADR-002):
+ * - lang === "de" (or absent) → "/posts/<bareSlug>"
+ * - lang === "en"             → "/en/posts/<bareSlug>"
+ *   where bareSlug = id with leading "<lang>/" stripped.
  */
 
 import {
@@ -76,25 +82,39 @@ if (!existsSync(OUTPUT_DIR)) {
 }
 
 /**
- * Generate a stable ID from file path
- * @param {string} filePath - The file path
- * @param {string} collectionType - The collection type (e.g., 'posts')
- * @returns {string} - The generated ID
+ * Generate a stable ID from a path-like string, matching Astro's `post.id`.
+ *
+ * Accepts either a content-collection-relative path (e.g. "de/miyo-ace/index.md")
+ * or a wikilink/markdown link target. Preserves "/" as the separator so it
+ * lines up with Astro's content-collection IDs.
+ *
+ * @param {string} pathLike
+ * @param {string} collectionType - e.g. "posts"
+ * @returns {string}
  */
-function generateNodeId(filePath, collectionType) {
-  // Remove collection prefix and extension
-  let id = filePath.replace(`src/content/${collectionType}/`, "");
-  id = id.replace(".md", "");
-  id = id.replace("/index", ""); // Handle folder-based posts
+function generateNodeId(pathLike, collectionType) {
+  let id = pathLike;
+  // Strip collection prefix if present (handles "src/content/posts/..." inputs)
+  id = id.replace(`src/content/${collectionType}/`, "");
+  // Strip leading "/posts/" or "posts/" prefixes from link-derived inputs
+  id = id.replace(/^\/?posts\//, "");
+  // Drop file extension and trailing "/index"
+  id = id.replace(/\.(md|mdx)$/, "");
+  id = id.replace(/\/index$/, "");
 
-  // Clean up the ID: lowercase, replace spaces/special chars with hyphens
-  id = id.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-
-  // Remove multiple consecutive hyphens
-  id = id.replace(/-+/g, "-");
-
-  // Remove leading/trailing hyphens
-  id = id.replace(/^-+|-+$/g, "");
+  // Per-segment cleanup: lowercase, allow only [a-z0-9-], collapse hyphens.
+  // Critically, "/" is preserved so nested IDs match Astro's `post.id`.
+  id = id
+    .split("/")
+    .map((segment) =>
+      segment
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-+|-+$/g, ""),
+    )
+    .filter(Boolean)
+    .join("/");
 
   return id;
 }
@@ -145,7 +165,7 @@ function extractStandardLinks(content) {
   let match;
 
   while ((match = markdownLinkRegex.exec(content)) !== null) {
-    const [fullMatch, displayText, url] = match;
+    const [, displayText, url] = match;
 
     // Check if this is an internal link
     if (isInternalLink(url)) {
@@ -276,42 +296,66 @@ function extractLinkTextFromUrl(url) {
 }
 
 /**
- * Read and parse markdown files from content directory
+ * Recursively read and parse markdown files from a content directory.
+ *
+ * Supports:
+ *  - root-level single files          (formatting-reference.md)
+ *  - root-level folder posts          (sample-folder-based-post/index.md)
+ *  - nested folder posts (locale)     (de/miyo-ace/index.md)
+ *  - nested single files              (de/foo.md, en/foo.md)
+ *  - deeper nesting if it ever shows up
+ *
+ * Skips dotfolders (e.g. `.obsidian`) and the `attachments` folder.
+ *
+ * @param {string} rootDir - absolute path to src/content/<collection>
+ * @returns {Array<{ id: string, data: object, body: string }>}
  */
-function readContentFiles(dirPath) {
+function readContentFiles(rootDir) {
   const posts = [];
 
-  try {
-    const items = readdirSync(dirPath);
+  /** @param {string} dir @param {string} relPrefix */
+  const walk = (dir, relPrefix) => {
+    let items;
+    try {
+      items = readdirSync(dir);
+    } catch (error) {
+      log.error("Error reading content directory:", error);
+      return;
+    }
+
+    // If this dir has an index.md, treat it as a folder-based post and stop recursing.
+    if (relPrefix && items.includes("index.md")) {
+      const indexPath = join(dir, "index.md");
+      const content = readFileSync(indexPath, "utf-8");
+      const id = generateNodeId(`${relPrefix}/index.md`, "posts");
+      const parsed = parseMarkdownFile(content, id);
+      if (parsed) posts.push(parsed);
+      return;
+    }
 
     for (const item of items) {
-      const itemPath = join(dirPath, item);
-      const stat = statSync(itemPath);
+      if (item.startsWith(".") || item === "attachments") continue;
+      const itemPath = join(dir, item);
+      let stat;
+      try {
+        stat = statSync(itemPath);
+      } catch {
+        continue;
+      }
+      const childRel = relPrefix ? `${relPrefix}/${item}` : item;
 
       if (stat.isDirectory()) {
-        // Handle folder-based posts
-        const indexPath = join(itemPath, "index.md");
-        if (existsSync(indexPath)) {
-          const content = readFileSync(indexPath, "utf-8");
-          const parsed = parseMarkdownFile(content, item);
-          if (parsed) {
-            posts.push(parsed);
-          }
-        }
-      } else if (item.endsWith(".md")) {
-        // Handle single-file posts
+        walk(itemPath, childRel);
+      } else if (item.endsWith(".md") || item.endsWith(".mdx")) {
         const content = readFileSync(itemPath, "utf-8");
-        const slug = item.replace(".md", "");
-        const parsed = parseMarkdownFile(content, slug);
-        if (parsed) {
-          posts.push(parsed);
-        }
+        const id = generateNodeId(childRel, "posts");
+        const parsed = parseMarkdownFile(content, id);
+        if (parsed) posts.push(parsed);
       }
     }
-  } catch (error) {
-    log.error("Error reading content directory:", error);
-  }
+  };
 
+  walk(rootDir, "");
   return posts;
 }
 
@@ -434,14 +478,54 @@ async function generateGraphData() {
     const nodes = [];
     const connections = [];
 
+    // Build lookup tables so wikilinks can resolve bare slugs back to the
+    // canonical (locale-prefixed) post id. A wikilink like [[miyo-ace]] inside
+    // a DE post should resolve to id "de/miyo-ace"; the same target inside an
+    // EN post resolves to "en/miyo-ace". Falls back to id-as-written for the
+    // root demo posts that have no locale prefix.
+    const postIdSet = new Set(visiblePosts.map((p) => p.id));
+    /** @type {Map<string, Map<string, string>>} */
+    const slugByLang = new Map([
+      ["de", new Map()],
+      ["en", new Map()],
+    ]);
+    for (const p of visiblePosts) {
+      const lang = p.data.lang === "en" ? "en" : "de";
+      const bare = p.id.replace(/^(de|en)\//, "");
+      slugByLang.get(lang).set(bare, p.id);
+    }
+
+    /**
+     * Resolve a generated link slug (from generateNodeId) to a canonical post id.
+     * Strategy: exact match → same-lang bare-slug match → cross-lang bare match.
+     */
+    const resolveLinkTargetId = (linkSlug, sourceLang) => {
+      if (!linkSlug) return null;
+      if (postIdSet.has(linkSlug)) return linkSlug;
+      const bare = linkSlug.replace(/^(de|en)\//, "");
+      const sameLang = slugByLang.get(sourceLang)?.get(bare);
+      if (sameLang) return sameLang;
+      const otherLang = sourceLang === "de" ? "en" : "de";
+      const cross = slugByLang.get(otherLang)?.get(bare);
+      if (cross) return cross;
+      return null;
+    };
+
     // Process each post
     for (const post of visiblePosts) {
-      // Add post node
+      // Locale-aware bare slug + URL. Untagged posts (the demo content at the
+      // collection root) default to DE — matches Astro's getStaticPaths fallback.
+      const lang = post.data.lang === "en" ? "en" : "de";
+      const bareSlug = post.id.replace(/^(de|en)\//, "");
+      const url = lang === "en" ? `/en/posts/${bareSlug}` : `/posts/${bareSlug}`;
+
       const postNode = {
         id: post.id,
         type: "post",
         title: post.data.title,
         slug: post.id,
+        lang,
+        url,
         date: post.data.date
           ? post.data.date.toISOString()
           : new Date().toISOString(),
@@ -456,18 +540,16 @@ async function generateGraphData() {
 
       // Process links to other posts
       for (const link of allLinks) {
-        const targetPost = visiblePosts.find((p) => p.id === link.slug);
-        if (targetPost && targetPost.id !== post.id) {
-          // Add post-to-post connection
+        const targetId = resolveLinkTargetId(link.slug, lang);
+        if (targetId && targetId !== post.id) {
           connections.push({
             source: post.id,
-            target: targetPost.id,
+            target: targetId,
             type: "link",
           });
 
-          // Update connection counts
           postNode.connections++;
-          const targetNode = nodes.find((n) => n.id === targetPost.id);
+          const targetNode = nodes.find((n) => n.id === targetId);
           if (targetNode) {
             targetNode.connections++;
           }

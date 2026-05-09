@@ -45,6 +45,7 @@ import Icon from './Icon.astro';
     id: string;
     name: string;
     slug?: string;
+    url?: string;
     radius: number;
     group?: string;
     x?: number;
@@ -233,6 +234,7 @@ import Icon from './Icon.astro';
             id: node.id,
             name: node.title || node.name,
             slug: node.slug,
+            url: node.url,
             radius: Math.max(5, Math.min(15, (node.connections || 0) + 5)),
             group: node.type
           })),
@@ -398,13 +400,17 @@ import Icon from './Icon.astro';
               if (dist < CLICK_DISTANCE && d.slug) {
                 closeModal();
 
+                // Prefer the precomputed locale-aware URL emitted by
+                // generate-graph-data.js; fall back to the legacy /posts/<slug>
+                // path only if it is missing (e.g. older cached graph data).
+                const target = d.url || `/posts/${d.slug}`;
                 if ((window as any).swup) {
                   if ((window as any).resetLocalGraph) {
                     (window as any).resetLocalGraph();
                   }
-                  (window as any).swup.navigate(`/posts/${d.slug}`);
+                  (window as any).swup.navigate(target);
                 } else {
-                  window.location.href = `/posts/${d.slug}`;
+                  window.location.href = target;
                 }
               }
             }) as any,
