@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
+import { getLocalisedPosts } from '@/utils/i18n';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
@@ -13,8 +14,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const isDev = import.meta.env.DEV;
   
   try {
-    // Get all posts
-    const allPosts = await getCollection('posts');
+    // Get DE posts (i18n: see docs/XDD/adr/ADR-002)
+    const allPosts = await getLocalisedPosts('de');
     const visiblePosts = allPosts.filter(post => shouldShowPost(post, isDev));
     const sortedPosts = sortPostsByDate(visiblePosts);
 

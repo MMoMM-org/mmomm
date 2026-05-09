@@ -98,7 +98,12 @@ export default defineConfig({
   '/docs/astro-modular-configuration': '/docs/configuration',
   '/docs/sourcetree-and-git': '/docs/sourcetree-and-git-setup'
 } : {},
-image: {
+i18n: {
+    defaultLocale: 'de',
+    locales: ['de', 'en'],
+    routing: { prefixDefaultLocale: false }
+  },
+  image: {
     service: {
       entrypoint: 'astro/assets/services/sharp',
       config: {

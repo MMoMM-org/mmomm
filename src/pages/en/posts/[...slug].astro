@@ -5,16 +5,17 @@ import { getLocalisedPosts, postSlug } from '@/utils/i18n';
 import PostLayout from '@/layouts/PostLayout.astro';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Get DE posts only (i18n: see docs/XDD/adr/ADR-002)
-  const posts = await getLocalisedPosts('de');
+  // Get EN posts only (i18n: see ADR-002 — EN locale)
+  const posts = await getLocalisedPosts('en');
 
   // Filter posts for production (in dev, show all including drafts)
   const isDev = import.meta.env.DEV;
   const visiblePosts = posts.filter(post => shouldShowPost(post, isDev));
 
-  // Generate paths
+  // Generate paths — strip the en/ folder prefix so URLs are /en/posts/<slug>/,
+  // not /en/posts/en/<slug>/.
   return visiblePosts.map(post => ({
-    params: { slug: post.id },
+    params: { slug: postSlug(post) },
     props: { post }
   }));
 };

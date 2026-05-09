@@ -14,8 +14,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const isDev = import.meta.env.DEV;
   
   try {
-    // Get DE posts (i18n: see docs/XDD/adr/ADR-002)
-    const allPosts = await getLocalisedPosts('de');
+    // Get DE posts (i18n: see ADR-002 — EN locale)
+    const allPosts = await getLocalisedPosts('en');
     const visiblePosts = allPosts.filter(post => shouldShowPost(post, isDev));
     const sortedPosts = sortPostsByDate(visiblePosts);
 

@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
+import { getLocalisedPosts } from '@/utils/i18n';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
@@ -11,8 +12,8 @@ import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Get all posts
-  const allPosts = await getCollection('posts');
+  // Get DE posts (i18n: see docs/XDD/adr/ADR-002)
+  const allPosts = await getLocalisedPosts('de');
 
   // Filter posts based on environment
   const isDev = import.meta.env.DEV;

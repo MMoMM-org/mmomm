@@ -26,8 +26,8 @@ const postsPageData = postsPageContent.length > 0 ? postsPageContent[0] : null;
 const url = new URL(Astro.request.url);
 const selectedTag = url.searchParams.get('tag');
 
-// Get DE posts (i18n: see docs/XDD/adr/ADR-002)
-const allPosts = await getLocalisedPosts('de');
+// Get DE posts (i18n: see ADR-002 — EN locale)
+const allPosts = await getLocalisedPosts('en');
 
 // Filter posts based on environment
 const isDev = import.meta.env.DEV;

@@ -14,8 +14,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const isDev = import.meta.env.DEV;
   
   try {
-    // Get DE posts (i18n: see docs/XDD/adr/ADR-002)
-    const allPosts = await getLocalisedPosts('de');
+    // Get DE posts (i18n: see ADR-002 — EN locale)
+    const allPosts = await getLocalisedPosts('en');
     const visiblePosts = allPosts.filter(post => shouldShowPost(post, isDev));
     const sortedPosts = sortPostsByDate(visiblePosts);
 
@@ -25,11 +25,35 @@ export const getStaticPaths: GetStaticPaths = async () => {
     if (isDev && allTags.length === 0) {
     }
 
-    // Generate paths for each tag
-    return allTags.map(tag => ({
-      params: { tag: tag },
-      props: { tag, allPosts: sortedPosts, allTags }
-    }));
+    const postsPerPage = siteConfig.postOptions.postsPerPage;
+    const paths: any[] = [];
+
+    // Generate paths for each tag and its pagination
+    for (const tag of allTags) {
+      try {
+        const tagPosts = sortedPosts.filter(post => {
+          if (!post.data.tags) return false;
+          const postTags = Array.isArray(post.data.tags) ? post.data.tags : [post.data.tags];
+          return postTags.some((postTag: any) => 
+            postTag && typeof postTag === 'string' && postTag.trim() === tag.trim()
+          );
+        });
+        const totalPages = Math.ceil(tagPosts.length / postsPerPage);
+
+        for (let page = 2; page <= totalPages; page++) {
+          paths.push({
+            params: { tag: tag, page: page.toString() },
+            props: { tag, allPosts: sortedPosts, allTags, currentPage: page }
+          });
+        }
+        } catch (error) {
+          if (isDev) {
+          }
+          // Continue with other tags
+        }
+    }
+
+    return paths;
   } catch (error) {
     if (isDev) {
     }
@@ -37,10 +61,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 };
 
-const { tag, allPosts, allTags } = Astro.props as {
+const { tag, allPosts, allTags, currentPage } = Astro.props as {
   tag: string;
   allPosts: any[];
   allTags: string[];
+  currentPage: number;
 };
 const isDev = import.meta.env.DEV;
 
@@ -76,14 +101,13 @@ try {
 const postsPerPage = siteConfig.postOptions.postsPerPage;
 const totalPosts = filteredPosts.length;
 const totalPages = Math.ceil(totalPosts / postsPerPage);
-const currentPage = 1; // This is the first page
-const startIndex = 0;
-const endIndex = Math.min(postsPerPage, totalPosts);
+const startIndex = (currentPage - 1) * postsPerPage;
+const endIndex = Math.min(startIndex + postsPerPage, totalPosts);
 const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
 
 // Generate SEO data
-const pageTitle = `Posts tagged "${tag}"`;
-const pageDescription = `All posts tagged with "${tag}"`;
+const pageTitle = `Posts tagged "${tag}" - Page ${currentPage}`;
+const pageDescription = `Page ${currentPage} of posts tagged with "${tag}"`;
 
 const seoData = {
   title: `${pageTitle} | ${siteConfig.title}`,
@@ -98,9 +122,9 @@ const pagination = {
   currentPage,
   totalPages,
   hasNext: currentPage < totalPages,
-  hasPrev: false,
-  nextUrl: totalPages > 1 ? `${baseUrl}/2` : undefined,
-  prevUrl: undefined
+  hasPrev: currentPage > 1,
+  nextUrl: currentPage < totalPages ? `${baseUrl}/${currentPage + 1}` : undefined,
+  prevUrl: currentPage > 1 ? (currentPage === 2 ? baseUrl : `${baseUrl}/${currentPage - 1}`) : undefined
 };
 ---
 
@@ -110,8 +134,8 @@ const pagination = {
       <!-- Header -->
       <header class="mb-8">
         <div class="flex items-start justify-between mb-3">
-          <h1 class="text-lg font-bold text-primary-900 dark:text-primary-50">
-            {pageTitle}
+          <h1 class="font-bold text-primary-900 dark:text-primary-50">
+            Posts tagged "{tag}"
           </h1>
           <div class="flex items-center space-x-2">
             <a 
@@ -135,7 +159,7 @@ const pagination = {
           </div>
         </div>
         <p class="text-base text-primary-600 dark:text-primary-300">
-          Showing <strong>{filteredPosts.length}</strong> posts tagged with 
+          Page {currentPage} of {totalPages} • <strong>{filteredPosts.length}</strong> posts tagged with 
           <span class="inline-flex items-center px-2 py-1 bg-highlight-100 dark:bg-highlight-900/30 text-highlight-800 dark:text-highlight-200 rounded text-sm font-medium ml-1">
             #{tag}
           </span>
@@ -155,31 +179,15 @@ const pagination = {
       <div class="relative">
         <!-- Main content -->
         <div class="max-w-none">
-          {paginatedPosts.length > 0 ? (
-            <>
-              <!-- Posts list -->
-              <div class="space-y-6 mb-12">
-                {paginatedPosts.map((post, index) => (
-                  <PostCard post={post} context="tags" eager={index < 2} />
-                ))}
-              </div>
+          <!-- Posts list -->
+          <div class="space-y-6 mb-12">
+            {paginatedPosts.map((post, index) => (
+              <PostCard post={post} context="tags" eager={index < 2} />
+            ))}
+          </div>
 
-              <!-- Pagination -->
-              <Pagination pagination={pagination} baseUrl={baseUrl} />
-            </>
-          ) : (
-            <!-- No posts for selected tag -->
-            <div class="text-center py-16">
-              <Icon name="tag" class="w-16 h-16 text-primary-400 dark:text-primary-500 mx-auto mb-6" />
-              <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-4">
-                No posts found
-              </h2>
-              <p class="text-primary-600 dark:text-primary-300 mb-8 max-w-md mx-auto">
-                There are no posts tagged with "{tag}". Try browsing other tags or 
-                <a href="/posts" class="text-primary-600 dark:text-primary-300 hover:underline">view all posts</a>.
-              </p>
-            </div>
-          )}
+          <!-- Pagination -->
+          <Pagination pagination={pagination} baseUrl={baseUrl} />
         </div>
 
         <!-- Mobile sidebar - appears below content on mobile/tablet -->
@@ -203,22 +211,3 @@ const pagination = {
     </div>
   </div>
 </BaseLayout>
-
-<style>
-  /* Enhanced posts page styles */
-  .posts-grid {
-    display: grid;
-    gap: 2rem;
-  }
-
-  @media (min-width: 768px) {
-    .posts-grid {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-  }
-
-  /* Tag highlight in header */
-  .tag-highlight {
-    @apply bg-gradient-to-r from-highlight-500 to-highlight-600 text-white;
-  }
-</style>
