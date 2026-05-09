@@ -12,6 +12,7 @@ tags:
 image: "[[cover.png]]"
 imageAlt: "Todoist Logo"
 draft: false
+lang: de
 ---
 
 Hallo und Willkommen,

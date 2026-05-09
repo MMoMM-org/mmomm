@@ -17,6 +17,7 @@ aliases:
   - mermaid-test
   - mermaid-diagram-test
   - mermaid-diagrams
+lang: en
 ---
 ### Media embeds
 

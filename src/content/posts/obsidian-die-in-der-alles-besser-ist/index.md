@@ -11,6 +11,7 @@ tags:
   - obsidian
 image: "[[cover.png]]"
 translationKey: obsidian-the-better-one
+lang: de
 ---
 Hallo und Willkommen,
 

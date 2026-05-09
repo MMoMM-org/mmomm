@@ -7,6 +7,7 @@ tags:
   - miyo
 image: "[[cover.png]]"
 translationKey: miyo-aggregate
+lang: de
 ---
 Wie schon in [MiYo - ACE](/blog/miyo-ace/)  besprochen will ich hier ein wenig mehr auf das
 

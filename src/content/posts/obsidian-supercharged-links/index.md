@@ -4,4 +4,5 @@ date: 2022-01-01
 tags:
   - obsidian
 translationKey: obsidian-supercharged-links
+lang: de
 ---

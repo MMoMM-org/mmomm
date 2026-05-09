@@ -4,6 +4,7 @@ description: "Willkommen,momentan ist hier wenig los, aber die Vorbereitung für
 date: 2022-10-24
 image: "[[cover.jpg]]"
 translationKey: pardon-the-dust
+lang: de
 ---
 Willkommen,
 

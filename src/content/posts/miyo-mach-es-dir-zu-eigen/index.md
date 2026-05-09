@@ -6,6 +6,7 @@ tags:
   - miyo
 image: "[[cover.png]]"
 translationKey: miyo-make-it-your-own
+lang: de
 ---
 [![red circle with miyo in kanji - miyo logo](attachments/image-1.png)](https://jisho.org/word/%E4%B8%89%E4%B8%96-1)
 

@@ -4,6 +4,7 @@ description: Was bedeutet Mingle Mangle of My Mind?
 date: 2022-11-22
 image: "[[cover.png]]"
 translationKey: minglemangle-haaa
+lang: de
 ---
 Leute fragen mich oft was eigentlich Mingle Mangle of My Mind (MMoMM) sein soll?
 

@@ -6,6 +6,7 @@ tags:
   - miyo
   - pkm
 translationKey: miyo-2-aspekte
+lang: de
 ---
 Zuletzt habe ich ein wenig über meine Art geschrieben wie ich meine Notizen bearbeite bzw. ich meinen Ansatz ausgewählt habe. Viele sagen jetzt bestimmt... hää?
 

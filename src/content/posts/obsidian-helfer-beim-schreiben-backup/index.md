@@ -6,6 +6,7 @@ tags:
   - obsidian
 image: "[[cover.png]]"
 translationKey: obsidian-helpers-backup
+lang: de
 ---
 Hallo und Willkommen,
 

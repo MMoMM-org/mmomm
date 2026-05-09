@@ -6,6 +6,7 @@ tags:
   - obsidian
 image: "[[cover.png]]"
 translationKey: obsidian-dynbedded
+lang: de
 ---
 Hallo und Willkommen.
 

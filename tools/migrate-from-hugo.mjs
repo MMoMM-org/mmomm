@@ -29,10 +29,15 @@ function flag(name, fallback) {
 const SOURCE = resolve(ROOT, flag('source', '../mmomm/content/blog'));
 const IMAGES = resolve(ROOT, flag('images', '../mmomm/static/img/wix'));
 const DEST = resolve(ROOT, flag('dest', 'src/content/posts'));
+const LOCALE = flag('locale', 'de');
 const ONE_SLUG = flag('slug', null);
 const SKIP = String(flag('skip', 'obsidian-todoist')).split(',').filter(Boolean);
 const DRY = flag('dry-run', false) === true;
 const VERBOSE = flag('verbose', false) === true;
+if (!['de', 'en'].includes(LOCALE)) {
+  console.error(`--locale must be 'de' or 'en' (got: ${LOCALE})`);
+  process.exit(1);
+}
 
 const log = (...a) => console.log(...a);
 const dbg = (...a) => VERBOSE && console.log('  ·', ...a);
@@ -308,8 +313,9 @@ function migratePost(slug) {
   }
 
   if (fm.draft === true) newFm.draft = true;
-  // Preserve translationKey passthrough — astro-modular's Zod schema will strip
-  // it at runtime, but the source preserves the link for the i18n phase.
+  // i18n: lang is required by the schema (see ADR-002); translationKey links
+  // DE↔EN counterparts and is now surfaced by the schema extension.
+  newFm.lang = LOCALE;
   if (fm.translationKey) newFm.translationKey = fm.translationKey;
 
   // ── Body ──────────────────────────────────────────────────────────────────

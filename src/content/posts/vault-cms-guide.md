@@ -19,6 +19,7 @@ aliases:
   - astro-suite-vault-modular-guide
   - astro-suite-obsidian-vault-guide-astro-modular
   - obsidian-vault-guide
+lang: en
 ---
 ![Vault CMS logo](attachments/vault-cms-cover.png)
 

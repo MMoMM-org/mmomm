@@ -7,6 +7,7 @@ tags:
   - miyo
 image: "[[cover.png]]"
 translationKey: miyo-ace
+lang: de
 ---
 [Zuletzt](/blog/die-2-aspekte-von-miyo/) habe ich ein wenig über die 2 Aspekte von `#MiYo` geschrieben:
 

@@ -6,6 +6,7 @@ tags:
   - obsidian
 image: "[[cover.png]]"
 translationKey: obsidian-buttons
+lang: de
 ---
 Hallo und Willkommen,
 
