@@ -25,7 +25,7 @@ continuing.
   Astro core i18n config in `astro.config.mjs`. Parallel route trees under
   `src/pages/posts/` and `src/pages/en/posts/`. Cover image preloads + prev/next post
   hrefs are locale-aware.
-- **Fork created and wired**: `MMoMM-org/astro-modular-mmomm` (master at `28aa366`)
+- **Fork created and wired**: `MMoMM-org/astro-modular-mmomm` (master at `d397c8e` after Phase 2b sync; previously `28aa366`)
   hosts theme-level patches. `pnpm run update` pulls from the fork via branch tarball
   (not GitHub Releases — forks don't auto-mirror those). `.astro-modular-source` records
   the last-pulled SHA. ADR-001 captures the fork decision; ADR-002 captures the i18n
@@ -116,7 +116,7 @@ continuing.
 ## Key references
 
 - **Branch**: `feat/astro-modular`. Branch off `main`, no direct main commits (hook-blocked).
-- **Fork**: <https://github.com/MMoMM-org/astro-modular-mmomm> (master at SHA `28aa366`
+- **Fork**: <https://github.com/MMoMM-org/astro-modular-mmomm> (master at SHA `d397c8e`
   as of 2026-05-09). Clone, patch, push pattern documented in `tools.md`.
 - **Local update flow**: `pnpm run update`. Reads SHA from
   `https://api.github.com/repos/MMoMM-org/astro-modular-mmomm/branches/master`, compares
