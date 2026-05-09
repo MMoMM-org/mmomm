@@ -7,7 +7,7 @@
 - [general.md](general.md) — conventions, style, naming [updated: YYYY-MM-DD]
 - [tools.md](tools.md) — CI, build, local dev [updated: 2026-05-09]
 - [domain.md](domain.md) — business rules, data models [updated: YYYY-MM-DD]
-- [decisions.md](decisions.md) — architecture choices [updated: YYYY-MM-DD]
+- [decisions.md](decisions.md) — architecture choices [updated: 2026-05-09]
 - [context.md](context.md) — current focus [updated: YYYY-MM-DD]
 - [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-09]
 
@@ -18,3 +18,4 @@
 ## Critical Documentation
 <!-- Add important docs here when created — Claude loads these on demand -->
 <!-- - [Architecture Overview](../architecture/overview.md) -->
+- [ADR-001: Fork astro-modular for i18n](../XDD/adr/ADR-001-fork-astro-modular-for-i18n.md) — why MMoMM-org/astro-modular-mmomm exists and what deferred work remains
