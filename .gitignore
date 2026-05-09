@@ -27,3 +27,6 @@ pnpm-debug.log*
 /begin-code.sh
 .mcp.json
 /generated-images/
+
+# claude code per-machine settings
+.claude/settings.local.json
