@@ -28,5 +28,5 @@ pnpm-debug.log*
 .mcp.json
 /generated-images/
 
-# claude code per-machine settings
-.claude/settings.local.json
+# claude code
+.claude/
