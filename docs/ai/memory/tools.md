@@ -1,5 +1,10 @@
 # Tools — astro-mmomm
 <!-- CI, build pipeline, API clients, local dev setup. Updated: 2026-05-09 -->
+
+<!-- 2026-05-09 (Phase 2b) -->
+- No unit-test suite; `package.json` `"test"` is the placeholder `echo 'Error: no test specified' && exit 1`. Verification for code changes is `pnpm build` + targeted `grep` against `dist/` (76–77 pages). For i18n changes, also assert per-locale URL shapes — e.g. `grep -oE 'href="/(en/)?posts/[^"]+"' dist/<page>/index.html`. Build also re-emits `dist/sitemap-index.xml` (from @astrojs/sitemap integration) alongside the hand-written `dist/sitemap.xml`.
+- TS diagnostics for `Cannot find module '@/types' | '@/config' | 'astro:content' | 'import.meta.env'` are documented Astro typegen cache misses, not real type holes. They cascade into implicit-`any` hints in dependent code (parameters lose inferred types when imports fail). They clear on the next `pnpm dev` or `pnpm build` once `.astro/` regenerates. Don't fix by adding `any` casts; the build passes and runtime types are correct.
+
 <!-- What goes here: commands that are non-obvious, tool quirks, CI gotchas, env var names -->
 <!-- What does NOT go here: domain rules (→ domain.md), code style (→ general.md) -->
 

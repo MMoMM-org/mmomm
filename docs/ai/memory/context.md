@@ -2,14 +2,16 @@
 <!-- Current sprint focus, active work, known blockers. Updated: 2026-05-09 -->
 <!-- This file is short-lived — prune entries older than 2 weeks via /memory-cleanup -->
 
-## Active branch: `feat/astro-modular` (13 commits ahead of `main`)
+## Active branch: `feat/astro-modular` (21 commits ahead of `main`)
 
 The site is being migrated from Hugo (`MMoMM-org/mmomm`, still live at www.mmomm.org) to
 Astro using the **astro-modular** theme. The branch has not been merged to `main` and not
 deployed anywhere. Hugo site remains the production source of truth.
 
-**Pre-flight check for next session**: `git rev-parse HEAD` should be `6b8cef5` (or
-later if work continued). `pnpm build` should produce 76 pages cleanly.
+**Pre-flight check for next session**: `git rev-parse HEAD` should be `adedc6a` (or
+later if work continued). `pnpm build` should produce 77 pages cleanly. The branch is
+local-only; consider `git push origin feat/astro-modular` for remote backup before
+continuing.
 
 ## What's done
 
@@ -30,34 +32,55 @@ later if work continued). `pnpm build` should produce 76 pages cleanly.
   architecture (Decision #3 was revised same-day from asymmetric → symmetric folder
   layout).
 
-## What's pending — Phase 2b (the next coherent chunk)
+## Phase 2b — mostly shipped (this session, 8 commits)
 
-Phase 2a left several places still hardcoding `/posts/${post.id}` paths. They produce
-broken cross-locale links. All belong in the fork (will need the same clone-patch-push
-loop). In priority order:
+| Commit | Task | What |
+|--------|------|------|
+| `7c09d53` | T1 | LinkedMentions backlinks use `findLinkedMentions` returning precomputed `mention.url` |
+| `2724561` | T2 | ProjectLayout client-script wikilinks use server-serialized `post.url` |
+| `8b76b93` | T4 | PostLayout client-script anchor URLs use the same pattern |
+| `e5c2b43` | T10 | Wikilinks IN post bodies (discovered during T1 verification) — uses lazy filesystem-walked slug→lang map in `internallinks.ts` |
+| `4df4c7b` | T8 | Sitemap `xhtml:link rel=alternate hreflang` per translation pair |
+| `ea9f412` | T7 | Per-locale RSS+Atom split: `/rss.xml`+`/feed.xml` (DE), `/en/rss.xml`+`/en/feed.xml` (EN); shared logic in `src/utils/feeds.ts` |
+| `17f52b6` | T5 | BaseLayout `lang` prop + hreflang `<link>` tags |
+| `adedc6a` | T11 | Locale-aware homepages — fixed DE locale-mixing bug + new `src/pages/en/index.astro`; shared logic in `src/utils/home.ts` |
 
-1. **`src/components/LinkedMentions.astro`** lines 307, 323 — backlinks render with
-   wrong locale. Use `postUrl(mention)` instead of `/posts/${mention.slug}`.
-2. **`src/layouts/ProjectLayout.astro`** line 465 — runtime JS link.href hardcodes
-   `/posts/${post.id}`.
-3. **`src/components/GraphModal.astro`** lines 405, 407 and **`LocalGraph.astro`**
-   line 264 — graph navigation URLs.
-4. **`src/layouts/PostLayout.astro`** lines 389, 391 — client-side script in a `<script>`
-   tag uses `/posts/${post.id}#{anchor}`. Needs the post object's locale serialised into
-   the data attribute or the URL pre-computed server-side.
-5. **`src/layouts/BaseLayout.astro`** — currently hardcodes `<html lang={siteConfig.language}>`
-   (single global value). Needs a `lang` prop + hreflang `<link>` tags pointing at the
-   `findTranslation(post)` counterpart.
-6. **`src/components/Header.astro`** — no language switcher exists. Add a DE↔EN toggle
-   that uses `findTranslation` to link to the paired post (or fall back to the locale
-   homepage).
-7. **`src/pages/rss.xml.ts`** + **`feed.xml.ts`** — currently emits both DE and EN posts
-   in one feed with broken `/posts/en/<slug>/` URLs (those routes don't exist; correct
-   is `/en/posts/<slug>/`). Split into per-locale feeds.
-8. **`src/pages/sitemap.xml.ts`** — add hreflang annotations for translation pairs.
-9. **`src/i18n/strings.ts`** (new file) — UI labels (Read more, Posted on, Tags,
+## What's pending after Phase 2b
+
+1. **T6 — `src/components/Header.astro` DE↔EN switcher** — needs UX decisions: position
+   (left/right of nav?), display style (icon, text "DE/EN", flag), fallback when no
+   translation exists for the current page (link to locale homepage — both exist now
+   thanks to T11). Uses `findTranslation(post)`.
+2. **T9 — `src/i18n/strings.ts`** (new file) — UI labels (Read more, Posted on, Tags,
    Pagination) currently hardcoded. Build a minimum-viable translation table; components
-   consume via `t(locale, key)`.
+   consume via `t(locale, key)`. Needs MVP key-set decision before dispatch.
+3. **T3a — `scripts/generate-graph-data.js` rewrite** — the generator silently skips all
+   28 migrated DE/EN posts because it doesn't recurse into `de/`/`en/` subfolders. Node
+   IDs are bare slugs but `post.id` carries the locale prefix, so `PostLayout`'s
+   `conn.source === post.id` matching cannot succeed. Rewrite needed: recurse into
+   locale folders, parse `lang` from frontmatter, emit IDs as `<lang>/<bare-slug>`,
+   attach `url` field per node.
+4. **T3b — graph component URL consumption** (`GraphModal.astro:405,407`,
+   `LocalGraph.astro:264`) — trivial 1-line update once T3a lands; reads `node.url`
+   from generator output.
+5. **T11 follow-up** — `dist/en/index.html` exists but EN site title/description still
+   reads as the DE site title (single-string `siteConfig.title`). Per-locale config
+   translation is its own initiative — same applies to RSS feeds (both feeds carry the
+   same site title). Consider extending `siteConfig` schema to `{de: ..., en: ...}` or
+   adding a translation lookup at consumption sites.
+
+## Phase 2b discoveries worth remembering
+
+- **`astro:content` config-load hazard**: `astro.config.mjs` → `internallinks.ts`
+  (for remarkInternalLinks) → must NOT import `i18n.ts` (which imports `astro:content`,
+  unavailable at config-load time). Worked around by inlining `postUrlFromPost` at
+  `internallinks.ts:6`. See `troubleshooting.md`.
+- **Slug→lang resolution for remark plugins**: filesystem walk + memoization on
+  `globalThis` via `Symbol.for`. See `decisions.md` and `buildSlugLangMap` in
+  `internallinks.ts`.
+- **DE homepage was silently mixing locales** — `getCollection('posts')` with no lang
+  filter. Same class of bug likely lurks in tag/archive listing pages. Audit pattern:
+  grep `getCollection('posts')` and verify each call is locale-paired.
 
 ## Other pending tracks
 
