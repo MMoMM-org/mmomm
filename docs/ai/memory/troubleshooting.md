@@ -3,9 +3,11 @@
 <!-- Format: ## [Issue title] — Status: open/resolved — [fix description] -->
 <!-- Resolved entries are archived by /memory-cleanup, not deleted -->
 
-## `pnpm run update` clobbers the build allowlist — Status: open
+## `pnpm run update` clobbers the build allowlist — Status: resolved
 <!-- 2026-05-09 -->
 astro-modular's `pnpm run update` (scripts/update.mjs) replaces framework files including `package.json` and `pnpm-workspace.yaml` when pulling a new theme release. After every update, re-verify the `allowBuilds:` and `onlyBuiltDependencies:` entries for `esbuild`, `sharp`, and `workerd` in `pnpm-workspace.yaml`, otherwise the next `pnpm install`/`pnpm build` aborts with `ERR_PNPM_IGNORED_BUILDS`.
+
+**Resolved 2026-05-09**: the fork's patched `update.mjs` (commit `f3d5e52` on `MMoMM-org/astro-modular-mmomm`) added `pnpm-workspace.yaml` to USER_PATHS, so the file is now preserved across updates. The pnpm 11 allowlist note in `tools.md` is the durable reference; this entry stays as historical context for why USER_PATHS was extended.
 
 ## `pnpm create astro-modular` denied by Claude Code auto-mode classifier — Status: resolved
 <!-- 2026-05-09 -->
