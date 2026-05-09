@@ -1,5 +1,7 @@
 import type { Post, WikilinkMatch } from "@/types";
 import { visit } from "unist-util-visit";
+import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
+import { join } from "node:path";
 
 // Inlined to avoid importing src/utils/i18n.ts (which imports `astro:content`)
 // from astro.config.mjs's load graph. Mirrors postUrl() in src/utils/i18n.ts.
@@ -9,22 +11,117 @@ function postUrlFromPost(post: Post): string {
   return `${prefix}/posts/${bareSlug}`;
 }
 
-// Global posts cache for build-time wikilink resolution
-let globalPostsCache: any[] = [];
+// Global posts cache for build-time wikilink resolution.
+// Stored on globalThis so it survives the dual-instantiation of this module
+// (once via astro.config.mjs's plugin import, once via layout `@/utils` import).
+// Without this, layouts populate one module's cache while the remark plugin
+// reads from the other and never sees any posts.
+const POSTS_CACHE_SYMBOL = Symbol.for("mmomm.internallinks.globalPostsCache");
+type GlobalWithCache = typeof globalThis & { [POSTS_CACHE_SYMBOL]?: any[] };
+function getCache(): any[] {
+  const g = globalThis as GlobalWithCache;
+  return g[POSTS_CACHE_SYMBOL] ?? [];
+}
+function setCache(posts: any[]): void {
+  (globalThis as GlobalWithCache)[POSTS_CACHE_SYMBOL] = posts;
+}
+
+// Lazy filesystem-backed slug→lang map. The remark plugin runs at content-
+// bundling time, BEFORE any layout populates globalPostsCache, so we can't
+// rely on layouts. Walk src/content/posts/ once on first use, parse the `lang:`
+// frontmatter line, and remember the result for subsequent calls.
+const SLUG_LANG_SYMBOL = Symbol.for("mmomm.internallinks.slugLangMap");
+type GlobalWithSlugMap = typeof globalThis & {
+  [SLUG_LANG_SYMBOL]?: Map<string, "de" | "en"> | null;
+};
+function buildSlugLangMap(): Map<string, "de" | "en"> {
+  const map = new Map<string, "de" | "en">();
+  const root = join(process.cwd(), "src", "content", "posts");
+  if (!existsSync(root)) return map;
+  const collect = (dir: string): string[] => {
+    const out: string[] = [];
+    let entries: string[];
+    try {
+      entries = readdirSync(dir);
+    } catch {
+      return out;
+    }
+    for (const name of entries) {
+      if (name.startsWith(".") || name === "attachments") continue;
+      const full = join(dir, name);
+      let stat: ReturnType<typeof statSync>;
+      try {
+        stat = statSync(full);
+      } catch {
+        continue;
+      }
+      if (stat.isDirectory()) out.push(...collect(full));
+      else if (stat.isFile() && (name.endsWith(".md") || name.endsWith(".mdx"))) out.push(full);
+    }
+    return out;
+  };
+  const files = collect(root);
+  for (const file of files) {
+    let content: string;
+    try {
+      content = readFileSync(file, "utf-8");
+    } catch {
+      continue;
+    }
+    // Match frontmatter block, then `lang: de|en` line within it
+    const fmMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!fmMatch) continue;
+    const langMatch = fmMatch[1].match(/^lang:\s*["']?(de|en)["']?\s*$/m);
+    if (!langMatch) continue;
+    const lang = langMatch[1] as "de" | "en";
+    // Derive bare slug from file path: strip root, leading <lang>/, trailing /index.md or .md/.mdx
+    const rel = file.slice(root.length + 1).replace(/\\/g, "/");
+    let bare = rel.replace(/\.(md|mdx)$/, "");
+    bare = bare.replace(/\/index$/, "");
+    bare = bare.replace(/^(de|en)\//, "");
+    if (!bare) continue;
+    map.set(bare, lang);
+  }
+  return map;
+}
+function getSlugLangMap(): Map<string, "de" | "en"> {
+  const g = globalThis as GlobalWithSlugMap;
+  if (!g[SLUG_LANG_SYMBOL]) g[SLUG_LANG_SYMBOL] = buildSlugLangMap();
+  return g[SLUG_LANG_SYMBOL]!;
+}
+
+// Resolve a bare slug to its locale-aware post URL. Tries the in-memory post
+// cache first (populated by layouts when available), then falls back to a
+// filesystem-derived slug→lang map. Returns null if no match — callers must
+// preserve their existing fallback URL in that case.
+function resolveLocaleAwarePostUrl(bareSlug: string): string | null {
+  if (!bareSlug) return null;
+  const cache = getCache();
+  if (cache.length) {
+    const target = cache.find(
+      (p) => p && typeof p.id === "string" && p.id.replace(/^(de|en)\//, "") === bareSlug
+    );
+    if (target) return postUrlFromPost(target as Post);
+  }
+  const lang = getSlugLangMap().get(bareSlug);
+  if (!lang) return null;
+  const prefix = lang === "de" ? "" : `/${lang}`;
+  return `${prefix}/posts/${bareSlug}`;
+}
 
 // Function to set the global posts cache
 export function setGlobalPostsCache(posts: any[]) {
-  globalPostsCache = posts;
+  setCache(posts);
 }
 
 // Function to get the global posts cache
 export function getGlobalPostsCache(): any[] {
-  return globalPostsCache;
+  return getCache();
 }
 
 // Function to populate the global posts cache (called from layouts)
 export function populateGlobalPostsCache(posts: any[]) {
-  globalPostsCache = posts;
+  setCache(posts);
 }
 
 // ============================================================================
@@ -537,6 +634,27 @@ export function remarkWikilinks() {
             wikilinkData = link.trim();
           }
 
+          // Locale-aware override: if the wikilink resolves to a post in the
+          // build-time cache, swap the /posts/<slug> URL for the target post's
+          // canonical locale URL (DE keeps /posts/, EN gets /en/posts/ prefix).
+          // Falls back to the URL above when the cache is empty (e.g. content
+          // collection that runs the plugin before PostLayout populates it) or
+          // when the slug doesn't resolve — preserves broken-link behaviour.
+          if (!isSamePageAnchor && url.startsWith("/posts/")) {
+            const bareSlug = url.replace(/^\/posts\//, "");
+            const localised = resolveLocaleAwarePostUrl(bareSlug);
+            if (localised) url = localised;
+            else {
+              // Try title-slug match as a secondary lookup (matches runtime
+              // resolver behaviour in PostLayout).
+              const titleSlug = createSlugFromTitle(wikilinkData);
+              if (titleSlug && titleSlug !== bareSlug) {
+                const fromTitle = resolveLocaleAwarePostUrl(titleSlug);
+                if (fromTitle) url = fromTitle;
+              }
+            }
+          }
+
           // Add anchor if present (for cross-page anchors, not same-page)
           // CRITICAL: This must run AFTER all URL construction
           if (anchor && !isSamePageAnchor) {
@@ -959,9 +1077,24 @@ export function remarkStandardLinks() {
             }
           }
 
+          // Locale-aware /posts/ URL override (mirrors remarkWikilinks). Splits
+          // off the anchor, looks up the target post in globalPostsCache, and
+          // swaps the prefix to /en/posts/ when the target's lang === 'en'.
+          if (
+            typeof node.url === "string" &&
+            node.url.startsWith("/posts/")
+          ) {
+            const hashIdx = node.url.indexOf("#");
+            const pathPart = hashIdx === -1 ? node.url : node.url.slice(0, hashIdx);
+            const anchorPart = hashIdx === -1 ? "" : node.url.slice(hashIdx);
+            const bareSlug = pathPart.replace(/^\/posts\//, "");
+            const localised = resolveLocaleAwarePostUrl(bareSlug);
+            if (localised) node.url = `${localised}${anchorPart}`;
+          }
+
           // Add wikilink styling to internal links for visual consistency
           // Include posts/ prefixed URLs and /posts/ URLs (but not double /posts/posts/)
-          if (node.url.startsWith("/posts/") || (node.url.startsWith("posts/") && !node.url.startsWith("posts/posts/"))) {
+          if (node.url.startsWith("/posts/") || node.url.startsWith("/en/posts/") || (node.url.startsWith("posts/") && !node.url.startsWith("posts/posts/"))) {
             if (!node.data) {
               node.data = {};
             }
