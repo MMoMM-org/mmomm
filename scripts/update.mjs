@@ -19,9 +19,15 @@ import { get as httpsGet } from 'https';
 import { pipeline } from 'stream/promises';
 
 const ROOT = resolve(import.meta.dirname, '..');
-const REPO = 'davidvkimball/astro-modular';
+// MMoMM-org/astro-modular-mmomm fork hosts our i18n customizations on top of
+// upstream davidvkimball/astro-modular (see docs/XDD/adr/ADR-001). Override
+// via env vars when temporarily pointing at upstream or a different branch.
+const REPO = process.env.ASTRO_MODULAR_REPO || 'MMoMM-org/astro-modular-mmomm';
+const BRANCH = process.env.ASTRO_MODULAR_BRANCH || 'master';
 
 // Files and directories that belong to the USER and must be preserved
+// during a framework refresh. Anything in the upstream tarball that's listed
+// here gets backed up before replacement and restored afterward.
 const USER_PATHS = [
   'src/content',       // All user content + .obsidian vault (plugin data.json files)
   'public/profile.jpg',
@@ -34,7 +40,24 @@ const USER_PATHS = [
   '.env',
   '.env.local',
   '.env.production',
+  // Cross-project conventions (upstream ships a stub these clobber):
+  'CLAUDE.md',            // project Claude config
+  '.gitignore',           // typically merged with project-specific entries
+  'pnpm-workspace.yaml',  // pnpm 11 build allowlist + lockfiles
+  'tools',                // user-side migration / one-shot scripts
 ];
+
+// Optional extension: read site-specific paths from .astro-modular-user-paths
+// (one path per line; '#' starts a comment). Lets a fork user preserve files
+// that only matter to their site (e.g. claude-docker/, .claude/, .mcp.json).
+const extPathsFile = join(ROOT, '.astro-modular-user-paths');
+if (existsSync(extPathsFile)) {
+  const ext = readFileSync(extPathsFile, 'utf-8')
+    .split('\n')
+    .map((s) => s.trim())
+    .filter((s) => s && !s.startsWith('#'));
+  USER_PATHS.push(...ext);
+}
 
 // Directories that should never be touched
 const SKIP_PATHS = [
@@ -109,33 +132,48 @@ function copyIfExists(src, dest) {
 async function main() {
   console.log('\nAstro Modular Updater');
   console.log('====================');
+  log(`Source: ${REPO} @ ${BRANCH}`);
 
-  // 1. Get current version
+  // 1. Get current version (kept as a record; SHA below is the actual gate).
   const currentVersion = getCurrentVersion();
   log(`Current version: ${currentVersion}`);
 
-  // 2. Check latest release
+  // 2. Check latest commit SHA on the configured branch.
+  // Fork strategy (ADR-001): we pull from a branch on the fork rather than
+  // upstream's GitHub Releases, because forks don't auto-mirror releases.
   logStep('Checking for updates...');
-  let release;
+  let branchInfo;
   try {
-    release = await fetchJSON(`https://api.github.com/repos/${REPO}/releases/latest`);
+    branchInfo = await fetchJSON(`https://api.github.com/repos/${REPO}/branches/${BRANCH}`);
   } catch (err) {
     logError(`Could not reach GitHub: ${err.message}`);
     process.exit(1);
   }
+  const latestSha = branchInfo?.commit?.sha;
+  if (!latestSha) {
+    logError(`Branch "${BRANCH}" not found on ${REPO}.`);
+    process.exit(1);
+  }
+  const shortSha = latestSha.slice(0, 7);
+  log(`Latest ${BRANCH}: ${shortSha}`);
 
-  const latestVersion = release.tag_name.replace(/^v/, '');
-  log(`Latest version:  ${latestVersion}`);
-
-  if (currentVersion === latestVersion) {
+  // Track the last-pulled SHA in .astro-modular-source so repeated `pnpm run
+  // update` calls are no-ops when the fork hasn't changed.
+  const sourceFile = join(ROOT, '.astro-modular-source');
+  const lastSha = existsSync(sourceFile)
+    ? readFileSync(sourceFile, 'utf-8').trim()
+    : null;
+  if (lastSha === latestSha) {
     log('Already up to date!');
     process.exit(0);
   }
 
-  // 3. Download release archive
-  logStep(`Downloading v${latestVersion}...`);
+  // 3. Download branch tarball/zipball (zip on Windows, tar.gz elsewhere).
+  logStep(`Downloading ${REPO}@${shortSha}...`);
   const isWindows = process.platform === 'win32';
-  const archiveUrl = isWindows ? release.zipball_url : release.tarball_url;
+  const archiveUrl = isWindows
+    ? `https://api.github.com/repos/${REPO}/zipball/${BRANCH}`
+    : `https://api.github.com/repos/${REPO}/tarball/${BRANCH}`;
   const tempDir = join(tmpdir(), `astro-modular-update-${Date.now()}`);
   mkdirSync(tempDir, { recursive: true });
   const archivePath = join(tempDir, isWindows ? 'release.zip' : 'release.tar.gz');
@@ -298,9 +336,13 @@ async function main() {
   // 9. Clean up temp directory
   rmSync(tempDir, { recursive: true, force: true });
 
+  // Record the SHA we just pulled so the next run can short-circuit if the
+  // fork hasn't moved.
+  writeFileSync(sourceFile, `${latestSha}\n`, 'utf-8');
+
   // 10. Done
   console.log('\n====================================');
-  console.log(`  Updated to v${latestVersion}!`);
+  console.log(`  Updated to ${REPO}@${shortSha}!`);
   console.log('====================================');
   console.log('\n  Next steps:');
   console.log('  1. Open your vault in Obsidian');

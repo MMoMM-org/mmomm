@@ -1,0 +1,16 @@
+# Site-specific paths preserved by `pnpm run update` (in addition to the
+# defaults baked into scripts/update.mjs). One path per line; '#' starts a
+# comment. Paths are resolved relative to the repo root.
+#
+# This file is project-local and gitignored — it lets us preserve
+# claude-docker/, .claude/, .mcp.json etc. without putting site-specifics
+# in the fork's update.mjs (which serves as a defaults file for any forker).
+
+claude-docker
+claude-docker-home
+begin-code.sh
+.mcp.json
+.claude
+docs
+src/CLAUDE.md
+.astro-modular-user-paths
