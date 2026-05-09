@@ -64,3 +64,6 @@ public/_headers
 .mcp.json
 /generated-images/
 .claude/
+
+# Per-machine state for fork-sync (last pulled commit SHA — see scripts/update.mjs)
+.astro-modular-source
