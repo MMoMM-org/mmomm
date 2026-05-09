@@ -8,7 +8,7 @@
 - [tools.md](tools.md) — CI, build, local dev [updated: 2026-05-09]
 - [domain.md](domain.md) — business rules, data models [updated: YYYY-MM-DD]
 - [decisions.md](decisions.md) — architecture choices [updated: 2026-05-09]
-- [context.md](context.md) — current focus [updated: YYYY-MM-DD]
+- [context.md](context.md) — current focus [updated: 2026-05-09]
 - [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-09]
 
 ## Archive
