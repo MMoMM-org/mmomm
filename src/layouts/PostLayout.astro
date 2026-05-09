@@ -270,7 +270,7 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
         </div>
 
         {siteConfig.postOptions.linkedMentions.enabled && (
-          <LinkedMentions currentSlug={post.id} />
+          <LinkedMentions currentSlug={post.id} lang={post.data.lang} />
         )}
 
         <!-- Post navigation -->
