@@ -18,17 +18,22 @@ Lighthouse-perfect, RSS + sitemap supported.
 - Bugs/fixes → docs/ai/memory/troubleshooting.md
 
 ## Build & Dev Commands
-| Command           | Action                                     |
-| :---------------- | :----------------------------------------- |
-| `npm install`     | Install dependencies                       |
-| `npm run dev`     | Start local dev server at localhost:4321   |
-| `npm run build`   | Build production site to ./dist/           |
-| `npm run preview` | Preview production build locally           |
-| `npm run astro`   | Run Astro CLI (e.g. `astro check`, `astro add`) |
+Package manager: **pnpm** (astro-modular ships a `pnpm-lock.yaml`). `pnpm-workspace.yaml` allowlists `esbuild`, `sharp`, and `workerd` post-install scripts.
+
+| Command           | Action                                                                |
+| :---------------- | :-------------------------------------------------------------------- |
+| `pnpm install`    | Install dependencies                                                  |
+| `pnpm dev`        | Start local dev server at localhost:5000 (syncs images, graph, config)|
+| `pnpm build`      | Build production site to ./dist/                                      |
+| `pnpm preview`    | Build + preview locally                                               |
+| `pnpm run update` | Pull latest astro-modular framework files (preserves `src/content`)   |
 
 ## Known Quirks
 <!-- Non-obvious gotchas specific to this repo. Things that would trip up a new contributor. -->
+- Theme is **astro-modular** by David V. Kimball — site config lives in `src/config.ts`, deployment platform set there.
 - Content collections live in `src/content/` and are typed via `src/content.config.ts` — schema changes require `astro check`.
+- Obsidian vault lives at `src/content/.obsidian/` — workspace files are gitignored; install the Vault CMS plugin to author posts in Obsidian.
+- `public/posts/`, `public/pages/`, `public/docs/`, `public/projects/`, `public/special/`, `public/graph/` are regenerated at build time and gitignored.
 - Docker-based Claude Code environment is in `claude-docker/` and `claude-docker-home/` — not part of the site build.
 
 ## Stack-Specific Rules
