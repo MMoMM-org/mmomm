@@ -1,7 +1,29 @@
 ---
 import { siteConfig } from '../config';
+import type { Post } from '@/types';
+import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, findTranslation } from '@/utils/i18n';
 import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
+
+export interface Props {
+  lang?: Locale;
+  post?: Post;
+}
+
+const { lang = DEFAULT_LOCALE, post } = Astro.props;
+
+// Resolve the inactive-locale link target: counterpart post URL when available,
+// otherwise the inactive locale's homepage.
+const otherLocale: Locale = lang === 'de' ? 'en' : 'de';
+let switcherHref = `${localePrefix(otherLocale)}/`;
+if (post?.data.translationKey) {
+  const counterpart = await findTranslation(post);
+  if (counterpart) {
+    switcherHref = `${postUrl(counterpart)}/`;
+  }
+}
+const switcherLabel = otherLocale.toUpperCase();
+const activeLabel = lang.toUpperCase();
 
 const showProfilePicture = siteConfig.profilePicture.enabled && siteConfig.profilePicture.placement === 'header';
 const profilePicture = siteConfig.profilePicture;
@@ -145,6 +167,17 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
 
       <!-- Action buttons -->
       <div class="flex items-center space-x-4">
+        <!-- Language switcher (desktop) -->
+        <div class="flex items-center space-x-1 text-sm" role="group" aria-label="Language">
+          <span aria-current="true" class="font-semibold text-primary-700 dark:text-primary-200">{activeLabel}</span>
+          <span class="text-primary-300 dark:text-primary-600" aria-hidden="true">/</span>
+          <a
+            href={switcherHref}
+            class="text-primary-500 dark:text-primary-400 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors"
+            hreflang={otherLocale}
+            aria-label={`Switch language to ${switcherLabel}`}
+          >{switcherLabel}</a>
+        </div>
         <!-- Feature Button -->
         {siteConfig.featureButton === "mode" && <ThemeToggle />}
         {siteConfig.featureButton === "graph" && siteConfig.postOptions.graphView.enabled && (
@@ -282,6 +315,17 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
               );
             }
           })}
+          <!-- Language switcher (mobile) -->
+          <div class="flex items-center space-x-2 px-3 py-2 mt-2 border-t border-primary-200 dark:border-primary-700 pt-3" role="group" aria-label="Language">
+            <span aria-current="true" class="font-semibold text-primary-700 dark:text-primary-200">{activeLabel}</span>
+            <span class="text-primary-300 dark:text-primary-600" aria-hidden="true">/</span>
+            <a
+              href={switcherHref}
+              class="text-primary-500 dark:text-primary-400 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors"
+              hreflang={otherLocale}
+              aria-label={`Switch language to ${switcherLabel}`}
+            >{switcherLabel}</a>
+          </div>
         </nav>
       </div>
     )}
