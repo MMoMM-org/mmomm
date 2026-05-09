@@ -6,6 +6,7 @@ import { generateProjectSEO } from '@/utils/seo';
 import { optimizePostImagePath, optimizeContentImagePath } from '@/utils/images';
 import { processWikilinksInHTML } from '@/utils/internallinks';
 import { getCollection } from 'astro:content';
+import { postUrl } from '@/utils/i18n';
 import { shouldShowPost, processPost, generateTOC, getAdjacentPosts, formatDate, formatDateMobile, isValidDate } from '@/utils/markdown';
 import { hasProjectCategories } from '@/utils/categories';
 import { normalizeStatus, getStatusDisplayText, hasStatusStyling, getStatusClasses } from '@/utils/status';
@@ -83,6 +84,13 @@ const structuredData = {
 // Get all posts for wikilink resolution
 const allPosts = await getCollection('posts');
 const visiblePosts = allPosts.filter(p => shouldShowPost(p as any, isDev));
+
+// Serialized projection for the runtime wikilink resolver — locale-aware URL precomputed server-side.
+const wikilinkPosts = visiblePosts.map(p => ({
+  id: p.id,
+  url: postUrl(p),
+  data: { title: p.data.title },
+}));
 
 // Get all projects to check if any have categories
 const allProjectsForCategories = await getCollection('projects');
@@ -355,7 +363,7 @@ const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProject
   </div>
 
   <Fragment slot="scripts">
-    <script define:vars={{ posts: visiblePosts, commentsEnabled: siteConfig.postOptions.comments.enabled, postTitle: project.data.title, postSlug: project.id }}>
+    <script define:vars={{ posts: wikilinkPosts, commentsEnabled: siteConfig.postOptions.comments.enabled, postTitle: project.data.title, postSlug: project.id }}>
       // Remove duplicate H1 from project content (since we render it in header)
       document.addEventListener('DOMContentLoaded', function() {
         const projectContent = document.getElementById('project-content');
@@ -462,7 +470,7 @@ const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProject
 
           if (post) {
             // Update href
-            link.href = `/posts/${post.id}`;
+            link.href = post.url;
 
             // Simple logic:
             // - If displayOverride exists and is not null, it's a wikilink with custom text [[link|display]] - use it
