@@ -227,14 +227,17 @@ export function optimizePostImagePath(
   if (postId && postSlug) {
     // Remove leading "./" if present
     let imageName = cleanPath.startsWith("./") ? cleanPath.slice(2) : cleanPath;
-    
+
     // Strip 'images/' or 'attachments/' prefixes if present (sync script removes them)
     if (imageName.startsWith("images/") || imageName.startsWith("attachments/")) {
       imageName = imageName.replace(/^(images|attachments)\//, "");
     }
-    
-    // For folder-based posts, images are in /posts/{postId}/
-    const folderPath = `/posts/${postSlug}/${imageName}`;
+
+    // i18n (ADR-002): Strip locale folder prefix from the slug and prepend
+    // the locale URL prefix. DE → /posts/<slug>/<image>, EN → /en/posts/<slug>/<image>.
+    const langPrefix = postId.startsWith("en/") ? "/en" : "";
+    const bareSlug = postSlug.replace(/^(de|en)\//, "");
+    const folderPath = `${langPrefix}/posts/${bareSlug}/${imageName}`;
     // Convert to WebP if applicable (sync-images.js creates WebP versions)
     return getOptimizedFormat(folderPath);
   }

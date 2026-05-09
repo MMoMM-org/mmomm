@@ -132,9 +132,10 @@ const shouldShowCoverImage = (() => {
             }
             
             // 4. Folder-based post - sync script copies images to post folder root
-            // Safety check: ensure post.id exists before using it
+            // Locale-aware path: uses postUrl(post) so DE → /posts/<slug>/ and
+            // EN → /en/posts/<slug>/, matching the dist layout.
             if (post.id) {
-              return `/posts/${post.id}/`;
+              return `${postUrl(post)}/`;
             } else {
               // Fallback to attachments directory if post.id is undefined
               return '/posts/attachments/';

@@ -5,6 +5,7 @@ import { generatePostSEO } from '@/utils/seo';
 import { optimizePostImagePath, getOptimizedFormat } from '@/utils/images';
 import { processWikilinksInHTML } from '@/utils/internallinks';
 import { getCollection } from 'astro:content';
+import { postUrl } from '@/utils/i18n';
 import { shouldShowPost, processPost, calculateReadingTime, generateTOC, getAdjacentPosts, formatDate, formatDateMobile, getReadingTimeMobile } from '@/utils/markdown';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
@@ -172,7 +173,7 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
               }
               // Safety check: ensure post.id exists before using it
               if (post.id) {
-                imageBasePath = `/posts/${post.id}/`;
+                imageBasePath = `${postUrl(post)}/`;
               } else {
                 // Fallback to attachments directory if post.id is undefined
                 imageBasePath = '/posts/attachments/';
@@ -272,7 +273,7 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
               {prevPost && (
                 <div class="text-left">
                   <a
-                    href={`/posts/${prevPost.id}`}
+                    href={postUrl(prevPost)}
                     class="group block p-4 rounded-lg border border-primary-200 dark:border-primary-700 hover:border-highlight-300 dark:hover:border-highlight-600 transition-all duration-200 hover:shadow-md"
                   >
                     <h3 class="font-semibold text-primary-900 dark:text-primary-50 group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors">
@@ -288,7 +289,7 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
               {nextPost && (
                 <div class={`text-right ${!prevPost ? 'md:col-start-2' : ''}`}>
                   <a
-                    href={`/posts/${nextPost.id}`}
+                    href={postUrl(nextPost)}
                     class="group block p-4 rounded-lg border border-primary-200 dark:border-primary-700 hover:border-highlight-300 dark:hover:border-highlight-600 transition-all duration-200 hover:shadow-md"
                   >
                     <h3 class="font-semibold text-primary-900 dark:text-primary-50 group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors">

@@ -3,6 +3,7 @@ import type { Post } from '@/types';
 import { processImagesForLightbox, getOptimizedFormat } from '@/utils/images';
 import { siteConfig } from '@/config';
 import { formatDate, formatDateMobile, getReadingTimeMobile } from '@/utils/markdown';
+import { postUrl } from '@/utils/i18n';
 import ImageGallery from './ImageGallery.astro';
 import TableOfContents from './TableOfContents.astro';
 import Button from './Button.astro';
@@ -157,9 +158,10 @@ const processedImage = (() => {
                 }
 
                 // 4. Folder-based post - sync script copies images to post folder root
-                // Safety check: ensure post.id exists before using it
+                // Locale-aware: postUrl(post) gives /posts/<slug>/ (DE) or
+                // /en/posts/<slug>/ (EN), matching the dist layout.
                 if (post.id) {
-                  return `/posts/${post.id}/`;
+                  return `${postUrl(post)}/`;
                 }
 
                 // Fallback to attachments directory if post.id is undefined

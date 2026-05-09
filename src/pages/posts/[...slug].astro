@@ -12,9 +12,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const isDev = import.meta.env.DEV;
   const visiblePosts = posts.filter(post => shouldShowPost(post, isDev));
 
-  // Generate paths
+  // Generate paths — strip the de/ folder prefix so URLs are /posts/<slug>/,
+  // not /posts/de/<slug>/. (Symmetric folder layout, see ADR-002.)
   return visiblePosts.map(post => ({
-    params: { slug: post.id },
+    params: { slug: postSlug(post) },
     props: { post }
   }));
 };

@@ -10,9 +10,9 @@ export function localePrefix(locale: Locale): string {
   return locale === DEFAULT_LOCALE ? '' : `/${locale}`;
 }
 
-/** Strip the EN folder prefix from a post id to get the bare slug. */
+/** Strip the locale folder prefix from a post id to get the bare slug. */
 export function postSlug(post: CollectionEntry<'posts'>): string {
-  return post.id.replace(/^en\//, '');
+  return post.id.replace(/^(de|en)\//, '');
 }
 
 /** Build the canonical URL path for a post (locale-aware). */
