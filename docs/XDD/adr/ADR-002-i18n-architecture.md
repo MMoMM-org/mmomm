@@ -1,6 +1,6 @@
 # ADR-002: Bilingual (DE+EN) i18n Architecture
 
-Status: Accepted
+Status: Accepted (Decision #3 revised 2026-05-09 — see Revisions)
 Date: 2026-05-09
 
 ## Context
@@ -40,14 +40,20 @@ redirects in `astro.config.mjs` under the `redirects:` key:
 No DE-only intermediate launch. EN must be at feature and content parity before cutover
 from the Hugo site at www.mmomm.org.
 
-### 3. Content folder layout — asymmetric by locale
+### 3. Content folder layout — symmetric by locale (revised 2026-05-09)
 
-- DE posts: `src/content/posts/<slug>/` (no move from current location)
+- DE posts: `src/content/posts/de/<slug>/`
 - EN posts: `src/content/posts/en/<slug>/`
 
-Locale is derived from path: any entry whose collection-relative path begins with `en/` is
-treated as EN; everything else is DE. The `lang` field in the schema provides an explicit
-override but defaults to the path-derived value.
+Each locale lives under its own folder. Locale is declared explicitly in frontmatter via
+the required `lang` field; the path is informational, not authoritative. URL strategy is
+unchanged — DE still emits at `/posts/<slug>/` (no `/de/` URL prefix), EN at
+`/en/posts/<slug>/`. Routes filter by `data.lang`, not by path.
+
+**Originally accepted as asymmetric** (DE at `posts/<slug>/`, EN at `posts/en/<slug>/`) to
+avoid moving the 14 already-migrated DE posts. Reversed to symmetric on 2026-05-09 — the
+visual symmetry, future-locale extensibility, and Obsidian vault tidiness outweigh the
+one-shot cost of `git mv`. See Revisions.
 
 ### 4. Routing — Astro core i18n with `prefixDefaultLocale: false`
 
@@ -126,8 +132,9 @@ fork (`MMoMM-org/astro-modular-mmomm`):
 
 **Positive:**
 
-- Asymmetric folder layout avoids a mass `git mv` of the 14 already-migrated DE posts,
-  keeping the migration commit's git blame clean.
+- ~~Asymmetric folder layout avoids a mass `git mv` of the 14 already-migrated DE posts,
+  keeping the migration commit's git blame clean.~~ (Obsoleted by 2026-05-09 revision —
+  symmetric layout chosen; `git mv` performed with `R` rename detection so blame survives.)
 - `prefixDefaultLocale: false` matches Hugo's URL convention (DE at root), minimising URL
   surface change for the DE side and reducing redirect scope.
 - Single content collection (not two separate ones) means no schema duplication and theme
@@ -138,9 +145,10 @@ fork (`MMoMM-org/astro-modular-mmomm`):
 
 **Negative / costs:**
 
-- Asymmetric folders introduce path-based locale derivation rather than an explicit
-  declared locale. Every collection consumer must filter by locale. Slight indirection for
-  new contributors.
+- ~~Asymmetric folders introduce path-based locale derivation rather than an explicit
+  declared locale.~~ (Obsoleted — symmetric layout uses an explicit required `lang`
+  frontmatter field; path is informational only.) Every collection consumer must still
+  filter by locale; a forgotten filter returns mixed-locale results silently.
 - Single collection requires every query to include a locale filter. A forgotten filter
   returns mixed-locale results silently.
 - Adopting `/posts/` over `/blog/` creates SEO redirect dependence; search engines take
@@ -160,9 +168,8 @@ simpler and consistent with how the migration script already structures output.
 
 **Move DE posts into `src/content/posts/de/<slug>/` for visual symmetry**
 
-Rejected. The 14 DE posts were already migrated and reviewed. A mass `git mv` would
-rewrite git history context for those entries, making the migration commit harder to audit.
-The asymmetry is documented and consistent (path prefix = EN; no prefix = DE).
+Initially rejected on cost-of-`git mv` grounds — see Revisions; this was reversed on
+2026-05-09 and is now the chosen layout.
 
 **`prefixDefaultLocale: true` (DE under `/de/`, EN under `/en/`)**
 
@@ -186,6 +193,54 @@ the old Hugo EN URLs) at the new domain outweighed the benefit of an earlier DE 
 Not viable without a path convention to fall back on. The migration script must place files
 somewhere; deriving locale from path eliminates a mandatory frontmatter field that could be
 omitted or wrong.
+
+## Revisions
+
+### 2026-05-09 — Decision #3 reversed: symmetric folder layout
+
+The folder layout was switched from asymmetric (DE at `posts/<slug>/`, EN at
+`posts/en/<slug>/`) to symmetric (DE at `posts/de/<slug>/`, EN at `posts/en/<slug>/`).
+
+**Why the original choice was made**: at the time of writing this ADR, 14 DE posts had
+already been migrated to `src/content/posts/<slug>/`. Moving them would have required a
+mass `git mv` operation. The asymmetric layout was chosen to avoid that one-shot cost.
+
+**Why it was reversed**: when implementing Phase 2 and looking at the file tree in
+practice, the asymmetry was actively confusing — the `en/` subfolder reads like a special
+category of DE posts rather than its own locale. Three concrete problems surfaced:
+
+1. **Obsidian vault organization**: the vault that drives content authoring is the DE
+   posts folder. Having an `en/` subfolder inside it makes the EN content look like it
+   belongs to a DE category.
+2. **Future locale extensibility**: adding French or Italian later would have to either
+   continue the asymmetry (FR at `posts/fr/`, looking like another EN-style subcategory)
+   or migrate everyone to symmetric anyway, just with more posts to move.
+3. **Idiomatic Astro i18n**: every Astro i18n tutorial and example uses parallel locale
+   folders. Asymmetric is non-standard and would surprise future contributors.
+
+**What changed in the implementation**:
+
+- 14 DE post folders moved: `src/content/posts/<slug>/` → `src/content/posts/de/<slug>/`
+  via `git mv` (history preserved on rename detection).
+- `src/utils/i18n.ts` `postSlug()` regex updated from `/^en\//` to `/^(de|en)\//` so it
+  strips either locale prefix.
+- `src/pages/posts/[...slug].astro` `getStaticPaths` switched from `params: { slug:
+  post.id }` to `params: { slug: postSlug(post) }` so emitted DE URLs stay
+  `/posts/<slug>/` and don't include the `/de/` folder prefix.
+- `src/utils/images.ts` `optimizePostImagePath` now detects the locale from the post id
+  prefix and emits the correct dist URL (`/posts/<slug>/<image>` for DE,
+  `/en/posts/<slug>/<image>` for EN). Without this, 38 cover-image preload links pointed
+  at non-existent `/posts/de/<slug>/<image>` paths.
+- `src/components/PostCard.astro`, `src/components/PostContent.astro`,
+  `src/layouts/PostLayout.astro` — image base path constructions and prev/next post
+  hrefs switched from `/posts/${post.id}` to `postUrl(post)` (locale-aware).
+
+**URL strategy unchanged**: DE still at `/posts/<slug>/`, EN at `/en/posts/<slug>/`. The
+folder structure no longer mirrors the URL structure, but that's fine — routes filter on
+the `lang` field, not on path.
+
+Implementation landed in commit `<see git log on feat/astro-modular>` (and a follow-up
+fork push on `MMoMM-org/astro-modular-mmomm`).
 
 ## Related
 
