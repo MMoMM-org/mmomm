@@ -322,7 +322,7 @@ export const siteConfig: SiteConfig = {
         children: [
           { title: "Privacy Policy", url: "/privacy-policy/" }
         ] },
-      { title: "GitHub", url: "https://github.com/MMoMM-org" }
+      { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github" }
     ],
     // [CONFIG:NAVIGATION_SOCIAL]
     social: [
