@@ -408,27 +408,17 @@ const shouldShowGraph = true;
 
     const currentPath = window.location.pathname;
     let currentSlug = '';
-    
-    // Try multiple patterns to match the current post
-    const patterns = [
-      /\/posts\/([^\/]+)/,           // /posts/slug
-      /\/posts\/([^\/]+)\/$/,        // /posts/slug/
-      /\/posts\/([^\/]+)\/index/,   // /posts/slug/index
-    ];
-    
-    for (const pattern of patterns) {
-      const match = currentPath.match(pattern);
-      if (match) {
-        currentSlug = match[1];
-        break;
-      }
-    }
-    
-    // If no match, try to extract from the last segment
-    if (!currentSlug) {
-      const segments = currentPath.split('/').filter(Boolean);
-      if (segments.length >= 2 && segments[0] === 'posts') {
-        currentSlug = segments[1];
+
+    // Build a locale-prefixed slug matching graph node.id format
+    // ('de/<slug>' or 'en/<slug>'). EN check first because /en/posts/...
+    // also contains /posts/ as a substring.
+    const enMatch = currentPath.match(/^\/en\/posts\/([^\/]+)/);
+    if (enMatch) {
+      currentSlug = `en/${enMatch[1]}`;
+    } else {
+      const deMatch = currentPath.match(/^\/posts\/([^\/]+)/);
+      if (deMatch) {
+        currentSlug = `de/${deMatch[1]}`;
       }
     }
     
