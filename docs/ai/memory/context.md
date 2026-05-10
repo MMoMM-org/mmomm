@@ -53,6 +53,22 @@ All 11 tasks completed. Synced to fork via two bundled commits.
 
 Fork-sync bundles: `d397c8e` (T1–T11 + T6) and `b1df8fb` (T3 + T9) on `MMoMM-org/astro-modular-mmomm` master.
 
+## Header & language-switcher track (queued — discovered 2026-05-10 during local preview)
+
+A live browser walk of the site surfaced six issues, all in or adjacent to `Header.astro`. Bundled into three tracks per ADR-003:
+
+**Track A — Language-switcher bugs** (must-fix; ~1h)
+- (b) DE→EN works, EN→DE silently fails — switcher's active-locale detection broken
+- (c) Site title (Home link) always points to `/` (DE root) — must be locale-aware (`/` for DE, `/en/` for EN)
+- (f) Switcher always jumps to locale homepage — must compute translated equivalent of current path (`/posts/` ↔ `/en/posts/`)
+
+**Track B — Visual polish** (small, ~15min)
+- (a) CSS gap missing between site title and first nav item
+- (e) Replace `GitHub` nav text item with `<Icon name="github">` OctoCat (FA brand icon already wired)
+
+**Track C — Per-locale nav** (deferred to a later session, see ADR-003)
+- (d) Nav labels are EN-only and some items point to astro-modular demos. Architectural decision: keep `navigation.pages` as a flat `NavigationItem[]` (plugin-compatible — Astro Modular Settings Obsidian plugin requires array shape), translate labels via the T9 i18n strings table, prefix URLs locale-aware at render. Best sequenced with Hugo non-blog migration so demo items get replaced with real ones at the same time.
+
 ## What's pending after Phase 2b
 
 Phase 2b proper is fully shipped (T1–T11 + T3c). The next-track candidates from earlier in this branch (still unaddressed):

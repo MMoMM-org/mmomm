@@ -20,3 +20,4 @@
 <!-- - [Architecture Overview](../architecture/overview.md) -->
 - [ADR-001: Fork astro-modular for i18n](../XDD/adr/ADR-001-fork-astro-modular-for-i18n.md) — why MMoMM-org/astro-modular-mmomm exists and what deferred work remains
 - [ADR-002: Bilingual i18n architecture](../XDD/adr/ADR-002-i18n-architecture.md) — URL strategy, folder layout, Astro i18n config, schema extension, phasing (Phase 1–3)
+- [ADR-003: Per-locale navigation translation](../XDD/adr/ADR-003-per-locale-navigation-translation.md) — keep `navigation.pages` flat for plugin compat; translate labels via T9 strings table; locales share nav structure
