@@ -8,7 +8,7 @@ The site is being migrated from Hugo (`MMoMM-org/mmomm`, still live at www.mmomm
 Astro using the **astro-modular** theme. The branch has not been merged to `main` and not
 deployed anywhere. Hugo site remains the production source of truth.
 
-**Pre-flight check for next session**: `git rev-parse HEAD` should be `66b070f` or
+**Pre-flight check for next session**: `git rev-parse HEAD` should be `a59dc7f` or
 later. `pnpm build` should produce 77 pages cleanly. Site remote at MMoMM-org/mmomm
 (`feat/astro-modular` branch) and theme fork at MMoMM-org/astro-modular-mmomm
 (master `4064b30`) both up to date.
@@ -60,7 +60,7 @@ Phase 2b proper is fully shipped (T1–T11 + T3c). The next-track candidates fro
 1. **Per-locale `siteConfig` translation** — both feeds, sitemaps, and homepages carry the same `siteConfig.title`/`description`/`homepageTitle` (single-string today). Extension options: `{de: ..., en: ...}` schema, or a lookup table that mirrors `src/i18n/strings.ts`.
 2. **Other UI string migrations** (foundation exists via T9): `Pagination.astro` Previous/Next, `PostContent.astro` Published, reading-time fallbacks, `LinkedMentions.astro:377` "Referenced in this post", `Header.astro` `Switch language to ...` (interpolation case — needs a `t`-helper extension). Each needs a `lang` prop wired through callers.
 3. **Localized `projects`/`docs`/`special` collections** — schemas have no `lang` field; both homepages share the same set.
-4. **`src/config.ts` personalization** — site still ships astro-modular's defaults (David V. Kimball as author, "Astro Modular" as title, fake socials, sample profile image). Real values: title "Mingle Mangle of My Mind", author "Marcus Breiden", domain `https://www.mmomm.org`, real socials.
+4. **`src/config.ts` personalization** — ✅ SHIPPED 2026-05-10 (commit `a59dc7f`). Real values now in place: site `https://www.mmomm.org`, title `MingleMangleOfMyMind`, author `Marcus Breiden`, language `de`, description `"PKM, Obsidian, MiYo, AI und anderes Gedöns"` (DE — EN-side deferred to track #1 per-locale siteConfig). Socials: GitHub (MMoMM-org), LinkedIn, YouTube, Xing. Footer attribution to astro-modular theme retained. Nav still has demo `Projects`/`Docs` items pointing to astro-modular sample collections — falls under track #6 sample-content cleanup.
 5. **Hugo non-blog migration + image-name quality pass** (combined track — discussed 2026-05-10):
    - **Hugo non-blog dirs awaiting migration** (at `../mmomm/content/`): `ueber-mich/`, `jetzt/`, `impressum/`, `datenschutz/`, `videos/`, `categories/`. The migration tool defaults `--source` to `../mmomm/content/blog` (line 30 of `tools/migrate-from-hugo.mjs`); each section needs a separate run, plus optional schema decisions (do these become `pages/` or a new collection? `categories/` is index-derived — different shape).
    - **Wix image extraction is ALREADY working** — confirmed: built site has zero `/img/wix/<hash>` references; migration tool detects `/img/wix/<file>` markdown patterns (regex `IMG_REF` ~line 148) and copies sources from `../mmomm/static/img/wix/` (85 hash-named files: `11062b_<hash>~mv2.jpg`, `a64b4a_<hash>~mv2.png`) into per-post `attachments/` folders, rewriting the markdown reference. Cover image goes to `cover.<ext>`. Image renaming uses `slugify(caption)` from the first non-blank paragraph after the image (line 158-164 — captions in Hugo are typically the line right after `![alt](src)`).
@@ -98,11 +98,6 @@ Phase 2b proper is fully shipped (T1–T11 + T3c). The next-track candidates fro
 
 ## Other pending tracks
 
-- **`src/config.ts` personalization**: still ships astro-modular's defaults — David V.
-  Kimball as author, "Astro Modular" as title, fake social links, sample profile image.
-  Real values: title "Mingle Mangle of My Mind" (or similar), author "Marcus Breiden",
-  domain `https://www.mmomm.org`, real socials. The Vault CMS Obsidian plugin can drive
-  most of this; `src/config.ts` is the source of truth.
 - **Hugo non-blog sections**: `ueber-mich/about`, `jetzt/now`, `impressum`,
   `datenschutz/privacy-policy`, `videos`, `categories` — not yet migrated. Migration tool
   (`tools/migrate-from-hugo.mjs`) currently handles only `/blog/`. Either extend it for
