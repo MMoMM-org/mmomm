@@ -8,10 +8,10 @@ The site is being migrated from Hugo (`MMoMM-org/mmomm`, still live at www.mmomm
 Astro using the **astro-modular** theme. The branch has not been merged to `main` and not
 deployed anywhere. Hugo site remains the production source of truth.
 
-**Pre-flight check for next session**: `git rev-parse HEAD` should be `d5c1e68` or
+**Pre-flight check for next session**: `git rev-parse HEAD` should be `66b070f` or
 later. `pnpm build` should produce 77 pages cleanly. Site remote at MMoMM-org/mmomm
 (`feat/astro-modular` branch) and theme fork at MMoMM-org/astro-modular-mmomm
-(master `b1df8fb`) both up to date.
+(master `4064b30`) both up to date.
 
 ## What's done
 
@@ -25,7 +25,7 @@ later. `pnpm build` should produce 77 pages cleanly. Site remote at MMoMM-org/mm
   Astro core i18n config in `astro.config.mjs`. Parallel route trees under
   `src/pages/posts/` and `src/pages/en/posts/`. Cover image preloads + prev/next post
   hrefs are locale-aware.
-- **Fork created and wired**: `MMoMM-org/astro-modular-mmomm` (master at `b1df8fb` after Phase 2b complete sync; lineage: `28aa366` → `d397c8e` (T1-T11+T6 bundle) → `b1df8fb` (T3+T9 bundle))
+- **Fork created and wired**: `MMoMM-org/astro-modular-mmomm` (master at `4064b30`; lineage: `28aa366` → `d397c8e` (T1-T11+T6 bundle) → `b1df8fb` (T3+T9 bundle) → `4064b30` (T3c LocalGraph runtime filter))
   hosts theme-level patches. `pnpm run update` pulls from the fork via branch tarball
   (not GitHub Releases — forks don't auto-mirror those). `.astro-modular-source` records
   the last-pulled SHA. ADR-001 captures the fork decision; ADR-002 captures the i18n
@@ -49,15 +49,23 @@ All 11 tasks completed. Synced to fork via two bundled commits.
 | `fa47ada` | T6 | DE↔EN switcher in Header (desktop right-cluster + mobile menu); text-only, `aria-current` on active locale |
 | `b829cb8` | T3 (a+b) | Graph generator recurses into `de/`/`en/`, parses `lang` from frontmatter, emits matching IDs and locale-aware URLs; consumers read `node.url` |
 | `d5c1e68` | T9 | `src/i18n/strings.ts` typed table foundation with `Record<Locale, StringMap>` parity enforcement; demo migration of `LinkedMentions.astro` title |
+| `66b070f` | T3c | LocalGraph runtime filter `currentSlug` is locale-aware (anchored regexes derive `de/<slug>` or `en/<slug>` matching graph node IDs) |
 
 Fork-sync bundles: `d397c8e` (T1–T11 + T6) and `b1df8fb` (T3 + T9) on `MMoMM-org/astro-modular-mmomm` master.
 
 ## What's pending after Phase 2b
 
-1. **T3c — LocalGraph runtime filter** — discovered during T3 verification: `LocalGraph.filterLocalGraphData` derives `currentSlug` from URL regex and matches against `node.id`. After T3a, `node.id` is `<lang>/<bare-slug>` but URL-derived slug is bare; runtime filter finds no node for migrated posts. Build-time check in `PostLayout.astro:96` is correct; only runtime needs locale awareness. Probably pass `post.id` from PostLayout as a prop. Migrated DE/EN posts also currently contain only template-placeholder wikilinks (`[[Titel der Notiz]]`, `[[{{YYYY-MM-DD}}]]`) — content cleanup is a separate concern.
-2. **Per-locale `siteConfig` translation** — both feeds, sitemaps, and homepages carry the same `siteConfig.title`/`description`/`homepageTitle` (single-string today). Extension options: `{de: ..., en: ...}` schema, or a lookup table that mirrors `src/i18n/strings.ts`. Out of scope for Phase 2b; pick up in a config-translation initiative.
-3. **Other UI string consumers** — T9 only migrated `LinkedMentions.astro` as demonstration. Remaining hardcoded user-facing strings (flagged by the T9 agent): `Pagination.astro` Previous/Next, `PostContent.astro` Published, reading-time fallbacks (`PostCard.astro`, `PostLayout.astro`), `LinkedMentions.astro:377` "Referenced in this post", `Header.astro` `Switch language to ...` (interpolation case — needs a t-helper extension). Each needs a `lang` prop wired through callers.
-4. **Localized `projects`/`docs`/`special` collections** — schemas have no `lang` field; both homepages share the same set. Out of scope for Phase 2b.
+Phase 2b proper is fully shipped (T1–T11 + T3c). The next-track candidates from earlier in this branch (still unaddressed):
+
+1. **Per-locale `siteConfig` translation** — both feeds, sitemaps, and homepages carry the same `siteConfig.title`/`description`/`homepageTitle` (single-string today). Extension options: `{de: ..., en: ...}` schema, or a lookup table that mirrors `src/i18n/strings.ts`.
+2. **Other UI string migrations** (foundation exists via T9): `Pagination.astro` Previous/Next, `PostContent.astro` Published, reading-time fallbacks, `LinkedMentions.astro:377` "Referenced in this post", `Header.astro` `Switch language to ...` (interpolation case — needs a `t`-helper extension). Each needs a `lang` prop wired through callers.
+3. **Localized `projects`/`docs`/`special` collections** — schemas have no `lang` field; both homepages share the same set.
+4. **`src/config.ts` personalization** — site still ships astro-modular's defaults (David V. Kimball as author, "Astro Modular" as title, fake socials, sample profile image). Real values: title "Mingle Mangle of My Mind", author "Marcus Breiden", domain `https://www.mmomm.org`, real socials.
+5. **Hugo non-blog migration**: `ueber-mich/about`, `jetzt/now`, `impressum`, `datenschutz/privacy-policy`, `videos`, `categories` — not yet migrated. `tools/migrate-from-hugo.mjs` currently handles only `/blog/`.
+6. **astro-modular sample content cleanup** — 5 demo posts and 4 demo pages (all `lang: en`) still in the build. Decide: delete vs translate vs leave-as-archive.
+7. **Migrated post content** — DE/EN posts contain template-placeholder wikilinks (`[[Titel der Notiz]]`) from the migration tool. Real cross-post wikilinks need to be added (or the placeholders removed) before LocalGraph renders anything visible on those posts.
+8. **GH Pages deploy + repo cutover** — `src/config.ts` `deployment.platform`, `.github/workflows/deploy.yml`, `public/CNAME` with `www.mmomm.org`. Open question: replace `MMoMM-org/mmomm` `main` (force-overwrite Hugo) or push to a new repo.
+9. **Upstream sync workflow** — when `davidvkimball/astro-modular` releases new versions, how to merge them into the fork. Standard pattern documented in ADR-001 Phase 3 as TBD.
 
 ## Phase 2b discoveries worth remembering
 
@@ -114,7 +122,7 @@ Fork-sync bundles: `d397c8e` (T1–T11 + T6) and `b1df8fb` (T3 + T9) on `MMoMM-o
 ## Key references
 
 - **Branch**: `feat/astro-modular`. Branch off `main`, no direct main commits (hook-blocked).
-- **Fork**: <https://github.com/MMoMM-org/astro-modular-mmomm> (master at SHA `b1df8fb`
+- **Fork**: <https://github.com/MMoMM-org/astro-modular-mmomm> (master at SHA `4064b30`
   as of 2026-05-09). Clone, patch, push pattern documented in `tools.md`.
 - **Local update flow**: `pnpm run update`. Reads SHA from
   `https://api.github.com/repos/MMoMM-org/astro-modular-mmomm/branches/master`, compares
