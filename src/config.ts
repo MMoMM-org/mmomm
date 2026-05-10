@@ -183,21 +183,21 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   // Site Information
   // [CONFIG:SITE_URL]
-  site: "https://astro-modular.netlify.app",
+  site: "https://www.mmomm.org",
   // [CONFIG:SITE_TITLE]
-  title: "Astro Modular",
+  title: "MingleMangleOfMyMind",
   // [CONFIG:HOMEPAGE_TITLE]
   homepageTitle: "",
   // [CONFIG:SITE_DESCRIPTION]
-  description: "A flexible blog theme designed for Obsidian users.",
+  description: "PKM, Obsidian, MiYo, AI und anderes Gedöns",
   // [CONFIG:SITE_AUTHOR]
-  author: "David V. Kimball",
+  author: "Marcus Breiden",
   // [CONFIG:SITE_LANGUAGE]
-  language: "en",
+  language: "de",
   // [CONFIG:FAVICON_THEME_ADAPTIVE]
   faviconThemeAdaptive: true, // If true, favicon switches between favicon-dark.png and favicon-light.png based on browser's system theme preference. If false, always uses favicon.png
   // [CONFIG:DEFAULT_OG_IMAGE_ALT]
-  defaultOgImageAlt: "Astro Modular logo.", // Alt text for the default Open Graph image, public/open-graph.png
+  defaultOgImageAlt: "MingleMangleOfMyMind logo.", // Alt text for the default Open Graph image, public/open-graph.png
 
   // Global Settings
   // [CONFIG:THEME]
@@ -322,19 +322,29 @@ export const siteConfig: SiteConfig = {
         children: [
           { title: "Privacy Policy", url: "/privacy-policy/" }
         ] },
-      { title: "GitHub", url: "https://github.com/davidvkimball/astro-modular" }
+      { title: "GitHub", url: "https://github.com/MMoMM-org" }
     ],
     // [CONFIG:NAVIGATION_SOCIAL]
     social: [
       {
-        title: "X",
-        url: "https://x.com/davidvkimball",
-        icon: "x-twitter",
+        title: "GitHub",
+        url: "https://github.com/MMoMM-org",
+        icon: "github",
       },
       {
-        title: "GitHub",
-        url: "https://github.com/davidvkimball",
-        icon: "github",
+        title: "LinkedIn",
+        url: "https://www.linkedin.com/in/marcusbreiden/",
+        icon: "linkedin",
+      },
+      {
+        title: "YouTube",
+        url: "https://www.youtube.com/@mmomm-org",
+        icon: "youtube",
+      },
+      {
+        title: "Xing",
+        url: "https://www.xing.com/profile/Marcus_Breiden",
+        icon: "xing",
       },
     ],
   },
