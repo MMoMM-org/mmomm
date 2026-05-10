@@ -12,21 +12,23 @@ export interface Props {
 
 const { lang = DEFAULT_LOCALE, post } = Astro.props;
 
-// Resolve the inactive-locale link target. Priority:
-// 1. Post detail with a found counterpart → counterpart post URL
-// 2. Post detail without a counterpart → other locale's posts listing (a sensible nearby page)
-// 3. Any other page → path-based equivalent in the other locale
-//    (e.g. /posts/ ↔ /en/posts/, /posts/tag/foo/ ↔ /en/posts/tag/foo/)
-function pathForOtherLocale(currentPath: string, currentLocale: Locale, otherLocale: Locale): string {
-  let bare = currentPath;
-  if (currentLocale === 'en') {
-    if (bare === '/en' || bare === '/en/') return `${localePrefix(otherLocale)}/`;
-    if (bare.startsWith('/en/')) bare = bare.slice(3);
-  }
+// The switcher's locale must be derived from the URL, not the `lang` prop.
+// Some routes (PageLayout, 404, etc.) don't propagate `lang` to BaseLayout,
+// so trusting the prop on those pages caused `pathForOtherLocale` to double-
+// prefix `/en` and produce `/en/en/`, `/en/en/en/`, ... on each click.
+function deriveLocaleFromPath(path: string): Locale {
+  if (path === '/en' || path === '/en/' || path.startsWith('/en/')) return 'en';
+  return 'de';
+}
+function pathForOtherLocale(currentPath: string, otherLocale: Locale): string {
+  // Strip ALL leading /en segments — greedy so that `/en/en/en/foo/` collapses
+  // to `/foo/` rather than just one level off.
+  const bare = currentPath.replace(/^(\/en)+(?=\/|$)/, '') || '/';
   return `${localePrefix(otherLocale)}${bare}`;
 }
 
-const otherLocale: Locale = lang === 'de' ? 'en' : 'de';
+const urlLocale: Locale = deriveLocaleFromPath(Astro.url.pathname);
+const otherLocale: Locale = urlLocale === 'de' ? 'en' : 'de';
 let switcherHref: string;
 if (post) {
   const counterpart = post.data.translationKey ? await findTranslation(post) : null;
@@ -34,11 +36,11 @@ if (post) {
     ? `${postUrl(counterpart)}/`
     : `${localePrefix(otherLocale)}/posts/`;
 } else {
-  switcherHref = pathForOtherLocale(Astro.url.pathname, lang, otherLocale);
+  switcherHref = pathForOtherLocale(Astro.url.pathname, otherLocale);
 }
 const switcherLabel = otherLocale.toUpperCase();
-const activeLabel = lang.toUpperCase();
-const homeHref = `${localePrefix(lang)}/`;
+const activeLabel = urlLocale.toUpperCase();
+const homeHref = `${localePrefix(urlLocale)}/`;
 
 const showProfilePicture = siteConfig.profilePicture.enabled && siteConfig.profilePicture.placement === 'header';
 const profilePicture = siteConfig.profilePicture;
