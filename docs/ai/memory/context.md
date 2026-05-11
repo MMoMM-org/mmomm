@@ -2,11 +2,11 @@
 <!-- Current sprint focus, active work, known blockers. Updated: 2026-05-11 -->
 <!-- This file is short-lived — prune entries older than 2 weeks via /memory-cleanup -->
 
-## Active branch: `feat/astro-modular` (50 commits ahead of `main`, pushed to origin MMoMM-org/mmomm)
+## Active branch: `feat/astro-modular` (53 commits ahead of `main`, pushed to origin MMoMM-org/mmomm)
 
 Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **astro-modular** theme. Branch not merged to main, not deployed anywhere. Hugo site remains production source of truth.
 
-**Pre-flight for next session**: `git rev-parse HEAD` should be `2e52723` or later. `pnpm build` produces 60 pages clean. Theme fork `MMoMM-org/astro-modular-mmomm` master at `4064b30`.
+**Pre-flight for next session**: `git rev-parse HEAD` should be `83fd031` or later. `pnpm build` produces 60 pages clean. Theme fork `MMoMM-org/astro-modular-mmomm` master at `4064b30`.
 
 ## What's shipped (full list)
 
@@ -29,6 +29,8 @@ Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **as
 
 **Track C — Per-locale nav labels + Hugo nav parity** (`2e52723`, 2026-05-11): ADR-003 implementation. Extended `NavigationItem` with `i18nKey?` (T9 label key) and `urlEn?` (EN URL override for slug-divergent pages). Added `tOpt(locale, key, fallback)` in `src/i18n/strings.ts` for safe lookup of keys coming from untyped data. `siteConfig.navigation.pages` rebuilt to match Hugo main nav 1:1 — Beiträge/Posts, Videos, Jetzt/Now, Über mich/About, GitHub. New `siteConfig.navigation.footer` array drives a new legal-links row in Footer.astro — Impressum, Datenschutz/Privacy Policy. Header + Footer both derive locale from URL (mirrors Track A workaround for PageLayout/404 not propagating lang). ADR-003 revisions section updated: Decision 3's naive `/en/` prefix is insufficient when slugs diverge, hence `urlEn`.
 
+**UI string migrations Phase 1** (`83fd031`, 2026-05-11): Pagination + LinkedMentions + PostLayout reading-time wired to T9. New `tPageOfTotal(locale, n, m)` and `tReadingTime(locale, minutes)` helpers in `src/i18n/strings.ts` centralize phrase interpolation; new `linkedMentions.referenced` key. `lang` prop threaded through all 8 Pagination call sites. Also fixed 4 pre-existing EN-route baseUrl bugs (`/posts/...` instead of `/en/posts/...` in `en/posts/index`, `en/posts/[page]`, both `en/posts/tag/...` routes) that silently routed EN paginated/tag-filtered users back to DE. `PostContent.astro` was on the migration list but is orphan code — skipped. Phase 2 below covers the surfaces this build pass exposed but did not address.
+
 ## Active plan — none
 
 Both major plans of the session (ADR-004 + i18n correctness) are shipped. No active queued plan. Pick from "next moves" below or surface a new track.
@@ -40,7 +42,7 @@ Both major plans of the session (ADR-004 + i18n correctness) are shipped. No act
 3. **Per-locale `siteConfig`** — title, description, homepageTitle, defaultOgImageAlt are single-string today. Feeds, sitemaps, homepages all read these. Options: `{de: …, en: …}` schema or a `siteConfigByLocale` table mirroring `src/i18n/strings.ts`. Touches `src/config.ts` shape (breaks Astro Modular Settings markers) — needs ADR.
 4. **Image-name quality pass** — 80/122 attachments (66%) are `image-N.<ext>` placeholders from `tools/migrate-from-hugo.mjs:164` caption-detection fallback. Highest-leverage move: re-run migration with `alt`-text-first heuristic (alt is more reliable than captions in Hugo source). Probably a 1h fix.
 5. **Migrated wikilinks cleanup** — DE/EN post bodies contain template-placeholder `[[Titel der Notiz]]` wikilinks from the migration tool. LocalGraph renders nothing on those posts because no real backlinks. Either fill in real cross-post links or strip placeholders.
-6. **Other UI string migrations** (Phase 2b foundation `src/i18n/strings.ts` exists): `Pagination.astro` Previous/Next, `PostContent.astro` Published, reading-time fallbacks, `LinkedMentions.astro:377` "Referenced in this post". Each call site needs a `lang` prop wired through. Lower urgency — current strings are English-only but unobtrusive.
+6. **UI string migrations Phase 2** (uncovered during Phase 1 spot-check): deeper i18n surfaces still English-only on DE pages — (a) `formatDate` and `formatDateMobile` in `src/utils/markdown.ts` hardcode `en-US` locale so dates render `December 4, 2022` even on DE post cards; (b) `calculateReadingTime` returns English `text: "N min read"` which PostCard uses verbatim (PostLayout now uses the locale-aware `tReadingTime` helper, but PostCard does not); (c) PostCard word-count `${n} words` is English-only; (d) posts-list header renders `Page N of M • N total posts` and `Show all posts` (find in `posts/index.astro` and `posts/[page].astro` header blocks). Fix pattern: take locale at the boundary (page route), pass to formatter / component, and either parametrise the existing helpers or add locale-aware variants alongside.
 7. **Upstream sync workflow** — ADR-001 Phase 3 TBD. When `davidvkimball/astro-modular` releases new versions, merge into the fork. Standard pattern: `cd <fork>; git fetch upstream; git merge upstream/master`. Cadence and conflict-resolution rules not yet captured.
 8. **`/blog/` redirects** — Phase 3 deploy concern. Astro config edits get reverted by `scripts/generate-deployment-config.js`. Defer to platform config (`_redirects` or `netlify.toml`) once deploy target is chosen.
 
