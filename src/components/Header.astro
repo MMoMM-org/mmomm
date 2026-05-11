@@ -10,9 +10,13 @@ export interface Props {
   lang?: Locale;
   post?: Post;
   page?: Page;
+  /** Hard override for the language switcher href. Use on locale-neutral routes
+   * (e.g. /now/) where there is no locale counterpart and the computed default
+   * would 404. */
+  switcherHref?: string;
 }
 
-const { lang = DEFAULT_LOCALE, post, page } = Astro.props;
+const { lang = DEFAULT_LOCALE, post, page, switcherHref: switcherHrefProp } = Astro.props;
 
 // The switcher's locale must be derived from the URL, not the `lang` prop.
 // Some routes (PageLayout, 404, etc.) don't propagate `lang` to BaseLayout,
@@ -60,7 +64,10 @@ const navPages = siteConfig.navigation.pages.map(p => ({
   })),
 }));
 let switcherHref: string;
-if (post) {
+if (switcherHrefProp) {
+  // Caller-side override (e.g. /now/ — locale-neutral route, no counterpart).
+  switcherHref = switcherHrefProp;
+} else if (post) {
   const counterpart = post.data.translationKey ? await findTranslation(post) : null;
   switcherHref = counterpart
     ? `${postUrl(counterpart)}/`

@@ -29,8 +29,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   // Special pages serve as fallback content when features are disabled
   const specialPaths = specialPages
     .filter(page => {
-      // Always exclude home and 404
-      if (['home', '404'].includes(page.id)) {
+      // Always exclude home, 404, and now — each has a dedicated route file
+      // (src/pages/index.astro, 404.astro, now.astro) and the dedicated route
+      // wins, but the static-paths conflict triggers a build warning.
+      if (['home', '404', 'now'].includes(page.id)) {
         return false;
       }
 

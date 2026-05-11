@@ -322,7 +322,10 @@ export const siteConfig: SiteConfig = {
     pages: [
       { title: "Beiträge", i18nKey: "nav.posts", url: "/posts/" },
       { title: "Videos", i18nKey: "nav.videos", url: "/videos/" },
-      { title: "Jetzt", i18nKey: "nav.now", url: "/jetzt/", urlEn: "/en/now/" },
+      // /now/ is locale-neutral (English-only, served from special collection
+      // via src/pages/now.astro). Both locales link to the same URL — urlEn
+      // is set explicitly to defeat the EN /en/ prefix in the Header renderer.
+      { title: "Jetzt", i18nKey: "nav.now", url: "/now/", urlEn: "/now/" },
       { title: "Über mich", i18nKey: "nav.about", url: "/ueber-mich/", urlEn: "/en/about/" },
       { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github", external: true }
     ],

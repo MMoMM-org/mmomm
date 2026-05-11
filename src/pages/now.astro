@@ -1,0 +1,43 @@
+---
+import { getEntry, render } from 'astro:content';
+import { siteConfig } from '@/config';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// /now/ is a single, English-only "now page" (per nownownow.com convention).
+// Lives in the special collection so it sits outside the bilingual pages
+// scheme — there is no /jetzt/ DE variant and no /en/now/ prefix. The Header
+// switcher gets an explicit `switcherHref="/en/"` so clicking EN from this
+// route doesn't 404 against a non-existent /en/now/.
+
+const now = await getEntry('special', 'now');
+if (!now) {
+  throw new Error('src/content/special/now.md is missing — required for /now route');
+}
+const { Content } = await render(now);
+
+const seoData = {
+  title: `${now.data.title} | ${siteConfig.title}`,
+  description: now.data.description ?? '',
+  canonical: Astro.url.href,
+  ogType: 'website' as const,
+};
+---
+
+<BaseLayout seoData={seoData} lang="de" switcherHref="/en/">
+  <div class="py-8 relative">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 relative" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <article class="bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm">
+        <div class="p-6 rounded-lg">
+          <header class="mb-4">
+            <h1 class="text-xl font-bold text-primary-900 dark:text-primary-50 mb-6 leading-tight">
+              {now.data.title}
+            </h1>
+          </header>
+          <div class="prose dark:prose-dark max-w-none">
+            <Content />
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</BaseLayout>

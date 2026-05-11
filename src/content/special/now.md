@@ -1,9 +1,6 @@
 ---
 title: "Now"
 description: "What am I working on at the moment?"
-lang: en
-translationKey: "now"
-draft: false
 ---
 
 What am I working on at the moment?
