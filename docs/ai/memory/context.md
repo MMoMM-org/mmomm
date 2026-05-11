@@ -57,21 +57,14 @@ Fork-sync bundles: `d397c8e` (T1–T11 + T6) and `b1df8fb` (T3 + T9) on `MMoMM-o
 
 Pivot decision: layout/i18n polish (Track C and beyond) was speculation without real bilingual content. Configure Vault CMS for bilingual authoring requires the schema and content structure to land first. Three sequential commits:
 
-1. **Schema bilingual on `pages`** (current step — Task #2)
-   - Extend `src/content.config.ts`: pages collection gets `lang: z.enum(['de','en'])` + `translationKey: z.string().optional()`
-   - Fix stale "asymmetric layout" comment on posts collection (ADR-002 revised to symmetric)
-   - Decide projects/docs schema based on whether they survive Step 2
-   - Verify build
-2. **Demo cleanup + nav prune** (next)
-   - Delete: `posts/{getting-started.md,formatting-reference.md,vault-cms-guide.md,obsidian-embeds-demo.md,sample-folder-based-post/,attachments/}`
-   - Delete: `pages/{about.md,contact.md,privacy-policy.md,thank-you.md,attachments/}`
-   - Delete: `projects/*`, `docs/*` (demo content)
-   - Keep: `special/*` (infrastructure)
-   - `siteConfig.optionalContentTypes.{projects,docs} = false`
-   - Prune `siteConfig.navigation.pages` to real items
-3. **Hugo non-blog migration** (then)
+1. ✅ **Schema bilingual on `pages`** — shipped `fab7815` (2026-05-11). Pages now require `lang: z.enum(['de','en'])` + optional `translationKey`. Stale "asymmetric layout" comment on posts collection updated. Projects/docs schema untouched (slated for deletion in step 2). Build: 77 pages clean.
+2. ✅ **Demo cleanup + nav prune** — shipped (2026-05-11, 42 files / -2936 lines). Deleted demo posts (`getting-started.md`, `formatting-reference.md`, `vault-cms-guide.md`, `obsidian-embeds-demo.md`, `sample-folder-based-post/`, `posts/attachments/`), demo pages (`about.md`, `contact.md`, `privacy-policy.md`, `thank-you.md`, `pages/attachments/`), all of `projects/*`, all of `docs/*`. Kept `special/*`. Config: `optionalContentTypes.{projects,docs} = false`, `homeOptions.{projects,docs}.enabled = false`, `navigation.pages` pruned to `Posts` + `GitHub` only. Build: 77 → 50 pages clean. **Note**: `/projects/index.html` still emitted as a 404-redirect stub (astro-modular fallback logic in `src/pages/projects/index.astro:16-29` looks for a `pages` entry named `projects` then redirects to /404 — harmless, just a thin redirect HTML). Same for `/docs/`.
+3. **Hugo non-blog migration** (current step)
    - 5 static pages: videos, jetzt/now, ueber-mich/about, impressum, datenschutz/privacy-policy → `pages/de/` + `pages/en/` with `lang`+`translationKey`
    - Replace Hugo `{{< youtube ID "title" >}}` shortcode with Astro mdx component or inline iframe
+   - Sources at `../mmomm/content/{ueber-mich,jetzt,impressum,datenschutz,videos}/` (DE) and `../mmomm/content.en/...` (EN — verify path)
+   - Migration tool currently targets `/blog/` only (line 30 of `tools/migrate-from-hugo.mjs`) — needs `--source` per-section or a sibling script
+   - After: full nav rebuild via ADR-003 per-locale strings (track C)
 
 After step 3 — Vault CMS bilingual config (separate work, configure-only per ADR-004 Decision 1).
 
