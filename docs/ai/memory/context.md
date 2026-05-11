@@ -56,20 +56,23 @@ Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **as
 - `db82b8e` **Commit E** (steps 6+7): 4 inline-string leaks fixed (3 new T9 keys: posts.showingPrefix, posts.exploreAllPrefix, posts.postsNoun). formatDate/formatDateMobile defaults removed; 7 callers updated with explicit locale.
 - `29c577c` **Commit F** (step 8): Hugo migration tooling locale-parameterised. LOCALE_SOURCES + LOCALE_HUGO_BASES tables replace hardcoded HUGO_DE/HUGO_EN constants and inline ternaries. Adding a 3rd locale = add a key, validation rejects unknowns with a list-the-valid-options error.
 
-## Active plan — ADR-005 Phase 2 (Route deduplication)
+**ADR-005 Phase 2 shipped** (2026-05-11, commit `3b09b00`): the 9-file `src/pages/en/` clone tree collapsed into a single parameterised `src/pages/[locale]/` tree in one commit. Each parameterised route's `getStaticPaths` iterates `LOCALES.filter(l => l !== DEFAULT_LOCALE)` and fans out paths. Files migrated: `index`, `[...slug]`, `posts/index`, `posts/[page]`, `posts/[...slug]`, `posts/tag/[...tag]`, `posts/tag/[...tag]/[page]`, `feed.xml.ts`, `rss.xml.ts`. Default-locale (DE) tree at root URLs preserved (ADR-002 Decision 4's `prefixDefaultLocale: false`). All 27 `/en/*` URLs intact; 59 pages built; astro check baseline (32 errors) unchanged. Adding a third locale now requires zero new route files — just data.
 
-Phase 2 of ADR-005 — collapse the 7-file `src/pages/en/` clone tree into a parameterised `src/pages/[locale]/...` tree. ~1-2 sessions. Steps:
+## Active plan — ADR-005 Phase 3 (Plugin fork)
 
-1. Create `src/pages/[locale]/posts/...` tree mirroring current `posts/` shape — `index.astro`, `[page].astro`, `[...slug].astro`, `tag/[...tag].astro`, `tag/[...tag]/[page].astro`
-2. `getStaticPaths` in each parameterised file iterates `LOCALES.filter(l => l !== DEFAULT_LOCALE)` and emits `params: { locale, ... }`
-3. Each route's frontmatter derives `lang` from `Astro.params.locale as Locale`
-4. Delete `src/pages/en/posts/...` files one-by-one as parameterised replacements build-clean
-5. Verify all URLs unchanged via build-output diff (snapshot `dist/` pre-vs-post)
-6. Verify hreflang/sitemap/RSS output unchanged
+Phase 3 of ADR-005 — fork `davidvkimball/obsidian-astro-modular-settings` → `MMoMM-org/astro-modular-settings-mmomm`, make it locale-aware from the start. ~2-3 sessions. Steps:
 
-Default-locale tree (`src/pages/posts/...`) stays at root URL paths because Astro's `i18n.routing.prefixDefaultLocale: false` (ADR-002 Decision 4) requires non-prefixed default routes. Only non-default locales move to `[locale]/`.
+1. Fork via `gh repo fork davidvkimball/obsidian-astro-modular-settings --org MMoMM-org --fork-name astro-modular-settings-mmomm` (gh CLI authed as MMoMM-org)
+2. Clone to `/Volumes/Moon/Coding/MMoMM.org/obsidian-astro-modular-settings-mmomm` sibling
+3. Patch `NavigationItem` editor type + UI for `i18nKey`/`urlByLocale`/`external`. The `urlByLocale` map renders as a per-locale URL row generated from `siteConfig.locales` (no hardcoded DE/EN tabs)
+4. Add `LocalisedString` editor: render N inputs (one per locale from `[CONFIG:LOCALES]`) for every site-info field
+5. Add new markers: `[CONFIG:LOCALES]`, `[CONFIG:DEFAULT_LOCALE]`, `[CONFIG:NAVIGATION_FOOTER]`. Plugin marker scheme for `LocalisedString` values uses object-literal parsing under the existing marker (locked-in decision for Phase 3)
+6. Build (`pnpm build` in the fork), install `main.js` + `manifest.json` + `styles.css` into vault's `.obsidian/plugins/astro-modular-settings/`
+7. Smoke test: add `"astro-modular-settings"` back to `community-plugins.json`, reload Obsidian, edit a benign setting via UI, verify config.ts still has `urlByLocale` + footer array + `LocalisedString` shapes intact
+8. Push fork to GitHub. Set up release-mirror workflow (analog ADR-001 Deferred Work #1)
+9. Update memory: `tools.md` re-enable rules, `decisions.md` ADR-005 Phase 3 entry
 
-After Phase 2: Phase 3 (plugin fork `MMoMM-org/astro-modular-settings-mmomm`, locale-aware), Phase 4 (runbook + memory updates).
+After Phase 3: Phase 4 (runbook "Adding a locale" + final memory cleanup).
 
 ## Next moves outside ADR-005 (pick when ADR-005 has free space)
 
