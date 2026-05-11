@@ -36,7 +36,7 @@ Readwise uses the Jinja2 Template Language to modify the layout of the notes.
 
 ### Category Folders
 
-![](attachments/image-2.png)
+![Group Files in Category Folders](attachments/group-files-in-category-folders.png)
 
 Group Files in Category Folders
 
@@ -52,7 +52,7 @@ After that you will define the note name. A lot of issues with the filesystems a
 
 I like it that you can directly see which variables you can use and that Readwise even delivers some tips & tricks. Also you will find a link to the documentation in each section.
 
-![](attachments/image-3.png)
+![File Name](attachments/file-name.png)
 
 File Name
 
@@ -66,7 +66,7 @@ Untypical for Obsidian Readwise uses the term Page instead of Note. But I guess 
 
 Next is the title of the note.
 
-![](attachments/image-4.png)
+![Page Title](attachments/page-title.png)
 
 Page Title
 
@@ -85,7 +85,7 @@ You can get:
 
 This part will only be done once.
 
-![](attachments/image-5.png)
+![Page Metadata](attachments/page-metadata.png)
 
 Page Metadata
 
@@ -98,7 +98,7 @@ This part will always be done if you export a highlight.
 
 > Readwise never changes a note. Every new highlight (even changed ones) are added at the end of the note.
 
-![](attachments/image-6.png)
+![Highlights Header](attachments/highlights-header.png)
 
 Highlights Header
 
@@ -110,7 +110,7 @@ This part will be used for every single highlight which is in the note. By defau
 
 You will find again lot of opportunities to change the highlight with the Jinja2 template language.
 
-![](attachments/image-7.png)
+![Highlight](attachments/highlight.png)
 
 Highlight
 
@@ -120,13 +120,13 @@ And almost at the end, which is kinda weird as it is at the front of the note, y
 
 This is kinda "stupid", because you are at "Sync Notification" of the example on the right and need to scroll up all the time if you want to see how your change will look like.
 
-![](attachments/image-8.png)
+![YAML front matter](attachments/yaml-front-matter.png)
 
 YAML front matter
 
 The three dashes at the start and the end of the YAML section are added automatically.
 
-![](attachments/image-9.png)
+![Front Matter](attachments/front-matter.png)
 
 Front Matter
 
@@ -136,7 +136,7 @@ And finally at the end you have the sync notification. Every time there is a syn
 
 This can be interesting, but it doesn't has to.
 
-![](attachments/image-10.png)
+![Sync Notification](attachments/sync-notification.png)
 
 Sync Notification
 
@@ -146,7 +146,7 @@ You can specify which items to be exported, but in my opinion this is to complic
 
 I would welcome the option to be able to use tags to control the export.
 
-![](attachments/image-11.png)
+![Items to be exported](attachments/items-to-be-exported.png)
 
 Items to be exported
 

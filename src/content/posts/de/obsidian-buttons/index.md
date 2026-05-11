@@ -60,7 +60,7 @@ Und wie kann man jetzt Buttons nutzen?
 
 Die einfachste Möglichkeit Buttons zu nutzen ist via dem Button Maker. Dieser kann über die Command Palette aufgerufen werden.
 
-![](attachments/image-2.png)
+![Button Maker](attachments/button-maker.png)
 
 Button Maker
 
@@ -424,7 +424,7 @@ Meine "Homepage" ist ein Workspace mit verschiedenen Notizen für Gestern, Heute
 - Öffnen des Privaten Todoist Projekts
 - Öffnen des Todoist Projekts für die Arbeit
 
-![](attachments/image-3.png)
+![Meine Obsidian Homepage](attachments/meine-obsidian-homepage-2.png)
 
 Meine Obsidian Homepage
 

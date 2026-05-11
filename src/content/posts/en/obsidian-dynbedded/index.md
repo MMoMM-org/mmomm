@@ -29,7 +29,7 @@ Let's take a look at some samples of the first feature:
 
 Left Standard Embedded Feature / Right Dynbedded Embedded Feature
 
-![](attachments/image-1.png)  
+![Left Standard Embedded Feature / Right Dynbedded Embedded Feature](attachments/left-standard-embedded-feature-right-dynbedded-embedded-feat.png)  
 
 - **Dataview**: shows inlinks into the note
 - **Buttons**: shows a note with 2 buttons
@@ -37,7 +37,7 @@ Left Standard Embedded Feature / Right Dynbedded Embedded Feature
 
 And now the second feature:
 
-![](attachments/image-2.png)  
+![And now the second feature:](attachments/and-now-the-second-feature.png)  
 
 - **Daily Note - Today**: show the note which I embedded yesterday as TODAY
 - As you can see, Dynbedded doesn't support checking checkboxes natively
@@ -159,7 +159,7 @@ And another example is a homenote / dashboard which uses relative dates to show 
 
 An unfinished example.
 
-![](attachments/image-6.png)  
+![An unfinished example.](attachments/an-unfinished-example.png)  
 
 ## Styling
 

@@ -38,7 +38,7 @@ Todoist QuickAdd
 - Collaboration - Sharing or assigning tasks to other people
 - Team Support - more functions for teams
 - Different views for the tasks incl. Kanban Style
-![](attachments/image-2.png)
+![Todoist Kanban Style View](attachments/todoist-kanban-style-view.png)
 
 Todoist Kanban Style View
 
@@ -47,7 +47,7 @@ Todoist Kanban Style View
 
 The free version should cover most needs. The major restriction for me at the moment is the limit of 5 projects.
 
-![](attachments/image-3.png)
+![Todoist 5 Projects](attachments/todoist-5-projects.png)
 
 Todoist 5 Projects
 
@@ -109,7 +109,7 @@ At the moment the command "Create a task with the selected text" doesn't work co
 
 You shouldn't press Enter too quickly, this will create the task.
 
-![](attachments/image-4.png)
+![Todoist Sync: Create Task](attachments/todoist-sync-create-task.png)
 
 Todoist Sync: Create Task
 

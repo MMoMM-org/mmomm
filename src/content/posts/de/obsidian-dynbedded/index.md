@@ -29,7 +29,7 @@ Schauen wir uns doch mal ein Beispiel für die erste Funktion an:
 
 Links Standard Embedded Funktion / Rechts Dynbedded Embedded Funktion
 
-![](attachments/image-1.png)  
+![Links Standard Embedded Funktion / Rechts Dynbedded Embedded Funktion](attachments/links-standard-embedded-funktion-rechts-dynbedded-embedded-f.png)  
 
 - **Dataview**: zeigt die Inlinks in die Notiz darstellen an
 - **Buttons**: zeigt eine Notiz mit 2 Buttons an
@@ -37,7 +37,7 @@ Links Standard Embedded Funktion / Rechts Dynbedded Embedded Funktion
 
 Und hier nun die zweite Funktion:
 
-![](attachments/image-2.png)  
+![Und hier nun die zweite Funktion:](attachments/und-hier-nun-die-zweite-funktion.png)  
 
 - **TagesNotiz - Heute**: zeigt die Notiz an die ich gestern als HEUTE verknüpft habe
 - Wie man hier auch sehen kann, funktionieren Checkboxen in Dynbedded direkt leider nicht.
@@ -157,7 +157,7 @@ Und die andere Möglichkeit ist eine Homenotiz / Dashboard aufzubauen welche ein
 
 Anbei ein Beispiel, ist noch nicht fertig.
 
-![](attachments/image-6.png)  
+![Anbei ein Beispiel, ist noch nicht fertig.](attachments/anbei-ein-beispiel-ist-noch-nicht-fertig.png)  
 
 ## Styling
 

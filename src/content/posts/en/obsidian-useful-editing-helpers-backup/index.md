@@ -39,7 +39,7 @@ Dropbox Token Store
 
 I think the best approach is it to exclude the /Apps/Obsidian Backups directory from your local sync, so you need to use the web interface if you want to restore a specific note.
 
-![Aut-O-Backups in Dropbox](attachments/image-2.png)
+![Aut-O-Backups in Dropbox](attachments/aut-o-backups-in-dropbox.png)
 
 Aut-O-Backups in Dropbox
 
@@ -53,7 +53,7 @@ Developed was the [Plugin from Jonathan Miller](https://github.com/jmilldotdev/o
 
 If you start typing in a tags: or tag: line in your frontmatter, the plugin will suggest you the tags.
 
-![Frontmatter Tag Suggest](attachments/image-3.png)
+![Frontmatter Tag Suggest](attachments/frontmatter-tag-suggest.png)
 
 Frontmatter Tag Suggest
 
@@ -69,7 +69,7 @@ Next to the default emois you can integrate other emojis and even create your ow
 
 By default the search for an icon / emoji starts after a : (Colon), would would suggest to change the configuration to expect a space in front of a colon and also add a space after the inserted emoji.
 
-![Icon Shortcodes](attachments/image-4.png)
+![Icon Shortcodes](attachments/icon-shortcodes.png)
 
 Icon Shortcodes
 
@@ -83,7 +83,7 @@ In this case I rather use
 
 You can activate the emoji Toolbar with the command palette or a hotkey, after that you can use words like with icon shortcode or you just scroll through it.
 
-![Emoji Toolbar](attachments/image-5.png)
+![Emoji Toolbar](attachments/emoji-toolbar.png)
 
 Emoji Toolbar
 

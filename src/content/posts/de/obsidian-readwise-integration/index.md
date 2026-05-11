@@ -36,7 +36,7 @@ Readwise benutzt für das Anpassen der Exporte die Jinja2 Template Language.
 
 ### Kategorie Ordner
 
-![](attachments/image-2.png)
+![Group Files in Category Folders](attachments/group-files-in-category-folders.png)
 
 Group Files in Category Folders
 
@@ -52,7 +52,7 @@ Danach geht es dann mit dem Notiznamen weiter. Viele der möglichen Probleme mit
 
 Ich finde es gut, das direkt die Variablen, die man nutzen kann und einige andere Tipps für jede Option angezeigt werden. Dort gibt es auch immer direkt einen Link auf die komplette Dokumentation.
 
-![](attachments/image-3.png)
+![File Name](attachments/file-name.png)
 
 File Name
 
@@ -66,7 +66,7 @@ Untypisch für Obsidian nutzt Readwise den Begriff Page anstelle von Note / Noti
 
 Als Nächstes kommt der Titel der Notiz.
 
-![](attachments/image-4.png)
+![Page Title](attachments/page-title.png)
 
 Page Title
 
@@ -85,7 +85,7 @@ Ihr bekommt hier:
 
 Dieser Bereich wird nur einmal ausgeführt.
 
-![](attachments/image-5.png)
+![Page Metadata](attachments/page-metadata.png)
 
 Page Metadata
 
@@ -98,7 +98,7 @@ Dieser Bereich wird immer dann aufgerufen, wenn Highlights exportiert werden, al
 
 > Readwise ändert niemals die Notiz ab, jedes neues Highlight (auch Änderungen an bestehenden Highlights) werden ans Ende der Notiz gestellt.
 
-![](attachments/image-6.png)
+![Highlights Header](attachments/highlights-header.png)
 
 Highlights Header
 
@@ -110,7 +110,7 @@ Dieser Bereich wird für jedes einzelne Highlight ausgeführt. Jedes einzelne Hi
 
 Auch hier gibt es viele Möglichkeiten, mit der Template-Sprache von Jinja2 dieses Highlight nach seinen Wünschen anzupassen.
 
-![](attachments/image-7.png)
+![Highlight](attachments/highlight.png)
 
 Highlight
 
@@ -120,13 +120,13 @@ Und fast am Schluss, irgendwie komisch, wenn man bedenkt, dass das ja eigentlich
 
 Das ist deswegen recht doof, weil auf der rechten Seite das Beispiel nun bei der "Sync Notification" angekommen ist und man deswegen immer noch oben Scrollen muss, um Änderungen zu sehen.
 
-![](attachments/image-8.png)
+![YAML front matter](attachments/yaml-front-matter.png)
 
 YAML front matter
 
 Die drei Bindestriche am Anfang und Ende der YAML Sektion werden automatisch eingefügt.
 
-![](attachments/image-9.png)
+![Front Matter](attachments/front-matter.png)
 
 Front Matter
 
@@ -136,7 +136,7 @@ Und zum guten Schluss dann die Sync Notification. Damit wird bei jedem Sync, wen
 
 Könnte ganz interessant sein, muss es aber nicht.
 
-![](attachments/image-10.png)
+![Sync Notification](attachments/sync-notification.png)
 
 Sync Notification
 
@@ -146,7 +146,7 @@ Man kann bestimmte Artikel exportieren, das ist aber meiner Meinung nach viel zu
 
 Ich würde es begrüßen, wenn man auch Tags definieren könnte, um den Export zu steuern.
 
-![](attachments/image-11.png)
+![Items to be exported](attachments/items-to-be-exported.png)
 
 Items to be exported
 

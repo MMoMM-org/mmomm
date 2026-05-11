@@ -43,13 +43,13 @@ You can use those additional functions by entering additional information into t
 - TI: "My Title" - Allows a custom title for the codeblock (it doesn't work for me though)
 - HL:"3, 5-8" - Highlights line 3 and 5 to 8
 - "FOLD" - folds the codeblock
-![](attachments/image-2.png)
+![Better Code Block - Reading View](attachments/better-code-block-reading-view.png)
 
 Better Code Block - Reading View
 
 From time to time you need to close and open the note again to trigger an update.
 
-![](attachments/image-3.png)
+![Better Code Blog - Reading View - Unfoldded](attachments/better-code-blog-reading-view-unfoldded.png)
 
 Better Code Blog - Reading View - Unfoldded
 
@@ -65,7 +65,7 @@ Better Word Count doesn't only show you the number of words and characters in a 
 
 That helps a lot if you want to know how much fluff was added to the note by frontmatter and so on.
 
-![](attachments/image-4.png)
+![Better Word Count](attachments/better-word-count.png)
 
 Better Word Count
 
@@ -79,7 +79,7 @@ You can not select a directory directly, you need to select a file and can then 
 
 Other than that it covers the function which I was looking for. Being able to add links to files without using Drag and Drop, and the capability to make some "configuration" on the fly.
 
-![](attachments/image-5.png)
+![Better File Link](attachments/better-file-link.png)
 
 Better File Link
 
@@ -87,13 +87,13 @@ If you don't want to use the command palette you can of course also add a hotkey
 
 The standard configuration can be changed in the Better File Link Settings. Here is also the place where you can define how a list of file is added. But be warned....
 
-![](attachments/image-6.png)
+![Better File Link Settings](attachments/better-file-link-settings.png)
 
 Better File Link Settings
 
 By default you will find a **-**  there, but this is only a suggestion and you still need to configure it.
 
-![](attachments/image-7.png)
+![Better File Link - File List](attachments/better-file-link-file-list.png)
 
 Better File Link - File List
 
@@ -105,17 +105,17 @@ Written by [David Šarman the Plugin](https://github.com/dsarman/better-inline-f
 
 I mainly use it for the capability to click on boolean Datafields and handle them like tasks.
 
-![](attachments/image-8.png)
+![Better Inline Field - Checkboxes](attachments/better-inline-field-checkboxes.png)
 
 Better Inline Field - Checkboxes
 
 Another function is to get some note suggestions for other specific datafields (which you need to configure), so that you don't need to type [[ ]] all the time and are limited to a specific directory.
 
-![](attachments/image-9.png)
+![Better Inline Field - Note Suggester](attachments/better-inline-field-note-suggester.png)
 
 Better Inline Field - Note Suggester
 
-![](attachments/image-10.png)
+![Better Inline Fields - Note](attachments/better-inline-fields-note.png)
 
 Better Inline Fields - Note
 

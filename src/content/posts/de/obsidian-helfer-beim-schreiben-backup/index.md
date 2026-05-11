@@ -39,7 +39,7 @@ Dropbox Token Store
 
 Da man am besten den Bereich /Apps/Obsidian Backups aus seinem Dropbox Sync rausnimmt bedeutet dies, das ihr die Weboberfläche benutzen müsst, um eine bestimmte Datei wiederherzustellen.
 
-![Aut-O-Backups in Dropbox](attachments/image-2.png)
+![Aut-O-Backups in Dropbox](attachments/aut-o-backups-in-dropbox.png)
 
 Aut-O-Backups in Dropbox
 
@@ -53,7 +53,7 @@ Geschrieben wurde das [Plugin von Jonathan Miller](https://github.com/jmilldotde
 
 Wenn ihr nun im Frontmatter in einer tags: oder tag: Zeile anfängt zu schreiben, schlägt euch das Plugin Tags vor.
 
-![Frontmatter Tag Suggest](attachments/image-3.png)
+![Frontmatter Tag Suggest](attachments/frontmatter-tag-suggest.png)
 
 Frontmatter Tag Suggest
 
@@ -69,7 +69,7 @@ Neben den Standard Emojis kann man noch zusätzliche Emojis einbinden und sogar 
 
 Standardmäßig startet die Icon / Emoji Suche nach einem **:** (Doppelpunkt), ich würde die Konfiguration aber so abändern das man erst ein SPACE vor dem **:** hat, sonst triggered der Shortcut laufend.
 
-![Icon Shortcodes](attachments/image-4.png)
+![Icon Shortcodes](attachments/icon-shortcodes.png)
 
 Icon Shortcodes
 
@@ -83,7 +83,7 @@ Da nutze ich dann doch lieber
 
 Aktiviert wird der Emoji Toolbar über die Command Palette oder einen HotKey, danach sucht man entweder wie bei Icon Shortcode mit Hilfe von Wörten oder man scrollt durch die Emojis durch.
 
-![Emoji Toolbar](attachments/image-5.png)
+![Emoji Toolbar](attachments/emoji-toolbar.png)
 
 Emoji Toolbar
 

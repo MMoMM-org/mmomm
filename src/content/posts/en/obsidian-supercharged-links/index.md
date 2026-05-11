@@ -47,13 +47,13 @@ And you can change the links based on :
 - Tags
 - Inline / Frontmatter Fields
 - Path
-![](attachments/image-2.png)
+![Supercharged Links - Regeln](attachments/supercharged-links-regeln.png)
 
 Supercharged Links - Regeln
 
 You can also reorder the rules.
 
-![](attachments/image-3.png)
+![Supercharged Links - Geänderte Regel Reihenfolge](attachments/supercharged-links-geanderte-regel-reihenfolge.png)
 
 Supercharged Links - Geänderte Regel Reihenfolge
 
@@ -61,7 +61,7 @@ The rules are executed after each other, the last rule wins. But only the option
 
 After defining the rules you can define the styling. You need to switch over into the Style Settings configuration and you can then change the styling under Supercharged Links.
 
-![](attachments/image-4.png)
+![Style Settings - Supercharged Links](attachments/style-settings-supercharged-links.png)
 
 Style Settings - Supercharged Links
 
@@ -87,7 +87,7 @@ I like to have the 👤 (Bust) Emoji in front of my people notes (even if they a
 
 Don't forget to add a space if needed if you prepend or append text!
 
-![](attachments/image-5.png)
+![Supercharged Links - Personen](attachments/supercharged-links-personen.png)
 
 Supercharged Links - Personen
 
@@ -97,7 +97,7 @@ I personally use tags to track the status of a project, but you can of course al
 
 Based on the status I then have a visual cue next to my note name.
 
-![](attachments/image-6.png)
+![Supercharged Links - Status](attachments/supercharged-links-status.png)
 
 Supercharged Links - Status
 
@@ -105,7 +105,7 @@ And there are still some things which require you to create custom CSS snippets 
 
 An example would be to show the value of the status attribute only if you hover over the note name with your mouse.
 
-![](attachments/image-7.png)
+![Supercharged Links - Status Anzeige](attachments/supercharged-links-status-anzeige.png)
 
 Supercharged Links - Status Anzeige
 
@@ -156,7 +156,7 @@ Obsidian links gain the additional information on first sight. You shouldn't ove
 
 If you want to give your external links some love you can use [Link Favicon](https://github.com/joethei/obsidian-link-favicon). It only adds the favourite icon in-front of the external link but even that makes the links better visible.
 
-![](attachments/image-9.png)
+![Link Favicon](attachments/link-favicon.png)
 
 Link Favicon
 

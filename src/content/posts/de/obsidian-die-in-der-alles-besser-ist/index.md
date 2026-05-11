@@ -43,13 +43,13 @@ Die zusätzlichen Funktionen können ganz einfach über entsprechende Elemente i
 - TI: "Mein Titel" - gibt dem Codeblock einen eigenen Titel (funktioniert leider nicht bei mir)
 - HL:"3, 5-8" - hebt die Zeilen 3 und 5 bis 8 hervor
 - "FOLD" - verkleinert den Codeblock
-![](attachments/image-2.jpg)
+![Better Code Block - Lese Ansicht](attachments/better-code-block-lese-ansicht.jpg)
 
 Better Code Block - Lese Ansicht
 
 Ab und zu müßt ihr die Notiz aufmachen und zumachen damit Änderungen sichtbar werden.
 
-![](attachments/image-3.jpg)
+![Better Code Blog - Lese Ansicht - Ausgeklappt](attachments/better-code-blog-lese-ansicht-ausgeklappt.jpg)
 
 Better Code Blog - Lese Ansicht - Ausgeklappt
 
@@ -65,7 +65,7 @@ Better Word Count zeigt euch nicht nur die Anzahl der Wörter und Buchstaben der
 
 Das hilft wenn man wissen will wieviel Text man wirklich geschrieben hat und wieviel "Verpackung" in Form von Frontmatter etc drin steckt.
 
-![](attachments/image-4.png)
+![Better Word Count](attachments/better-word-count.png)
 
 Better Word Count
 
@@ -79,7 +79,7 @@ Leider kann man nicht direkt ein Verzeichnis auswählen, sondern immer nur ein F
 
 Ansonsten sind die Funktionen genau die die ich gesucht habe. Anstelle von Dateien mit Drag und Drop in meine Notiz ziehen zu müssen und dann die Dinge manuell "konfigurieren" zu müssen kann ich jetzt einen "normalen Datei Dialog" nutzen.
 
-![](attachments/image-5.png)
+![Better File Link](attachments/better-file-link.png)
 
 Better File Link
 
@@ -87,13 +87,13 @@ Für Leute die nicht dauern die Command Palette nutzen möchten kann man natürl
 
 Den Standard kann man auch in der Konfiguration festlegen und dort auch ändern wie eine Liste von Dateien aussieht. Dabei sollte man sich nicht verwirren lassen.
 
-![](attachments/image-6.png)
+![Better File Link Settings](attachments/better-file-link-settings.png)
 
 Better File Link Settings
 
 Dort ist zwar Standardmäßig ein **-** drin, aber das ist nur ein Vorschlag und der wird nicht genutzt. Man muss es also noch konfigurieren.
 
-![](attachments/image-7.png)
+![Better File Link - File List](attachments/better-file-link-file-list.png)
 
 Better File Link - File List
 
@@ -105,17 +105,17 @@ Geschrieben von [David Šarman ist das Plugin](https://github.com/dsarman/better
 
 Ich nutze es eigentlich nur für die Möglichkeit Boolean Datafields wie einen Task zu nutzen.
 
-![](attachments/image-8.png)
+![Better Inline Field - Checkboxen](attachments/better-inline-field-checkboxen.png)
 
 Better Inline Field - Checkboxen
 
 Aber eine andere Funktion ist für bestimmte Felder Notizen vorgeschlagen zu bekommen ohne immer [[ ]] tippen zu müssen und dabei auf ein bestimmtes Verzeichnis beschränkt zu sein (Das muss man in der Konfiguration definieren).
 
-![](attachments/image-9.png)
+![Better Inline Field - Note Suggester](attachments/better-inline-field-note-suggester.png)
 
 Better Inline Field - Note Suggester
 
-![](attachments/image-10.png)
+![Better Inline Fields - Notiz](attachments/better-inline-fields-notiz.png)
 
 Better Inline Fields - Notiz
 

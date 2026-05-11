@@ -431,7 +431,7 @@ For example:
 - Open the Privat Todoist project
 - Open the Work Todoist project
 
-![](attachments/image-3.png)
+![My Obsidian Homepage](attachments/my-obsidian-homepage-2.png)
 
 My Obsidian Homepage
 
