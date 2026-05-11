@@ -316,12 +316,6 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:NAVIGATION_PAGES]
     pages: [
       { title: "Posts", url: "/posts/" },
-      { title: "Projects", url: "/projects/" },
-      { title: "Docs", url: "/docs/" },
-      { title: "About", url: "/about/",
-        children: [
-          { title: "Privacy Policy", url: "/privacy-policy/" }
-        ] },
       { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github" }
     ],
     // [CONFIG:NAVIGATION_SOCIAL]
@@ -375,13 +369,13 @@ export const siteConfig: SiteConfig = {
     },
     projects: {
       // [CONFIG:HOME_OPTIONS_PROJECTS_ENABLED]
-      enabled: true, // Show featured projects on homepage
+      enabled: false, // Show featured projects on homepage
       // [CONFIG:HOME_OPTIONS_PROJECTS_COUNT]
       count: 2, // Number of projects to show
     },
     docs: {
       // [CONFIG:HOME_OPTIONS_DOCS_ENABLED]
-      enabled: true, // Show featured docs on homepage
+      enabled: false, // Show featured docs on homepage
       // [CONFIG:HOME_OPTIONS_DOCS_COUNT]
       count: 3, // Number of docs to show
     },
