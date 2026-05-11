@@ -1,7 +1,11 @@
 # Troubleshooting — astro-mmomm
-<!-- Known issues and proven fixes. Updated: 2026-05-11 -->
+<!-- Known issues and proven fixes. Updated: 2026-05-11 (image-rename pass) -->
 <!-- Format: ## [Issue title] — Status: open/resolved — [fix description] -->
 <!-- Resolved entries are archived by /memory-cleanup, not deleted -->
+
+## `tools/migrate-from-hugo.mjs` in-loop body mutation invalidates match indices — Status: workaround
+<!-- 2026-05-11 — discovered during image-rename pass (commit 957060e) -->
+`processBody` (around line 150-183) collects all image matches via `body.matchAll(IMG_REF)` ONCE, then iterates and calls `body.replace(full, newRef)` inside the loop. Each replacement shrinks the body (`/img/wix/<long-hash>.png` → `attachments/<short>.png`), but every subsequent iteration still uses the pre-loop `m.index` to compute `body.slice(m.index + full.length)` for caption detection. After image #1 is replaced, image #2's slice starts at a stale offset that lands in the wrong text — caption-detection then fails and the file falls back to `image-N.<ext>`. Effect: roughly 66% of body-image attachments shipped with `image-N` placeholder names (80/122 in this repo's 28-post migration). **Symptom pattern**: first image per post often has a real caption-derived name; images 2+ degrade to placeholders. **Fix when migrating again**: process matches in reverse order (so positions before the just-spliced replacement remain valid), OR compute all replacements against the ORIGINAL body and apply them via index-splice (`body.slice(0, idx) + new + body.slice(idx + full.length)`) in reverse. The renamer `tools/rename-image-attachments.mjs` (added in 957060e) uses the index-splice approach as a reference. **Until fixed**: any new Hugo import will reproduce this bug — the workaround is to re-run the renamer after migration. Better: fix the migration tool first, then ingest.
 
 ## Astro 7 alpha dev server does not HMR `Header.astro` edits — Status: workaround
 <!-- 2026-05-11 -->
