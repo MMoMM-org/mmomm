@@ -2,8 +2,9 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 // Define schema for blog posts
-// i18n: every post declares its language. EN posts live under src/content/posts/en/*;
-// DE posts at src/content/posts/* (asymmetric layout, see docs/XDD/adr/ADR-002).
+// i18n: every post declares its language. DE posts live under src/content/posts/de/*,
+// EN posts under src/content/posts/en/* (symmetric layout — see docs/XDD/adr/ADR-002
+// Decision #3, revised 2026-05-09).
 // `translationKey` links a DE post to its EN counterpart (and vice versa).
 const postsCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
@@ -39,12 +40,18 @@ const postsCollection = defineCollection({
 });
 
 // Define schema for static pages
+// i18n: every page declares its language. DE pages live under src/content/pages/de/*,
+// EN pages under src/content/pages/en/* (mirrors the posts collection layout — see
+// ADR-002 Decision #3 and ADR-004 Decision #4).
+// `translationKey` links a DE page to its EN counterpart (and vice versa).
 const pagesCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
   schema: z.object({
     title: z.string().default('Untitled Page'),
     description: z.string().nullable().optional().default('No description provided'),
     draft: z.boolean().optional(),
+    lang: z.enum(['de', 'en']),
+    translationKey: z.string().optional(),
     lastModified: z.coerce.date().optional(),
     image: z.any().nullable().optional().transform((val) => {
       // Handle various Obsidian syntax formats

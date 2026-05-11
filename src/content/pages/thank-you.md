@@ -1,6 +1,7 @@
 ---
 title: Thank You
 description: Thank you for your submission.
+lang: en
 hideTOC: true
 noIndex: true
 draft: false

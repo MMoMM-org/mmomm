@@ -1,6 +1,7 @@
 ---
 title: Privacy Policy
 description: This privacy policy explains how your information is collected, used, and protected when you visit this website.
+lang: en
 noIndex: true
 hideTOC: false
 draft: false

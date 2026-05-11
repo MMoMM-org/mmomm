@@ -1,6 +1,7 @@
 ---
 title: Contact
 description: Contact me.
+lang: en
 noIndex: false
 hideTOC: false
 draft: false
