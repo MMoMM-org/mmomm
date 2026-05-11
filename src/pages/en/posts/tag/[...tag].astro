@@ -93,7 +93,7 @@ const seoData = {
 };
 
 // Pagination info
-const baseUrl = `/posts/tag/${encodeURIComponent(tag)}`;
+const baseUrl = `/en/posts/tag/${encodeURIComponent(tag)}`;
 const pagination = {
   currentPage,
   totalPages,
@@ -165,7 +165,7 @@ const pagination = {
               </div>
 
               <!-- Pagination -->
-              <Pagination pagination={pagination} baseUrl={baseUrl} />
+              <Pagination pagination={pagination} baseUrl={baseUrl} lang="en" />
             </>
           ) : (
             <!-- No posts for selected tag -->

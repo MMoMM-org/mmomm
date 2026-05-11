@@ -377,7 +377,7 @@ function processExcerptLinks(text: string, targetSlug: string): string {
 
               <div class="mt-3 flex items-center text-xs text-primary-500 dark:text-primary-400">
                 <Icon name="arrow-right" class="w-3 h-3 mr-1" />
-                <span>Referenced in this post</span>
+                <span>{t(lang, 'linkedMentions.referenced')}</span>
               </div>
             </article>
           ))}
