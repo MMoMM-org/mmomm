@@ -1,6 +1,7 @@
 ---
 import { getEntry, render } from 'astro:content';
 import { siteConfig } from '@/config';
+import { DEFAULT_LOCALE, lt } from '@/utils/i18n';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 // /now/ is a single, English-only "now page" (per nownownow.com convention).
@@ -16,7 +17,7 @@ if (!now) {
 const { Content } = await render(now);
 
 const seoData = {
-  title: `${now.data.title} | ${siteConfig.title}`,
+  title: `${now.data.title} | ${lt(DEFAULT_LOCALE, siteConfig.title)}`,
   description: now.data.description ?? '',
   canonical: Astro.url.href,
   ogType: 'website' as const,

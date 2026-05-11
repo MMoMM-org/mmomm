@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import { siteConfig } from '@/config';
+import { DEFAULT_LOCALE, lt } from '@/utils/i18n';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
 
@@ -17,7 +18,7 @@ try {
 
 // SEO data for 404 page
 const seoData = {
-  title: `Page Not Found | ${siteConfig.title}`,
+  title: `Page Not Found | ${lt(DEFAULT_LOCALE, siteConfig.title)}`,
   description: 'The page you are looking for could not be found.',
   canonical: Astro.url.href,
   ogType: 'website' as const

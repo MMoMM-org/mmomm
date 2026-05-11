@@ -4,6 +4,7 @@ import type { Page } from '@/types';
 import { siteConfig } from '@/config';
 import { render } from 'astro:content';
 import { generatePageSEO } from '@/utils/seo';
+import { lt } from '@/utils/i18n';
 import { optimizeContentImagePath, getOptimizedFormat } from '@/utils/images';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
@@ -42,7 +43,7 @@ const structuredData = {
   url: Astro.url.href,
   isPartOf: {
     '@type': 'WebSite',
-    name: siteConfig.title,
+    name: lt(page.data.lang, siteConfig.title),
     url: siteConfig.site
   },
   author: {

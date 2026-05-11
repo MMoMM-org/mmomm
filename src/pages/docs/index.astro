@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import { siteConfig } from '@/config';
 import { generatePostsListSEO } from '@/utils/seo';
+import { DEFAULT_LOCALE, lt } from '@/utils/i18n';
 import { shouldShowContent } from '@/utils/markdown';
 import { hasDocCategories, getDocCategories, groupDocsByCategory } from '@/utils/categories';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -80,10 +81,13 @@ if (docsHaveCategories) {
 shouldShowTOC = !docsPageHideTOC && tocHeadings.length > 0;
 
 
-// Generate SEO data
-const seoData = generatePostsListSEO(import.meta.env.SITE || '', undefined);
-seoData.title = docsPageContent?.data.title ? `${docsPageContent.data.title} | ${siteConfig.title}` : `Documentation | ${siteConfig.title}`;
-seoData.description = docsPageContent?.data.description || `Browse all documentation on ${siteConfig.title}`;
+// Generate SEO data — docs index is locale-neutral fallback (docs collection
+// has no `lang` schema today per ADR-004 Decision 4); use defaultLocale.
+const docsLocale = DEFAULT_LOCALE;
+const siteTitleForDocs = lt(docsLocale, siteConfig.title);
+const seoData = generatePostsListSEO(import.meta.env.SITE || '', docsLocale, undefined);
+seoData.title = docsPageContent?.data.title ? `${docsPageContent.data.title} | ${siteTitleForDocs}` : `Documentation | ${siteTitleForDocs}`;
+seoData.description = docsPageContent?.data.description || `Browse all documentation on ${siteTitleForDocs}`;
 seoData.noIndex = (docsPageContent?.data as any)?.noIndex || false;
 ---
 

@@ -1,12 +1,15 @@
 import type { APIRoute } from "astro";
 import { siteConfig } from "../config";
+import { lt } from "../utils/i18n";
 
 export const GET: APIRoute = async () => {
   const siteUrl = import.meta.env.SITE || siteConfig.site;
+  // llms.txt is a single locale-neutral endpoint; emit the default-locale variant.
+  const locale = siteConfig.defaultLocale;
 
-  const llmsTxt = `# ${siteConfig.title}
+  const llmsTxt = `# ${lt(locale, siteConfig.title)}
 
-> ${siteConfig.description}
+> ${lt(locale, siteConfig.description)}
 
 This site is built with Astro and contains a blog with posts about technology, development, and various topics.
 

@@ -5,7 +5,7 @@ import { generatePostSEO } from '@/utils/seo';
 import { optimizePostImagePath, getOptimizedFormat } from '@/utils/images';
 import { processWikilinksInHTML } from '@/utils/internallinks';
 import { getCollection } from 'astro:content';
-import { postUrl } from '@/utils/i18n';
+import { postUrl, lt } from '@/utils/i18n';
 import { t, tReadingTime, tWordCount } from '@/i18n/strings';
 import { shouldShowPost, processPost, calculateReadingTime, generateTOC, getAdjacentPosts, formatDate, formatDateMobile, getReadingTimeMobile } from '@/utils/markdown';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -46,7 +46,7 @@ const structuredData = {
   },
   "publisher": {
     "@type": "Organization",
-    "name": siteConfig.title,
+    "name": lt(post.data.lang, siteConfig.title),
     "logo": {
       "@type": "ImageObject",
       "url": siteConfig.site + "/favicon.ico"

@@ -6,7 +6,7 @@ import { generateProjectSEO } from '@/utils/seo';
 import { optimizePostImagePath, optimizeContentImagePath } from '@/utils/images';
 import { processWikilinksInHTML } from '@/utils/internallinks';
 import { getCollection } from 'astro:content';
-import { postUrl } from '@/utils/i18n';
+import { postUrl, DEFAULT_LOCALE, lt } from '@/utils/i18n';
 import { shouldShowPost, processPost, generateTOC, getAdjacentPosts, formatDate, formatDateMobile, isValidDate } from '@/utils/markdown';
 import { hasProjectCategories } from '@/utils/categories';
 import { normalizeStatus, getStatusDisplayText, hasStatusStyling, getStatusClasses } from '@/utils/status';
@@ -48,8 +48,11 @@ const getRepositoryIcon = (repositoryUrl: string) => {
 // Check if we're in development mode
 const isDev = import.meta.env.DEV;
 
-// Generate SEO data
-const seoData = generateProjectSEO(project, import.meta.env.SITE || '');
+// Generate SEO data — projects collection is locale-neutral (no `lang` field
+// today per ADR-004 Decision 4); use defaultLocale until projects gain
+// bilingual schema.
+const projectLocale = DEFAULT_LOCALE;
+const seoData = generateProjectSEO(project, import.meta.env.SITE || '', projectLocale);
 
 // Image handling is now done by ImageWrapper component
 
@@ -65,7 +68,7 @@ const structuredData = {
   },
   "publisher": {
     "@type": "Organization",
-    "name": siteConfig.title,
+    "name": lt(projectLocale, siteConfig.title),
     "logo": {
       "@type": "ImageObject",
       "url": siteConfig.site + "/favicon.ico"

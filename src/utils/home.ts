@@ -3,7 +3,7 @@ import { siteConfig } from '@/config';
 import { generateHomeSEO } from '@/utils/seo';
 import { isValidDate, processPost, shouldShowPost, shouldShowContent, sortPostsByDate } from '@/utils/markdown';
 import { hasProjectCategories } from '@/utils/categories';
-import { findTranslation, getLocalisedPosts, postSlug, type Locale } from '@/utils/i18n';
+import { findTranslation, getLocalisedPosts, postSlug, type Locale, lt } from '@/utils/i18n';
 
 type SpecialEntry = CollectionEntry<'special'>;
 
@@ -152,14 +152,15 @@ export async function getHomeData(locale: Locale, currentUrl: string): Promise<H
     contentTypesCount === 0 && siteConfig.homeOptions.blurb.placement !== 'none' && HomeBlurbContent,
   );
 
-  const seoData = generateHomeSEO(currentUrl);
-  if (siteConfig.homepageTitle) seoData.title = siteConfig.homepageTitle;
+  const seoData = generateHomeSEO(currentUrl, locale);
+  const localisedHomepageTitle = lt(locale, siteConfig.homepageTitle);
+  if (localisedHomepageTitle) seoData.title = localisedHomepageTitle;
 
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
-    name: siteConfig.title,
-    description: siteConfig.description,
+    name: lt(locale, siteConfig.title),
+    description: lt(locale, siteConfig.description),
     url: siteConfig.site,
     author: {
       '@type': 'Person',
@@ -167,7 +168,7 @@ export async function getHomeData(locale: Locale, currentUrl: string): Promise<H
     },
     publisher: {
       '@type': 'Organization',
-      name: siteConfig.title,
+      name: lt(locale, siteConfig.title),
       url: siteConfig.site,
     },
   };

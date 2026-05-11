@@ -1,6 +1,6 @@
 ---
 import { siteConfig } from '@/config';
-import { type Locale, localePrefix } from '@/utils/i18n';
+import { type Locale, localePrefix, lt } from '@/utils/i18n';
 import { tOpt } from '@/i18n/strings';
 import Icon from './Icon.astro';
 
@@ -34,7 +34,7 @@ const legalLinks = (siteConfig.navigation.footer ?? []).map(p => ({
 const showLegalLinks = legalLinks.length > 0;
 
 // Replace placeholder with actual author name
-const footerContent = siteConfig.footer.content.replace('{author}', siteConfig.author);
+const footerContent = lt(urlLocale, siteConfig.footer.content).replace('{author}', siteConfig.author);
 
 // Size and style classes for profile picture
 const getProfilePictureClasses = (size: string, style: string) => {
@@ -70,14 +70,14 @@ const getProfilePictureClasses = (size: string, style: string) => {
           >
             <img
               src={profilePicture.image}
-              alt={profilePicture.alt}
+              alt={lt(urlLocale, profilePicture.alt)}
               class={getProfilePictureClasses(profilePicture.size, profilePicture.style)}
             />
           </a>
         ) : (
           <img
             src={profilePicture.image}
-            alt={profilePicture.alt}
+            alt={lt(urlLocale, profilePicture.alt)}
             class={getProfilePictureClasses(profilePicture.size, profilePicture.style)}
           />
         )}
@@ -164,14 +164,14 @@ const getProfilePictureClasses = (size: string, style: string) => {
               >
                 <img
                   src={profilePicture.image}
-                  alt={profilePicture.alt}
+                  alt={lt(urlLocale, profilePicture.alt)}
                   class={getProfilePictureClasses(profilePicture.size, profilePicture.style)}
                 />
               </a>
             ) : (
               <img
                 src={profilePicture.image}
-                alt={profilePicture.alt}
+                alt={lt(urlLocale, profilePicture.alt)}
                 class={getProfilePictureClasses(profilePicture.size, profilePicture.style)}
               />
             )}

@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { type Locale, getLocalisedPosts } from '@/utils/i18n';
+import { type Locale, getLocalisedPosts, lt } from '@/utils/i18n';
 import { t, tPageOfTotal } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
@@ -113,7 +113,7 @@ const pageTitle = `${t(lang, 'posts.postsTagged')} "${tag}" - ${tPageOfTotal(lan
 const pageDescription = `${tPageOfTotal(lang, currentPage, totalPages)}, ${t(lang, 'posts.postsTaggedWith')} "${tag}"`;
 
 const seoData = {
-  title: `${pageTitle} | ${siteConfig.title}`,
+  title: `${pageTitle} | ${lt(lang, siteConfig.title)}`,
   description: pageDescription,
   canonical: Astro.url.href,
   ogType: 'website' as const

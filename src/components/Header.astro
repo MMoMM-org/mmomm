@@ -1,7 +1,7 @@
 ---
 import { siteConfig } from '../config';
 import type { Post, Page } from '@/types';
-import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, pageUrl, findTranslation, findPageTranslation } from '@/utils/i18n';
+import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, pageUrl, findTranslation, findPageTranslation, lt } from '@/utils/i18n';
 import { tOpt } from '@/i18n/strings';
 import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
@@ -122,12 +122,12 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
           {showProfilePicture ? (
             <img
               src={profilePicture.image}
-              alt={profilePicture.alt}
+              alt={lt(lang, profilePicture.alt)}
               class={getHeaderProfilePictureClasses(profilePicture.style)}
             />
           ) : (
             <span class="font-semibold text-primary-900 dark:text-primary-50">
-              {siteConfig.title}
+              {lt(lang, siteConfig.title)}
             </span>
           )}
         </a>

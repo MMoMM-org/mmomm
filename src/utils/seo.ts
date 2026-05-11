@@ -7,6 +7,7 @@ import type {
   OpenGraphImage,
 } from "@/types";
 import siteConfig from "@/config";
+import { DEFAULT_LOCALE, type Locale, lt } from "./i18n";
 import {
   getFallbackOGImage,
   optimizePostImagePath,
@@ -14,10 +15,10 @@ import {
 } from "./images";
 
 // Helper function to get default OG image
-function getDefaultOGImage(): OpenGraphImage {
+function getDefaultOGImage(locale: Locale): OpenGraphImage {
   return {
     url: "/open-graph.png",
-    alt: siteConfig.defaultOgImageAlt,
+    alt: lt(locale, siteConfig.defaultOgImageAlt),
     width: 1200,
     height: 630,
   };
@@ -44,6 +45,7 @@ function extractImagePath(image: string): string {
 // Generate SEO data for posts
 export function generatePostSEO(post: Post, url: string): SEOData {
   const { title, description, image, imageOG, tags, date } = post.data;
+  const locale: Locale = post.data.lang;
 
   let ogImage: OpenGraphImage | undefined;
 
@@ -74,7 +76,7 @@ export function generatePostSEO(post: Post, url: string): SEOData {
     };
   } else {
     // Use default OG image
-    ogImage = getDefaultOGImage();
+    ogImage = getDefaultOGImage(locale);
     ogImage = {
       ...ogImage,
       url: `${siteConfig.site}${ogImage.url}`,
@@ -82,14 +84,14 @@ export function generatePostSEO(post: Post, url: string): SEOData {
   }
 
   return {
-    title: `${title} | ${siteConfig.title}`,
+    title: `${title} | ${lt(locale, siteConfig.title)}`,
     description: description || `Post: ${title}`,
     canonical: url,
     ogImage,
     ogType: "article",
     publishedTime: date.toISOString(),
     modifiedTime: date.toISOString(),
-    tags: tags?.filter((tag) => tag !== null) || undefined,
+    tags: tags?.filter((tag: string | null): tag is string => tag !== null) || undefined,
     noIndex: post.data.noIndex || false, // Add this line
   };
 }
@@ -97,6 +99,7 @@ export function generatePostSEO(post: Post, url: string): SEOData {
 // Generate SEO data for pages
 export function generatePageSEO(page: Page, url: string): SEOData {
   const { title, description, image } = page.data;
+  const locale: Locale = page.data.lang;
 
   let ogImage: OpenGraphImage | undefined;
 
@@ -127,7 +130,7 @@ export function generatePageSEO(page: Page, url: string): SEOData {
     };
   } else {
     // Use default OG image
-    ogImage = getDefaultOGImage();
+    ogImage = getDefaultOGImage(locale);
     ogImage = {
       ...ogImage,
       url: `${siteConfig.site}${ogImage.url}`,
@@ -135,7 +138,7 @@ export function generatePageSEO(page: Page, url: string): SEOData {
   }
 
   return {
-    title: `${title} | ${siteConfig.title}`,
+    title: `${title} | ${lt(locale, siteConfig.title)}`,
     description: description || "",
     canonical: url,
     ogImage,
@@ -145,7 +148,7 @@ export function generatePageSEO(page: Page, url: string): SEOData {
 }
 
 // Generate SEO data for projects
-export function generateProjectSEO(project: Project, url: string): SEOData {
+export function generateProjectSEO(project: Project, url: string, locale: Locale): SEOData {
   const { title, description, image, date } = project.data;
 
   let ogImage: OpenGraphImage | undefined;
@@ -177,7 +180,7 @@ export function generateProjectSEO(project: Project, url: string): SEOData {
     };
   } else {
     // Use default OG image
-    ogImage = getDefaultOGImage();
+    ogImage = getDefaultOGImage(locale);
     ogImage = {
       ...ogImage,
       url: `${siteConfig.site}${ogImage.url}`,
@@ -185,14 +188,14 @@ export function generateProjectSEO(project: Project, url: string): SEOData {
   }
 
   return {
-    title: `${title} | ${siteConfig.title}`,
+    title: `${title} | ${lt(locale, siteConfig.title)}`,
     description: description || `Project: ${title}`,
     canonical: url,
     ogImage,
     ogType: "article",
     publishedTime: date.toISOString(),
     modifiedTime: date.toISOString(),
-    tags: project.data.categories?.filter((cat) => cat !== null) || undefined,
+    tags: project.data.categories?.filter((cat: string | null): cat is string => cat !== null) || undefined,
     noIndex: project.data.noIndex || false,
   };
 }
@@ -200,7 +203,8 @@ export function generateProjectSEO(project: Project, url: string): SEOData {
 // Generate SEO data for documentation
 export function generateDocumentationSEO(
   documentation: Docs,
-  url: string
+  url: string,
+  locale: Locale
 ): SEOData {
   const { title, description, image, category, version } = documentation.data;
 
@@ -234,7 +238,7 @@ export function generateDocumentationSEO(
     };
   } else {
     // Use default OG image
-    ogImage = getDefaultOGImage();
+    ogImage = getDefaultOGImage(locale);
     ogImage = {
       ...ogImage,
       url: `${siteConfig.site}${ogImage.url}`,
@@ -242,7 +246,7 @@ export function generateDocumentationSEO(
   }
 
   return {
-    title: `${title} | ${siteConfig.title}`,
+    title: `${title} | ${lt(locale, siteConfig.title)}`,
     description: description || `Documentation: ${title}`,
     canonical: url,
     ogImage,
@@ -256,19 +260,19 @@ export function generateDocumentationSEO(
 }
 
 // Generate SEO data for homepage
-export function generateHomeSEO(url: string): SEOData {
+export function generateHomeSEO(url: string, locale: Locale): SEOData {
   let ogImage: OpenGraphImage | undefined;
 
   // Always use fallback image for homepage
-  ogImage = getDefaultOGImage();
+  ogImage = getDefaultOGImage(locale);
   ogImage = {
     ...ogImage,
     url: `${siteConfig.site}${ogImage.url}`,
   };
 
   return {
-    title: siteConfig.title,
-    description: siteConfig.description,
+    title: lt(locale, siteConfig.title),
+    description: lt(locale, siteConfig.description),
     canonical: normalizeCanonicalUrl(url),
     ogImage,
     ogType: "website",
@@ -279,10 +283,12 @@ export function generateHomeSEO(url: string): SEOData {
 export function generateTagSEO(
   tag: string,
   site: string,
+  locale: Locale,
   currentPage?: number
 ): SEOData {
-  const title = `Posts tagged with "${tag}" | ${siteConfig.title}`;
-  const description = `Browse all posts tagged with ${tag} on ${siteConfig.title}`;
+  const siteTitle = lt(locale, siteConfig.title);
+  const title = `Posts tagged with "${tag}" | ${siteTitle}`;
+  const description = `Browse all posts tagged with ${tag} on ${siteTitle}`;
   const baseUrl = `${site}/posts/tag/${tag}`;
   const canonical =
     currentPage && currentPage > 1 ? `${baseUrl}/${currentPage}` : baseUrl;
@@ -293,12 +299,12 @@ export function generateTagSEO(
     canonical,
     robots: "index, follow",
     ogType: "website",
-    ogImage: getDefaultOGImage(),
+    ogImage: getDefaultOGImage(locale),
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      image: getDefaultOGImage().url,
+      image: getDefaultOGImage(locale).url,
     },
   };
 }
@@ -306,13 +312,15 @@ export function generateTagSEO(
 // Generate SEO data for posts listing pages
 export function generatePostsListSEO(
   site: string,
+  locale: Locale,
   currentPage?: number
 ): SEOData {
+  const siteTitle = lt(locale, siteConfig.title);
   const title =
     currentPage && currentPage > 1
-      ? `Posts - Page ${currentPage} | ${siteConfig.title}`
-      : `Posts | ${siteConfig.title}`;
-  const description = `Browse all posts on ${siteConfig.title}`;
+      ? `Posts - Page ${currentPage} | ${siteTitle}`
+      : `Posts | ${siteTitle}`;
+  const description = `Browse all posts on ${siteTitle}`;
   const canonical =
     currentPage && currentPage > 1
       ? `${site}/posts/${currentPage}`
@@ -324,12 +332,12 @@ export function generatePostsListSEO(
     canonical,
     robots: "index, follow",
     ogType: "website",
-    ogImage: getDefaultOGImage(),
+    ogImage: getDefaultOGImage(locale),
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      image: getDefaultOGImage().url,
+      image: getDefaultOGImage(locale).url,
     },
   };
 }
@@ -364,7 +372,7 @@ export function generateStructuredData(
 }
 
 // Generate meta tags HTML
-export function generateMetaTags(seoData: SEOData): string {
+export function generateMetaTags(seoData: SEOData, locale: Locale = DEFAULT_LOCALE): string {
   const tags = [
     `<title>${seoData.title}</title>`,
     `<meta name="description" content="${seoData.description}">`,
@@ -376,7 +384,7 @@ export function generateMetaTags(seoData: SEOData): string {
     `<meta property="og:description" content="${seoData.description}">`,
     `<meta property="og:url" content="${seoData.canonical}">`,
     `<meta property="og:type" content="${seoData.ogType}">`,
-    `<meta property="og:site_name" content="${siteConfig.title}">`,
+    `<meta property="og:site_name" content="${lt(locale, siteConfig.title)}">`,
 
     // Twitter Card
     `<meta name="twitter:card" content="summary_large_image">`,

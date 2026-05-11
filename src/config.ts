@@ -1,5 +1,5 @@
 // Site configuration with TypeScript types
-import type { Locale, NavigationItem } from "./types";
+import type { Locale, LocalisedString, NavigationItem } from "./types";
 
 // Aspect ratio options for post cards
 export type AspectRatio = 
@@ -14,15 +14,15 @@ export type AspectRatio =
 export interface SiteConfig {
   // Site Information
   site: string;
-  title: string;
+  title: LocalisedString;
   /** Homepage-specific meta title. Falls back to title if empty. */
-  homepageTitle: string;
-  description: string;
+  homepageTitle: LocalisedString;
+  description: LocalisedString;
   author: string;
   locales: readonly Locale[];
   defaultLocale: Locale;
   faviconThemeAdaptive: boolean;
-  defaultOgImageAlt: string;
+  defaultOgImageAlt: LocalisedString;
   
   // Global Settings
   theme: "minimal" | "oxygen" | "atom" | "ayu" | "catppuccin" | "charcoal" | "dracula" | "everforest" | "flexoki" | "gruvbox" | "macos" | "nord" | "obsidian" | "rose-pine" | "sky" | "solarized" | "things" | "custom";
@@ -46,7 +46,7 @@ export interface SiteConfig {
   };
   footer: {
     enabled: boolean;
-    content: string;
+    content: LocalisedString;
     showSocialIconsInFooter: boolean;
   };
   // [CONFIG:HIDE_SCROLL_BAR]
@@ -85,7 +85,7 @@ export interface SiteConfig {
   profilePicture: {
     enabled: boolean;
     image: string;
-    alt: string;
+    alt: LocalisedString;
     size: "sm" | "md" | "lg";
     url?: string;
     placement: "footer" | "header";
@@ -188,11 +188,14 @@ export const siteConfig: SiteConfig = {
   // [CONFIG:SITE_URL]
   site: "https://www.mmomm.org",
   // [CONFIG:SITE_TITLE]
-  title: "MingleMangleOfMyMind",
+  title: { de: "MingleMangleOfMyMind", en: "MingleMangleOfMyMind" },
   // [CONFIG:HOMEPAGE_TITLE]
-  homepageTitle: "",
+  homepageTitle: { de: "", en: "" },
   // [CONFIG:SITE_DESCRIPTION]
-  description: "PKM, Obsidian, MiYo, AI und anderes Gedöns",
+  description: {
+    de: "PKM, Obsidian, MiYo, AI und anderes Gedöns",
+    en: "PKM, Obsidian, MiYo, AI, and other oddments",
+  },
   // [CONFIG:SITE_AUTHOR]
   author: "Marcus Breiden",
   // [CONFIG:LOCALES]
@@ -202,7 +205,10 @@ export const siteConfig: SiteConfig = {
   // [CONFIG:FAVICON_THEME_ADAPTIVE]
   faviconThemeAdaptive: true, // If true, favicon switches between favicon-dark.png and favicon-light.png based on browser's system theme preference. If false, always uses favicon.png
   // [CONFIG:DEFAULT_OG_IMAGE_ALT]
-  defaultOgImageAlt: "MingleMangleOfMyMind logo.", // Alt text for the default Open Graph image, public/open-graph.png
+  defaultOgImageAlt: {
+    de: "MingleMangleOfMyMind logo.",
+    en: "MingleMangleOfMyMind logo.",
+  }, // Alt text for the default Open Graph image, public/open-graph.png
 
   // Global Settings
   // [CONFIG:THEME]
@@ -239,7 +245,10 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:FOOTER_ENABLED]
     enabled: true,
     // [CONFIG:FOOTER_CONTENT]
-    content: `© 2026 {author}. Built with <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a> (a bilingual fork of <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
+    content: {
+      de: `© 2026 {author}. Gebaut mit <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a> (ein zweisprachiger Fork von <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
+      en: `© 2026 {author}. Built with <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a> (a bilingual fork of <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
+    },
     // [CONFIG:FOOTER_SHOW_SOCIAL_ICONS]
     showSocialIconsInFooter: true,
   },
@@ -299,7 +308,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:PROFILE_PICTURE_IMAGE]
     image: "/profile.jpg", // Path to your profile image (place in public/ directory)
     // [CONFIG:PROFILE_PICTURE_ALT]
-    alt: "Profile picture",
+    alt: { de: "Profilbild", en: "Profile picture" },
     // [CONFIG:PROFILE_PICTURE_SIZE]
     size: "md", // "sm" (32px), "md" (48px), or "lg" (64px) - only affects footer placement
     // [CONFIG:PROFILE_PICTURE_URL]
@@ -636,11 +645,23 @@ function validateSiteConfig(config: SiteConfig): { isValid: boolean; errors: str
   if (!config.site || !config.site.startsWith('http')) {
     errors.push('Site URL is missing or invalid. Please set a complete URL like "https://yourdomain.com" in the site field.');
   }
-  if (!config.title || config.title.trim() === '') {
-    errors.push('Site title is required and cannot be empty. Set a descriptive title for your blog.');
+  if (!config.title || typeof config.title !== 'object') {
+    errors.push('Site title is required as a LocalisedString { de: "...", en: "..." }. Set a descriptive title for each locale.');
+  } else {
+    for (const locale of config.locales) {
+      if (!config.title[locale] || config.title[locale].trim() === '') {
+        errors.push(`Site title is missing or empty for locale "${locale}". Set title.${locale} to a descriptive title.`);
+      }
+    }
   }
-  if (!config.description || config.description.trim() === '') {
-    errors.push('Site description is required and cannot be empty. Set a brief description of your blog.');
+  if (!config.description || typeof config.description !== 'object') {
+    errors.push('Site description is required as a LocalisedString { de: "...", en: "..." }. Set a description for each locale.');
+  } else {
+    for (const locale of config.locales) {
+      if (!config.description[locale] || config.description[locale].trim() === '') {
+        errors.push(`Site description is missing or empty for locale "${locale}". Set description.${locale} to a brief description.`);
+      }
+    }
   }
   if (!config.author || config.author.trim() === '') {
     errors.push('Author name is required and cannot be empty. Set your name or the blog author.');
@@ -765,8 +786,17 @@ function validateSiteConfig(config: SiteConfig): { isValid: boolean; errors: str
   if (typeof config.footer.enabled !== 'boolean') {
     errors.push('Footer enabled setting must be a boolean value (true or false).');
   }
-  if (config.footer.enabled && (!config.footer.content || config.footer.content.trim() === '')) {
-    errors.push('Footer content is required when footer is enabled. Set footer.content to your footer text.');
+  if (config.footer.enabled) {
+    if (!config.footer.content || typeof config.footer.content !== 'object') {
+      errors.push('Footer content is required when footer is enabled. Set footer.content to a LocalisedString { de: "...", en: "..." }.');
+    } else {
+      for (const locale of config.locales) {
+        const value = config.footer.content[locale];
+        if (!value || value.trim() === '') {
+          errors.push(`Footer content is missing or empty for locale "${locale}". Set footer.content.${locale} to your footer text.`);
+        }
+      }
+    }
   }
   if (typeof config.footer.showSocialIconsInFooter !== 'boolean') {
     errors.push('Footer social icons setting must be a boolean value (true or false).');
@@ -777,8 +807,15 @@ function validateSiteConfig(config: SiteConfig): { isValid: boolean; errors: str
     if (!config.profilePicture.image || config.profilePicture.image.trim() === '') {
       errors.push('Profile picture image path is required when profilePicture.enabled is true. Set profilePicture.image to the path of your image (e.g., "/profile.jpg" in the public/ directory).');
     }
-    if (!config.profilePicture.alt || config.profilePicture.alt.trim() === '') {
-      errors.push('Profile picture alt text is required when profilePicture.enabled is true. Set profilePicture.alt to describe your profile picture for accessibility.');
+    if (!config.profilePicture.alt || typeof config.profilePicture.alt !== 'object') {
+      errors.push('Profile picture alt text is required when profilePicture.enabled is true. Set profilePicture.alt to a LocalisedString { de: "...", en: "..." }.');
+    } else {
+      for (const locale of config.locales) {
+        const value = config.profilePicture.alt[locale];
+        if (!value || value.trim() === '') {
+          errors.push(`Profile picture alt text is missing or empty for locale "${locale}".`);
+        }
+      }
     }
     if (!['sm', 'md', 'lg'].includes(config.profilePicture.size)) {
       errors.push(`Profile picture size must be "sm" (32px), "md" (48px), or "lg" (64px). Current value "${config.profilePicture.size}" is invalid.`);

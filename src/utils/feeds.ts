@@ -2,7 +2,7 @@ import rss from "@astrojs/rss";
 import { siteConfig } from "../config";
 import { shouldShowPost, sortPostsByDate } from "./markdown";
 import { optimizePostImagePath } from "./images";
-import { getLocalisedPosts, postUrl, type Locale } from "./i18n";
+import { getLocalisedPosts, postUrl, type Locale, lt } from "./i18n";
 import type { Post } from "@/types";
 
 function extractImagePath(image: unknown): string {
@@ -62,8 +62,8 @@ export async function buildRssFeed(locale: Locale) {
   const sortedPosts = await getFeedPosts(locale);
 
   return rss({
-    title: siteConfig.title,
-    description: siteConfig.description,
+    title: lt(locale, siteConfig.title),
+    description: lt(locale, siteConfig.description),
     site: siteUrl,
     items: sortedPosts.map((post) => {
       const link = absoluteUrl(siteUrl, postUrl(post));
@@ -125,8 +125,8 @@ export async function buildAtomFeed(locale: Locale): Promise<Response> {
 
   const atomFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="${locale}">
-  <title>${siteConfig.title}</title>
-  <subtitle>${siteConfig.description}</subtitle>
+  <title>${lt(locale, siteConfig.title)}</title>
+  <subtitle>${lt(locale, siteConfig.description)}</subtitle>
   <link href="${siteUrl}"/>
   <link href="${feedSelfHref}" rel="self"/>
   <id>${feedSelfHref}</id>

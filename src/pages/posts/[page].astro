@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { type Locale, getLocalisedPosts } from '@/utils/i18n';
+import { type Locale, getLocalisedPosts, lt } from '@/utils/i18n';
 import { t, tPageOfTotal } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
@@ -78,10 +78,10 @@ const pageTitle = selectedTag
   : `${t(lang, 'posts.allPosts')} - ${tPageOfTotal(lang, currentPage, totalPages)}`;
 const pageDescription = selectedTag
   ? `${tPageOfTotal(lang, currentPage, totalPages)}, ${t(lang, 'posts.postsTaggedWith')} "${selectedTag}"`
-  : `${tPageOfTotal(lang, currentPage, totalPages)} — ${t(lang, 'posts.allPosts')} on ${siteConfig.title}`;
+  : `${tPageOfTotal(lang, currentPage, totalPages)} — ${t(lang, 'posts.allPosts')} on ${lt(lang, siteConfig.title)}`;
 
 const seoData = {
-  title: `${pageTitle} | ${siteConfig.title}`,
+  title: `${pageTitle} | ${lt(lang, siteConfig.title)}`,
   description: pageDescription,
   canonical: Astro.url.href,
   ogType: 'website' as const

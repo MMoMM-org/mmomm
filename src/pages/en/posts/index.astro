@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { type Locale, getLocalisedPosts } from '@/utils/i18n';
+import { type Locale, getLocalisedPosts, lt } from '@/utils/i18n';
 import { optimizePostImagePath } from '@/utils/images';
 import { t } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -62,10 +62,10 @@ const pageTitle = selectedTag
   : (postsPageData?.data.title || t(lang, 'posts.allPosts'));
 const pageDescription = selectedTag
   ? `${t(lang, 'posts.allPostsTagged')} "${selectedTag}"`
-  : (postsPageData?.data.description || `${t(lang, 'posts.allPosts')} — ${siteConfig.title}`);
+  : (postsPageData?.data.description || `${t(lang, 'posts.allPosts')} — ${lt(lang, siteConfig.title)}`);
 
 const seoData = {
-  title: `${pageTitle} | ${siteConfig.title}`,
+  title: `${pageTitle} | ${lt(lang, siteConfig.title)}`,
   description: pageDescription,
   canonical: Astro.url.href,
   ogType: 'website' as const

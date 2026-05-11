@@ -13,6 +13,7 @@ import ImageWrapper from '@/components/ImageWrapper.astro';
 import DocsSidebar from '@/components/DocsSidebar.astro';
 import Icon from '@/components/Icon.astro';
 import { shouldShowContent, getAdjacentDocs, formatDate } from '@/utils/markdown';
+import { DEFAULT_LOCALE, lt } from '@/utils/i18n';
 
 export interface Props {
   documentation: Docs;
@@ -39,8 +40,10 @@ const currentCategory = documentation.data.category &&
 const { render } = await import('astro:content');
 const { Content, headings } = await render(documentation);
 
-// Generate SEO data
-const seoData = generateDocumentationSEO(documentation, Astro.url.href);
+// Generate SEO data — docs collection is locale-neutral (no `lang` field today
+// per ADR-004 Decision 4); use defaultLocale until docs gain bilingual schema.
+const docsLocale = DEFAULT_LOCALE;
+const seoData = generateDocumentationSEO(documentation, Astro.url.href, docsLocale);
 
 // Generate table of contents from headings using configurable depth
 const maxDepth = siteConfig.tableOfContents.depth;
@@ -63,7 +66,7 @@ const structuredData = {
   url: Astro.url.href,
   isPartOf: {
     '@type': 'WebSite',
-    name: siteConfig.title,
+    name: lt(docsLocale, siteConfig.title),
     url: siteConfig.site
   },
   author: {
