@@ -1,5 +1,13 @@
 # Tools — astro-mmomm
-<!-- CI, build pipeline, API clients, local dev setup. Updated: 2026-05-09 -->
+<!-- CI, build pipeline, API clients, local dev setup. Updated: 2026-05-11 -->
+
+## Vault CMS + Astro Composer keep parallel content-type lists
+<!-- 2026-05-11 -->
+The astro-modular Obsidian plugin stack stores content-type configuration in TWO `data.json` files that overlap:
+- `src/content/.obsidian/plugins/vault-cms/data.json` — the canonical registry. Has `contentTypes[]` (folder, linkBasePath, enabled, fileOrganization) AND `frontmatterProperties{<id>: {template, ...}}`. Also owns `defaultContentTypeId` and `seoConfig.scanDirectories`.
+- `src/content/.obsidian/plugins/astro-composer/data.json` — the *authoring* surface. Has its own `contentTypes[]` with overlapping fields (id, name, folder, linkBasePath, template, enabled) — this is the list shown in the "new note" picker.
+
+When reconfiguring content types (rename, split, disable), BOTH files must be updated together — IDs must match across them, otherwise the new-note flow opens a folder that the registry doesn't know about (or vice versa). The bilingual i18n workaround (ADR-004 Decision 1) lives entirely in these two JSONs: split `Posts` into `Posts (DE)` (`posts/de/`, template `lang: de`) and `Posts (EN)` (`posts/en/`, template `lang: en`), same for `Pages`. After editing, reload Obsidian (Cmd-R in the vault) so the plugins re-read their config. `defaultContentTypeId` in vault-cms must reference an ID that exists in the current `contentTypes[]` array, or the wizard breaks. Editing these files is safe — the Astro build never reads `.obsidian/`.
 
 <!-- 2026-05-09 (Phase 2b) -->
 - No unit-test suite; `package.json` `"test"` is the placeholder `echo 'Error: no test specified' && exit 1`. Verification for code changes is `pnpm build` + targeted `grep` against `dist/` (76–77 pages). For i18n changes, also assert per-locale URL shapes — e.g. `grep -oE 'href="/(en/)?posts/[^"]+"' dist/<page>/index.html`. Build also re-emits `dist/sitemap-index.xml` (from @astrojs/sitemap integration) alongside the hand-written `dist/sitemap.xml`.
