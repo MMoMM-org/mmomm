@@ -3,39 +3,39 @@
   "configFilePath": "../config.ts",
   "contentTypes": [
     {
-      "id": "content-1765432406133",
-      "name": "Documentation",
-      "folder": "docs",
-      "fileOrganization": "file",
-      "indexFileName": "index",
-      "linkBasePath": "/docs/",
-      "enabled": true
-    },
-    {
-      "id": "pages-1765432337485",
-      "name": "Pages",
-      "folder": "pages",
-      "fileOrganization": "file",
-      "indexFileName": "index",
-      "linkBasePath": "/",
-      "enabled": true
-    },
-    {
-      "id": "posts-1765432337485",
-      "name": "Posts",
-      "folder": "posts",
+      "id": "posts-de-1765432337485",
+      "name": "Posts (DE)",
+      "folder": "posts/de",
       "fileOrganization": "file",
       "indexFileName": "index",
       "linkBasePath": "/posts/",
       "enabled": true
     },
     {
-      "id": "content-1765432392567",
-      "name": "Projects",
-      "folder": "projects",
+      "id": "posts-en-1765432337485",
+      "name": "Posts (EN)",
+      "folder": "posts/en",
       "fileOrganization": "file",
       "indexFileName": "index",
-      "linkBasePath": "/projects/",
+      "linkBasePath": "/en/posts/",
+      "enabled": true
+    },
+    {
+      "id": "pages-de-1765432337485",
+      "name": "Pages (DE)",
+      "folder": "pages/de",
+      "fileOrganization": "file",
+      "indexFileName": "index",
+      "linkBasePath": "/",
+      "enabled": true
+    },
+    {
+      "id": "pages-en-1765432337485",
+      "name": "Pages (EN)",
+      "folder": "pages/en",
+      "fileOrganization": "file",
+      "indexFileName": "index",
+      "linkBasePath": "/en/",
       "enabled": true
     },
     {
@@ -46,6 +46,24 @@
       "enabled": true,
       "indexFileName": "index",
       "linkBasePath": "/"
+    },
+    {
+      "id": "content-1765432406133",
+      "name": "Documentation",
+      "folder": "docs",
+      "fileOrganization": "file",
+      "indexFileName": "index",
+      "linkBasePath": "/docs/",
+      "enabled": false
+    },
+    {
+      "id": "content-1765432392567",
+      "name": "Projects",
+      "folder": "projects",
+      "fileOrganization": "file",
+      "indexFileName": "index",
+      "linkBasePath": "/projects/",
+      "enabled": false
     }
   ],
   "frontmatterProperties": {
@@ -59,15 +77,23 @@
       "imageProperty": "image",
       "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\ncategory: \"\"\norder: 2\nversion: \"\"\nlastModified: {{date}}\nimage:\nimageAlt:\nhideCoverImage: false\nhideTOC: false\ndraft: false\nfeatured: true\n---\n"
     },
-    "pages-1765432337485": {
+    "pages-de-1765432337485": {
       "titleProperty": "title",
       "descriptionProperty": "description",
       "draftProperty": "draft",
       "draftLogic": "true-draft",
       "hasDraftStatus": true,
-      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nnoIndex: false\nhideTOC: false\ndraft: false\n---\n"
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nlang: de\ntranslationKey: \"\"\nnoIndex: false\nhideTOC: false\ndraft: false\n---\n"
     },
-    "posts-1765432337485": {
+    "pages-en-1765432337485": {
+      "titleProperty": "title",
+      "descriptionProperty": "description",
+      "draftProperty": "draft",
+      "draftLogic": "true-draft",
+      "hasDraftStatus": true,
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nlang: en\ntranslationKey: \"\"\nnoIndex: false\nhideTOC: false\ndraft: false\n---\n"
+    },
+    "posts-de-1765432337485": {
       "titleProperty": "title",
       "dateProperty": "date",
       "descriptionProperty": "description",
@@ -76,7 +102,18 @@
       "draftLogic": "true-draft",
       "hasDraftStatus": true,
       "imageProperty": "image",
-      "template": "---\ntitle: \"{{title}}\"\ndate: {{date}}\ndescription: \"\"\ntags: []\nimage: \"\"\nimageAlt: \"\"\nimageOG: false\nhideCoverImage: false\nhideTOC: false\ntargetKeyword: \"\"\ndraft: false\n---\n"
+      "template": "---\ntitle: \"{{title}}\"\ndate: {{date}}\ndescription: \"\"\ntags: []\nlang: de\ntranslationKey: \"\"\nimage: \"\"\nimageAlt: \"\"\nimageOG: false\nhideCoverImage: false\nhideTOC: false\ntargetKeyword: \"\"\ndraft: false\n---\n"
+    },
+    "posts-en-1765432337485": {
+      "titleProperty": "title",
+      "dateProperty": "date",
+      "descriptionProperty": "description",
+      "tagsProperty": "tags",
+      "draftProperty": "draft",
+      "draftLogic": "true-draft",
+      "hasDraftStatus": true,
+      "imageProperty": "image",
+      "template": "---\ntitle: \"{{title}}\"\ndate: {{date}}\ndescription: \"\"\ntags: []\nlang: en\ntranslationKey: \"\"\nimage: \"\"\nimageAlt: \"\"\nimageOG: false\nhideCoverImage: false\nhideTOC: false\ntargetKeyword: \"\"\ndraft: false\n---\n"
     },
     "content-1765432392567": {
       "titleProperty": "title",
@@ -299,5 +336,5 @@
   "runWizardOnStartup": false,
   "wizardCompleted": true,
   "enableMdxSupport": false,
-  "defaultContentTypeId": "posts-1765432337485"
+  "defaultContentTypeId": "posts-de-1765432337485"
 }
