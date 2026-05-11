@@ -45,20 +45,37 @@ Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **as
 
 **UI string migrations Phase 2** (`1b67aa4`, 2026-05-11): the visible-on-DE English strings exposed by Phase 1's spot-check are now i18n. `formatDate`/`formatDateMobile` (`src/utils/markdown.ts`) take a `Locale` parameter and route through `Intl` with `de-DE`/`en-US` BCP-47 tags. PostCard derives `post.data.lang` and threads it through dates, reading-time, word-count (new `tWordCount` helper with proper de/en pluralization), and the "+N more" tag chip (new `tMoreTags`). PostLayout gets the same treatment. All 8 posts-list routes (DE+EN: `index`, `[page]`, `tag/[...tag]`, `tag/[...tag]/[page]`) now declare `const lang = '<x>' as Locale` and route pageTitle, pageDescription, h1, "Page N of M • K total posts" counter, "Showing N posts tagged with #X" line, "Show all posts" / "View All Posts" links, and the empty-state "Previous Page" button through `t()`/`tPageOfTotal`. New T9 keys: `posts.allPosts`, `posts.allPostsTagged`, `posts.showAllPosts`, `posts.viewAllPosts`, `posts.totalPosts`, `posts.postsTagged` (cap, headings), `posts.postsTaggedWith` (lowercase, mid-sentence). Folded in 5 more EN-route URL bugs of the same class as Phase 1. Bonus: a long-standing `Astro.props` destructure typing issue in both `[page].astro` files fixed by `as Props` cast — total `astro check` error count dropped from 66 → 32.
 
-## Active plan — none
+**ADR-005 multi-locale architecture written** (2026-05-11, no commit yet — uncommitted in working tree): Pivot from "fork plugin for `urlEn`/`i18nKey` preservation" to "N-locale-ready design with DE/EN MVP" after user signalled "kompletter Umbau auf multi language" direction. Six locked-in decisions: (1) `Locale = 'de' \| 'en'` union stays for MVP, APIs N-shaped so widening = one line; (2) `siteConfig.locales` + `defaultLocale` become source of truth, legacy `language: "de"` removed; (3) `LocalisedString = Record<Locale, string>` required-all with `lt(locale, value)` migration helper; (4) `urlEn` → `urlByLocale: Partial<Record<Locale, string>>` with centralised resolver in `i18n.ts`; (5) routes parameterised as `src/pages/[locale]/...` over non-default locales (kills 7-file `src/pages/en/` duplication); (6) plugin fork = Phase 3, locale-aware from start. ADR-002 Decision 4 + ADR-003 Decision 3 revised in-line; ADR-004 Decision 1 reaffirmed (Vault CMS scales linearly per locale). Blast-radius audit attached as ADR Findings: 21 hardcoded locale-equality branches across 11 files, 42 `/en/` URL hits across 19 files, 4 inline T9-coverage gaps (`'Zeige' / 'Showing'` ternaries Phase 2 missed). 4-phase plan; Phase 1 begins next session pending no further user input.
 
-Both major plans of the session (ADR-004 + i18n correctness) are shipped. No active queued plan. Pick from "next moves" below or surface a new track.
+## Active plan — ADR-005 Phase 1 (Schema foundation)
 
-## Next moves (pick one, ordered by leverage)
+ADR-005 phased migration to multi-locale architecture. Phase 1 next, ~1 session:
+1. Add `siteConfig.locales` + `defaultLocale`; remove legacy `language` field; update `[CONFIG:*]` markers (`[CONFIG:LOCALES]`, `[CONFIG:DEFAULT_LOCALE]` replace `[CONFIG:SITE_LANGUAGE]`)
+2. Update `src/utils/i18n.ts` to re-source `LOCALES`/`DEFAULT_LOCALE` from config; add `LocalisedString` type + `lt()` helper
+3. Migrate 6 site-info fields to `LocalisedString` (title, description, homepageTitle, defaultOgImageAlt, footer.content, profilePicture.alt)
+4. Refactor `urlEn` → `urlByLocale` (types.ts, config.ts, Header/Footer resolver extracted to i18n.ts)
+5. Refactor 6 `locale === 'de' ? a : b` branches in `src/i18n/strings.ts` to per-locale function tables
+6. Fix 4 inline-string leaks in `posts/index.astro`, `posts/tag/[...tag].astro`, and their EN mirrors (`'Zeige' / 'Showing'` → `t()` calls)
+7. Drop `formatDate`/`formatDateMobile` default `= 'de'`; require explicit locale
+8. Refactor `tools/migrate-from-hugo.mjs` + `rename-image-attachments.mjs` to locale-parameterised source-dir tables
+9. Verify `pnpm build` produces same page count + same URLs as today
 
-1. **Fork astro-modular-settings for i18n** (analog ADR-001) — currently the plugin is disabled in `community-plugins.json` because it clobbers `siteConfig.navigation.pages` (drops `i18nKey`/`urlEn`/`external` fields and the entire `footer` array). Repo target: `MMoMM-org/astro-modular-settings-mmomm`. Scope: extend NavigationItem model with `i18nKey?`, `urlEn?`, `external?`, add top-level `footer?: NavigationItem[]` parallel to `pages` with a `[CONFIG:NAVIGATION_FOOTER]` marker, preserve all existing markers. Source: should be at `davidvkimball/astro-modular-settings` (same author as the theme — same fork pattern as ADR-001). Verify the public repo exists before scoping. Without this, the Settings UI stays disabled and config.ts is edited only in the editor.
-2. **GH Pages deploy preview** — currently the work is reviewable only via local `pnpm dev`. Three pieces: `siteConfig.deployment.platform: "github-pages"`, `.github/workflows/deploy.yml`, `public/CNAME` with `www.mmomm.org`. Open question: replace `MMoMM-org/mmomm` main (force-overwrite Hugo) or push to a new repo first? Affects whether `www.mmomm.org` flips to Astro immediately or after a soak.
-3. **Per-locale `siteConfig`** — title, description, homepageTitle, defaultOgImageAlt are single-string today. Feeds, sitemaps, homepages all read these. Options: `{de: …, en: …}` schema or a `siteConfigByLocale` table mirroring `src/i18n/strings.ts`. Touches `src/config.ts` shape (breaks Astro Modular Settings markers) — needs ADR. Re-couples with #1 if the fork gets done first.
-4. **Migrated wikilinks cleanup** — DE/EN post bodies contain template-placeholder `[[Titel der Notiz]]` wikilinks from the migration tool. LocalGraph renders nothing on those posts because no real backlinks. Either fill in real cross-post links or strip placeholders.
-5. **15 residual image-N placeholders** — content edge cases from the rename pass (`957060e`). Each needs a manual decision: invent a caption, keep the placeholder, or remove the image. List under `find src/content/posts -name 'image-*' -type f`. Not blocking.
-6. **i18n string coverage Phase 3** — remaining English-on-DE surfaces not in Phase 2's scope: (a) empty-state copy (`No posts found`, `Try going back to an earlier page or removing filters.`, `There are no posts tagged with "X". Try browsing other tags…`) in the 4 list routes; (b) `RSS Feed` / `Atom Feed` button labels (likely keep as proper nouns, but `Subscribe to RSS feed` title attributes could be translated); (c) ProjectLayout / DocumentationLayout / ProjectCard / DocumentationCard if those code paths are ever re-enabled (currently dead — projects+docs collections empty); (d) any remaining footer / share-button / 404-page strings (audit by grep). Lower urgency since Phase 2 covered all high-traffic visible strings.
-7. **Upstream sync workflow** — ADR-001 Phase 3 TBD. When `davidvkimball/astro-modular` releases new versions, merge into the fork. Standard pattern: `cd <fork>; git fetch upstream; git merge upstream/master`. Cadence and conflict-resolution rules not yet captured.
-8. **`/blog/` redirects** — Phase 3 deploy concern. Astro config edits get reverted by `scripts/generate-deployment-config.js`. Defer to platform config (`_redirects` or `netlify.toml`) once deploy target is chosen.
+After Phase 1: Phase 2 (route deduplication `src/pages/[locale]/`), Phase 3 (plugin fork `MMoMM-org/astro-modular-settings-mmomm`, locale-aware), Phase 4 (runbook + memory updates).
+
+## Next moves outside ADR-005 (pick when ADR-005 has free space)
+
+These survived the ADR-005 reframe — they're orthogonal to the multi-locale migration:
+
+1. **GH Pages deploy preview** — currently reviewable only via local `pnpm dev`. Three pieces: `siteConfig.deployment.platform: "github-pages"`, `.github/workflows/deploy.yml`, `public/CNAME` with `www.mmomm.org`. Open question: replace `MMoMM-org/mmomm` main (force-overwrite Hugo) or push to a new repo first?
+2. **Migrated wikilinks cleanup** — DE/EN post bodies contain template-placeholder `[[Titel der Notiz]]` wikilinks from the migration tool. LocalGraph renders nothing on those posts. Either fill in real cross-post links or strip placeholders.
+3. **15 residual image-N placeholders** — content edge cases from the rename pass (`957060e`). Each needs a manual decision: invent a caption, keep the placeholder, or remove the image. List under `find src/content/posts -name 'image-*' -type f`. Not blocking.
+4. **Upstream sync workflow** — ADR-001 Phase 3 TBD. When `davidvkimball/astro-modular` releases new versions, merge into the fork. Cadence and conflict-resolution rules not yet captured. Phase 3 of ADR-005 covers the same need for the plugin fork — bundle them.
+5. **`/blog/` redirects** — deploy concern. Astro config edits get reverted by `scripts/generate-deployment-config.js`. Defer to platform config (`_redirects` or `netlify.toml`) once deploy target is chosen.
+
+**Subsumed by ADR-005** (no longer separate moves):
+- ~~Fork astro-modular-settings for i18n~~ → ADR-005 Phase 3 (locale-aware from start, not just `urlEn` preservation)
+- ~~Per-locale `siteConfig`~~ → ADR-005 Decision 3 (`LocalisedString`, applied in Phase 1)
+- ~~i18n string coverage Phase 3~~ → ADR-005 Phase 1 step 5+6 covers the 4 known inline gaps; remaining coverage audited as part of Phase 1 verification
 
 ## Discoveries this session worth remembering
 
