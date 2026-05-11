@@ -2,11 +2,11 @@
 <!-- Current sprint focus, active work, known blockers. Updated: 2026-05-11 -->
 <!-- This file is short-lived — prune entries older than 2 weeks via /memory-cleanup -->
 
-## Active branch: `feat/astro-modular` (55 commits ahead of `main`, pushed to origin MMoMM-org/mmomm)
+## Active branch: `feat/astro-modular` (58 commits ahead of `main`, pushed to origin MMoMM-org/mmomm)
 
 Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **astro-modular** theme. Branch not merged to main, not deployed anywhere. Hugo site remains production source of truth.
 
-**Pre-flight for next session**: `git rev-parse HEAD` should be `1b67aa4` or later. `pnpm build` produces 60 pages clean. Theme fork `MMoMM-org/astro-modular-mmomm` master at `4064b30`.
+**Pre-flight for next session**: `git rev-parse HEAD` should be `0e7c256` or later. `pnpm build` produces 56 pages clean. Theme fork `MMoMM-org/astro-modular-mmomm` master at `4064b30`.
 
 ## What's shipped (full list)
 
@@ -30,6 +30,8 @@ Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **as
 **Track C — Per-locale nav labels + Hugo nav parity** (`2e52723`, 2026-05-11): ADR-003 implementation. Extended `NavigationItem` with `i18nKey?` (T9 label key) and `urlEn?` (EN URL override for slug-divergent pages). Added `tOpt(locale, key, fallback)` in `src/i18n/strings.ts` for safe lookup of keys coming from untyped data. `siteConfig.navigation.pages` rebuilt to match Hugo main nav 1:1 — Beiträge/Posts, Videos, Jetzt/Now, Über mich/About, GitHub. New `siteConfig.navigation.footer` array drives a new legal-links row in Footer.astro — Impressum, Datenschutz/Privacy Policy. Header + Footer both derive locale from URL (mirrors Track A workaround for PageLayout/404 not propagating lang). ADR-003 revisions section updated: Decision 3's naive `/en/` prefix is insufficient when slugs diverge, hence `urlEn`.
 
 **UI string migrations Phase 1** (`83fd031`, 2026-05-11): Pagination + LinkedMentions + PostLayout reading-time wired to T9. New `tPageOfTotal(locale, n, m)` and `tReadingTime(locale, minutes)` helpers in `src/i18n/strings.ts` centralize phrase interpolation; new `linkedMentions.referenced` key. `lang` prop threaded through all 8 Pagination call sites. Also fixed 4 pre-existing EN-route baseUrl bugs (`/posts/...` instead of `/en/posts/...` in `en/posts/index`, `en/posts/[page]`, both `en/posts/tag/...` routes) that silently routed EN paginated/tag-filtered users back to DE. `PostContent.astro` was on the migration list but is orphan code — skipped.
+
+**`/now/` locale-neutral page** (`0e7c256`, 2026-05-11): the "Now Page Movement" page (`/now/`, English-only, no `/jetzt/` DE variant and no `/en/now/` prefix) — replicates the Hugo site's `static/now/index.html` meta-refresh trick with a clean Astro route. Established the locale-neutral page pattern (special collection + dedicated `.astro` route + `switcherHref` override + `urlEn` set equal to `url` to defeat the EN prefix); see `general.md` for the durable rule. Header + BaseLayout gained an optional `switcherHref?: string` prop. Build now emits 56 pages (-4: dropped jetzt+now bilingual pair and their public/{de,en}/pages/* image dirs).
 
 **UI string migrations Phase 2** (`1b67aa4`, 2026-05-11): the visible-on-DE English strings exposed by Phase 1's spot-check are now i18n. `formatDate`/`formatDateMobile` (`src/utils/markdown.ts`) take a `Locale` parameter and route through `Intl` with `de-DE`/`en-US` BCP-47 tags. PostCard derives `post.data.lang` and threads it through dates, reading-time, word-count (new `tWordCount` helper with proper de/en pluralization), and the "+N more" tag chip (new `tMoreTags`). PostLayout gets the same treatment. All 8 posts-list routes (DE+EN: `index`, `[page]`, `tag/[...tag]`, `tag/[...tag]/[page]`) now declare `const lang = '<x>' as Locale` and route pageTitle, pageDescription, h1, "Page N of M • K total posts" counter, "Showing N posts tagged with #X" line, "Show all posts" / "View All Posts" links, and the empty-state "Previous Page" button through `t()`/`tPageOfTotal`. New T9 keys: `posts.allPosts`, `posts.allPostsTagged`, `posts.showAllPosts`, `posts.viewAllPosts`, `posts.totalPosts`, `posts.postsTagged` (cap, headings), `posts.postsTaggedWith` (lowercase, mid-sentence). Folded in 5 more EN-route URL bugs of the same class as Phase 1. Bonus: a long-standing `Astro.props` destructure typing issue in both `[page].astro` files fixed by `as Props` cast — total `astro check` error count dropped from 66 → 32.
 
