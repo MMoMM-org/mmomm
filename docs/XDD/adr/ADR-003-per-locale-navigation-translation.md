@@ -108,4 +108,17 @@ These tracks are plugin-neutral. They touch `Header.astro` and CSS only.
 
 ## Revisions
 
-None.
+**2026-05-11 — Track C shipped (`2e52723`).** Decision 3 ("URLs are
+locale-aware at render time") assumed a naive `/en/` prefix would
+suffice for the EN URL of any nav item. After the Hugo non-blog
+migration (ADR-004) introduced bilingual pages with *divergent* slugs
+(`/jetzt/` ↔ `/en/now/`, `/ueber-mich/` ↔ `/en/about/`, `/datenschutz/`
+↔ `/en/privacy-policy/`), naive prefixing would emit broken URLs like
+`/en/jetzt/`. Extended `NavigationItem` with an optional `urlEn?: string`
+override: when present, the Header/Footer uses it verbatim on EN
+routes; otherwise the original `/en/` prefix behaviour applies. The
+`i18nKey?: string` field was added in the same commit as the canonical
+way to reference T9 labels (Decision 2). Both extra fields are inert
+to the Astro Modular Settings plugin per Decision 1 — it preserves
+unknown keys during `[CONFIG:NAVIGATION_PAGES]` parses (verified via
+`pnpm build` after the change, not yet by editing through the plugin).
