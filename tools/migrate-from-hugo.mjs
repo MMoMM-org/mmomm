@@ -26,18 +26,27 @@ function flag(name, fallback) {
   if (next === undefined || next.startsWith('--')) return true;
   return next;
 }
-const SOURCE = resolve(ROOT, flag('source', '../mmomm/content/blog'));
-const IMAGES = resolve(ROOT, flag('images', '../mmomm/static/img/wix'));
-const DEST = resolve(ROOT, flag('dest', 'src/content/posts'));
+// Per-locale Hugo source defaults. Adding a third locale = add a key here
+// (ADR-005 Phase 1 step 8). Users can still override per-section via --source.
+const LOCALE_SOURCES = {
+  de: { content: '../mmomm/content/blog', images: '../mmomm/static/img/wix' },
+  en: { content: '../mmomm/content.en/blog', images: '../mmomm/static/img/wix' },
+};
+const VALID_LOCALES = Object.keys(LOCALE_SOURCES);
+
 const LOCALE = flag('locale', 'de');
+if (!VALID_LOCALES.includes(LOCALE)) {
+  console.error(`--locale must be one of [${VALID_LOCALES.join(', ')}] (got: ${LOCALE})`);
+  process.exit(1);
+}
+
+const SOURCE = resolve(ROOT, flag('source', LOCALE_SOURCES[LOCALE].content));
+const IMAGES = resolve(ROOT, flag('images', LOCALE_SOURCES[LOCALE].images));
+const DEST = resolve(ROOT, flag('dest', 'src/content/posts'));
 const ONE_SLUG = flag('slug', null);
 const SKIP = String(flag('skip', 'obsidian-todoist')).split(',').filter(Boolean);
 const DRY = flag('dry-run', false) === true;
 const VERBOSE = flag('verbose', false) === true;
-if (!['de', 'en'].includes(LOCALE)) {
-  console.error(`--locale must be 'de' or 'en' (got: ${LOCALE})`);
-  process.exit(1);
-}
 
 const log = (...a) => console.log(...a);
 const dbg = (...a) => VERBOSE && console.log('  ·', ...a);

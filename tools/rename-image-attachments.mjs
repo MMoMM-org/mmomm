@@ -25,8 +25,14 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, '..');
 const POSTS_BASE = join(REPO_ROOT, 'src/content/posts');
-const HUGO_DE = join(REPO_ROOT, '../mmomm/content/blog');
-const HUGO_EN = join(REPO_ROOT, '../mmomm/content.en/blog');
+
+// Per-locale Hugo source roots. Adding a third locale = add a key here
+// (ADR-005 Phase 1 step 8). The walker iterates POSTS_BASE/<locale>/ and
+// derives `lang` from the folder name, then looks up the Hugo base via this map.
+const LOCALE_HUGO_BASES = {
+  de: join(REPO_ROOT, '../mmomm/content/blog'),
+  en: join(REPO_ROOT, '../mmomm/content.en/blog'),
+};
 
 const APPLY = process.argv.includes('--apply');
 const SKIP_HUGO = process.argv.includes('--no-hugo');
@@ -76,7 +82,8 @@ function detectCaption(body, beforeIndex, afterIndex) {
 // Uses the same AFTER-then-BEFORE detection as the migrated body.
 function captionFromHugo(slug, lang, nth) {
   if (SKIP_HUGO) return null;
-  const hugoBase = lang === 'de' ? HUGO_DE : HUGO_EN;
+  const hugoBase = LOCALE_HUGO_BASES[lang];
+  if (!hugoBase) return null;
   const file = join(hugoBase, slug, 'index.md');
   if (!existsSync(file)) return null;
   const body = readFileSync(file, 'utf8');
