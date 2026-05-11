@@ -14,7 +14,7 @@ This site is built with Astro and contains a blog with posts about technology, d
 
 - **Site**: ${siteUrl}
 - **Author**: ${siteConfig.author}
-- **Language**: ${siteConfig.language}
+- **Language**: ${siteConfig.defaultLocale}
 - **RSS Feed**: ${siteUrl}rss.xml
 - **Sitemap**: ${siteUrl}sitemap.xml
 

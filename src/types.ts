@@ -1,6 +1,19 @@
 // Type definitions for the blog theme
 import type { CollectionEntry } from "astro:content";
 
+/**
+ * Site locale union. MVP is hardcoded DE/EN per ADR-005 Decision 1; widen here
+ * when adding a third locale (the only TypeScript change required by ADR-005).
+ */
+export type Locale = 'de' | 'en';
+
+/**
+ * Per-locale string value. Required-all (not Partial) so TypeScript enforces
+ * locale parity at compile time — missing translations cannot ship. See
+ * ADR-005 Decision 3.
+ */
+export type LocalisedString = Record<Locale, string>;
+
 export type Post = CollectionEntry<"posts">;
 
 export type PostData = CollectionEntry<"posts">["data"];

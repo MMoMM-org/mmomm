@@ -1,5 +1,5 @@
 // Site configuration with TypeScript types
-import type { NavigationItem } from "./types";
+import type { Locale, NavigationItem } from "./types";
 
 // Aspect ratio options for post cards
 export type AspectRatio = 
@@ -19,7 +19,8 @@ export interface SiteConfig {
   homepageTitle: string;
   description: string;
   author: string;
-  language: string;
+  locales: readonly Locale[];
+  defaultLocale: Locale;
   faviconThemeAdaptive: boolean;
   defaultOgImageAlt: string;
   
@@ -194,8 +195,10 @@ export const siteConfig: SiteConfig = {
   description: "PKM, Obsidian, MiYo, AI und anderes Gedöns",
   // [CONFIG:SITE_AUTHOR]
   author: "Marcus Breiden",
-  // [CONFIG:SITE_LANGUAGE]
-  language: "de",
+  // [CONFIG:LOCALES]
+  locales: ['de', 'en'] as const,
+  // [CONFIG:DEFAULT_LOCALE]
+  defaultLocale: 'de',
   // [CONFIG:FAVICON_THEME_ADAPTIVE]
   faviconThemeAdaptive: true, // If true, favicon switches between favicon-dark.png and favicon-light.png based on browser's system theme preference. If false, always uses favicon.png
   // [CONFIG:DEFAULT_OG_IMAGE_ALT]
@@ -744,9 +747,18 @@ function validateSiteConfig(config: SiteConfig): { isValid: boolean; errors: str
     errors.push('Featured post slug is required when type is "featured". Set homeOptions.featuredPost.slug to the post slug (the part after /posts/ in the URL).');
   }
 
-  // Language validation
-  if (!config.language || !config.language.match(/^[a-z]{2}(-[A-Z]{2})?$/)) {
-    errors.push('Language must be a valid language code like "en" or "en-US". Current value is invalid.');
+  // Locale validation (ADR-005 Decision 2)
+  if (!Array.isArray(config.locales) || config.locales.length === 0) {
+    errors.push('locales must be a non-empty array of locale codes (e.g. ["de", "en"]).');
+  } else {
+    for (const locale of config.locales) {
+      if (typeof locale !== 'string' || !locale.match(/^[a-z]{2}(-[A-Z]{2})?$/)) {
+        errors.push(`Each locale must be a valid language code like "en" or "en-US". "${String(locale)}" is invalid.`);
+      }
+    }
+    if (!config.defaultLocale || !config.locales.includes(config.defaultLocale)) {
+      errors.push(`defaultLocale must be one of the values in locales. Currently "${String(config.defaultLocale)}" is not in [${config.locales.join(', ')}].`);
+    }
   }
 
   // Footer validation

@@ -1,13 +1,30 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { siteConfig } from '../config';
+import type { Locale, LocalisedString } from '../types';
 
-export type Locale = 'de' | 'en';
+// Re-export so existing imports `from '@/utils/i18n'` keep working — Locale is
+// now defined in src/types.ts per ADR-005 Decision 2.
+export type { Locale, LocalisedString };
 
-export const DEFAULT_LOCALE: Locale = 'de';
-export const LOCALES: readonly Locale[] = ['de', 'en'] as const;
+/** Configured locales, sourced from siteConfig (ADR-005 Decision 2). */
+export const LOCALES: readonly Locale[] = siteConfig.locales;
 
-/** URL prefix for a locale. DE = '' (root), EN = '/en'. */
+/** Configured default locale, sourced from siteConfig (ADR-005 Decision 2). */
+export const DEFAULT_LOCALE: Locale = siteConfig.defaultLocale;
+
+/** URL prefix for a locale. Default locale = '' (root), others = '/<locale>'. */
 export function localePrefix(locale: Locale): string {
   return locale === DEFAULT_LOCALE ? '' : `/${locale}`;
+}
+
+/**
+ * Resolve a `LocalisedString | string` value for a given locale. Accepts the
+ * legacy single-string shape during the Phase 1 migration (ADR-005 Decision 3)
+ * so call sites can adopt `LocalisedString` field-by-field without breaking
+ * the build. New code should pass a `LocalisedString`.
+ */
+export function lt(locale: Locale, value: LocalisedString | string): string {
+  return typeof value === 'string' ? value : value[locale];
 }
 
 /** Strip the locale folder prefix from a post id to get the bare slug. */
