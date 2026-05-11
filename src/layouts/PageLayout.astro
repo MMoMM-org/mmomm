@@ -52,7 +52,7 @@ const structuredData = {
 };
 ---
 
-<BaseLayout seoData={seoData}>
+<BaseLayout seoData={seoData} lang={page.data.lang} page={page}>
   <Fragment slot="head">
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

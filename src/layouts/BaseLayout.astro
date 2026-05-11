@@ -1,6 +1,6 @@
 ---
 import { siteConfig, getFontFamily, getGoogleFontsUrl, shouldLoadLocalFonts, shouldLoadCdnFonts, getFontDisplay, getThemeDisplayName } from '@/config';
-import type { SEOData, Post } from '@/types';
+import type { SEOData, Post, Page } from '@/types';
 import { DEFAULT_LOCALE, type Locale, postUrl, findTranslation } from '@/utils/i18n';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
@@ -39,9 +39,10 @@ export interface Props {
   bodyClass?: string;
   lang?: Locale;
   post?: Post;
+  page?: Page;
 }
 
-const { seoData, bodyClass = '', lang = DEFAULT_LOCALE, post } = Astro.props;
+const { seoData, bodyClass = '', lang = DEFAULT_LOCALE, post, page } = Astro.props;
 
 // Determine scrollbar class based on configuration
 const scrollbarClass = siteConfig.hideScrollBar ? '' : 'show-scrollbars';
@@ -1116,7 +1117,7 @@ if (post?.data.translationKey) {
   </a>
 
   <!-- Header -->
-  <Header lang={lang} post={post} />
+  <Header lang={lang} post={post} page={page} />
 
   <!-- Main content -->
   <main id="main-content" class="container mx-auto relative" style={`max-width: ${siteConfig.layout.contentWidth}`}>

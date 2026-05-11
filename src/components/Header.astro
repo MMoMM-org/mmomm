@@ -1,16 +1,17 @@
 ---
 import { siteConfig } from '../config';
-import type { Post } from '@/types';
-import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, findTranslation } from '@/utils/i18n';
+import type { Post, Page } from '@/types';
+import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, pageUrl, findTranslation, findPageTranslation } from '@/utils/i18n';
 import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
 
 export interface Props {
   lang?: Locale;
   post?: Post;
+  page?: Page;
 }
 
-const { lang = DEFAULT_LOCALE, post } = Astro.props;
+const { lang = DEFAULT_LOCALE, post, page } = Astro.props;
 
 // The switcher's locale must be derived from the URL, not the `lang` prop.
 // Some routes (PageLayout, 404, etc.) don't propagate `lang` to BaseLayout,
@@ -53,6 +54,13 @@ if (post) {
   switcherHref = counterpart
     ? `${postUrl(counterpart)}/`
     : `${localePrefix(otherLocale)}/posts/`;
+} else if (page?.data.translationKey) {
+  // Bilingual page: prefer the translated slug ('/jetzt/' -> '/en/now/').
+  // Fall back to the naive path-strip when no counterpart exists.
+  const counterpart = await findPageTranslation(page);
+  switcherHref = counterpart
+    ? `${pageUrl(counterpart)}/`
+    : pathForOtherLocale(Astro.url.pathname, otherLocale);
 } else {
   switcherHref = pathForOtherLocale(Astro.url.pathname, otherLocale);
 }
