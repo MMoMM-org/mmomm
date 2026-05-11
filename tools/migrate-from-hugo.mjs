@@ -147,21 +147,45 @@ function ensureDir(p) { if (!existsSync(p)) mkdirSync(p, { recursive: true }); }
 // Also fix nested ``` fences (CommonMark requires longer fence for nested).
 const IMG_REF = /!\[([^\]]*)\]\((\/img\/wix\/[^)]+)\)/g;
 
+function isUsableCaption(s) {
+  if (!s) return false;
+  const t = s.trim();
+  return !!t && t.length < 80 && !/^[#`>!\-*]/.test(t);
+}
+
 function processBody(body, ctx) {
   const used = new Set(); // filenames already used in this post
   const matches = [...body.matchAll(IMG_REF)];
 
+  // Pass 1: compute all replacements against the ORIGINAL (immutable) body.
+  // The previous implementation mutated `body` inside this loop while still
+  // using `m.index` captured before the loop; after the first replace shrank
+  // the body, subsequent caption-detection slices were misaligned and ~66% of
+  // images fell to `image-N.<ext>` fallback. See troubleshooting.md.
+  const replacements = [];
   for (const m of matches) {
     const [full, alt, srcPath] = m;
     const sourceFile = basename(srcPath);
     const ext = extname(sourceFile);
-    // Find caption: first non-blank paragraph after the image (often plain text)
-    const after = body.slice(m.index + full.length);
-    const captionMatch = after.match(/^\n+([^\n]+)\n/);
-    const caption = captionMatch?.[1]?.trim();
-    const useCaption = caption && !/^[#`>!\-\*]/.test(caption) && caption.length < 80;
 
-    let filename = useCaption ? `${slugify(caption)}${ext}` : `image-${used.size + 1}${ext}`;
+    // Heuristic priority: alt-text first, then caption AFTER (the typical
+    // astro-modular convention), then caption BEFORE (the dynbedded
+    // convention), then a numbered fallback.
+    const altTrim = alt?.trim();
+    const useAlt = altTrim && altTrim.length < 80;
+
+    const afterCap = body.slice(m.index + full.length).match(/^\n+([^\n]+)/)?.[1]?.trim();
+    const useAfter = isUsableCaption(afterCap);
+
+    const beforeCap = body.slice(0, m.index).match(/\n([^\n]+)\n+$/)?.[1]?.trim();
+    const useBefore = isUsableCaption(beforeCap);
+
+    let captionText = null;
+    if (useAlt) captionText = altTrim;
+    else if (useAfter) captionText = afterCap;
+    else if (useBefore) captionText = beforeCap;
+
+    let filename = captionText ? `${slugify(captionText)}${ext}` : `image-${used.size + 1}${ext}`;
     let i = 2;
     while (used.has(filename)) {
       const stem = filename.slice(0, -ext.length).replace(/-\d+$/, '');
@@ -177,9 +201,16 @@ function processBody(body, ctx) {
     }
     ctx.images.push({ from: srcAbs, to: join(ctx.attachmentsDir, filename) });
 
-    const newAlt = alt || (useCaption ? caption : '');
+    const newAlt = alt || captionText || '';
     const newRef = `![${newAlt}](attachments/${filename})`;
-    body = body.replace(full, newRef);
+    replacements.push({ matchIndex: m.index, fullLen: full.length, newRef });
+  }
+
+  // Pass 2: splice replacements in reverse so earlier match indices stay valid
+  // (we never touch body before the position we're splicing at).
+  for (let i = replacements.length - 1; i >= 0; i--) {
+    const r = replacements[i];
+    body = body.slice(0, r.matchIndex) + r.newRef + body.slice(r.matchIndex + r.fullLen);
   }
 
   // Fix nested triple-backtick code blocks: when a fenced block contains another
