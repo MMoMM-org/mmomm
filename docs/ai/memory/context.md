@@ -53,6 +53,39 @@ All 11 tasks completed. Synced to fork via two bundled commits.
 
 Fork-sync bundles: `d397c8e` (T1–T11 + T6) and `b1df8fb` (T3 + T9) on `MMoMM-org/astro-modular-mmomm` master.
 
+## Active plan — Content structure adopts Hugo shape (ADR-004, 2026-05-11)
+
+Pivot decision: layout/i18n polish (Track C and beyond) was speculation without real bilingual content. Configure Vault CMS for bilingual authoring requires the schema and content structure to land first. Three sequential commits:
+
+1. **Schema bilingual on `pages`** (current step — Task #2)
+   - Extend `src/content.config.ts`: pages collection gets `lang: z.enum(['de','en'])` + `translationKey: z.string().optional()`
+   - Fix stale "asymmetric layout" comment on posts collection (ADR-002 revised to symmetric)
+   - Decide projects/docs schema based on whether they survive Step 2
+   - Verify build
+2. **Demo cleanup + nav prune** (next)
+   - Delete: `posts/{getting-started.md,formatting-reference.md,vault-cms-guide.md,obsidian-embeds-demo.md,sample-folder-based-post/,attachments/}`
+   - Delete: `pages/{about.md,contact.md,privacy-policy.md,thank-you.md,attachments/}`
+   - Delete: `projects/*`, `docs/*` (demo content)
+   - Keep: `special/*` (infrastructure)
+   - `siteConfig.optionalContentTypes.{projects,docs} = false`
+   - Prune `siteConfig.navigation.pages` to real items
+3. **Hugo non-blog migration** (then)
+   - 5 static pages: videos, jetzt/now, ueber-mich/about, impressum, datenschutz/privacy-policy → `pages/de/` + `pages/en/` with `lang`+`translationKey`
+   - Replace Hugo `{{< youtube ID "title" >}}` shortcode with Astro mdx component or inline iframe
+
+After step 3 — Vault CMS bilingual config (separate work, configure-only per ADR-004 Decision 1).
+
+## Plugin stack reference (one-time finding 2026-05-11)
+
+Five astro-modular Obsidian plugins are complementary, not duplicates:
+- **Astro Composer** = authoring (new-note flow, kebab-slugs, internal links, terminal)
+- **Vault CMS** = setup wizard + content-types + preset manager (`davidvkimball/vault-cms-presets`)
+- **Bases CMS** = grid-view content management via `.base` files
+- **Home Base** = pins a `.base` view as default tab
+- **Astro Modular Settings** = `src/config.ts` editor via `[CONFIG:KEY]` markers (ADR-003 plugin-compat)
+
+All five plugins have **zero i18n awareness** (grep `translationKey|"lang"|"locale"` = 0 hits across both Vault CMS and Astro Composer source). Bilingual workaround per ADR-004 Decision 1: per-locale content-types in plugin config (no fork).
+
 ## Header & language-switcher track (queued — discovered 2026-05-10 during local preview)
 
 A live browser walk of the site surfaced six issues, all in or adjacent to `Header.astro`. Bundled into three tracks per ADR-003:
