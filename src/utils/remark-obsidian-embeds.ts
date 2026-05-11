@@ -354,8 +354,17 @@ export const remarkObsidianEmbeds: Plugin<[], Root> = () => {
                 contentIndex = pathParts.indexOf('docs');
               }
 
-              const contentSlug = pathParts[contentIndex + 1];
-              resolvedUrl = `/${collection}/${contentSlug}/${url}`;
+              // i18n (ADR-002): if the segment after the collection is a locale folder
+              // (`de`/`en`), the real slug is one segment further and the URL must carry
+              // a locale prefix (DE has none, EN has `/en`).
+              const maybeLocale = pathParts[contentIndex + 1];
+              const isLocale = maybeLocale === 'de' || maybeLocale === 'en';
+              const contentSlug = isLocale ? pathParts[contentIndex + 2] : maybeLocale;
+              const langPrefix = maybeLocale === 'en' ? '/en' : '';
+              // Also strip any `attachments/` segment from the URL — sync-images.js flattens
+              // them out of the public output for i18n posts.
+              const cleanUrl = isLocale ? url.replace(/(^|\/)attachments\//, '$1') : url;
+              resolvedUrl = `${langPrefix}/${collection}/${contentSlug}/${cleanUrl}`;
             } else {
               // File-based content: /collection/attachments/file (shared attachments folder)
               let collection = 'posts';
@@ -390,8 +399,12 @@ export const remarkObsidianEmbeds: Plugin<[], Root> = () => {
               contentIndex = pathParts.indexOf('docs');
             }
 
-            const contentSlug = pathParts[contentIndex + 1];
-            resolvedUrl = `/${collection}/${contentSlug}/${url}`;
+            // i18n (ADR-002): see explanatory note above.
+            const maybeLocale = pathParts[contentIndex + 1];
+            const isLocale = maybeLocale === 'de' || maybeLocale === 'en';
+            const contentSlug = isLocale ? pathParts[contentIndex + 2] : maybeLocale;
+            const langPrefix = maybeLocale === 'en' ? '/en' : '';
+            resolvedUrl = `${langPrefix}/${collection}/${contentSlug}/${url}`;
           }
         }
 

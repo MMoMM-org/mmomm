@@ -1868,39 +1868,66 @@ export function remarkFolderImages() {
       let collection: string | null = null;
       let contentSlug: string | null = null;
       let isFolderBased = false;
+      let detectedLocale: 'de' | 'en' | null = null;
 
       if (file.path) {
         // Normalize path separators (Windows uses backslashes, Unix uses forward slashes)
         const normalizedPath = file.path.replace(/\\/g, "/");
         const pathParts = normalizedPath.split("/");
         
+        // Helper: detect i18n locale folder between collection and slug.
+        // Returns { slug, locale } where locale is 'de'|'en'|null.
+        const detectSlugAndLocale = (collectionIndex: number) => {
+          const next = pathParts[collectionIndex + 1];
+          if (next === 'de' || next === 'en') {
+            return { slug: pathParts[collectionIndex + 2], locale: next as 'de' | 'en' };
+          }
+          return { slug: next, locale: null as 'de' | 'en' | null };
+        };
+
         // Check for posts
         if (normalizedPath.includes("/posts/")) {
           collection = "posts";
           const postsIndex = pathParts.indexOf("posts");
           isFolderBased = normalizedPath.endsWith("/index.md");
-          contentSlug = isFolderBased ? pathParts[postsIndex + 1] : null;
+          if (isFolderBased) {
+            const { slug, locale } = detectSlugAndLocale(postsIndex);
+            contentSlug = slug;
+            detectedLocale = locale;
+          }
         }
         // Check for projects
         else if (normalizedPath.includes("/projects/")) {
           collection = "projects";
           const projectsIndex = pathParts.indexOf("projects");
           isFolderBased = normalizedPath.endsWith("/index.md");
-          contentSlug = isFolderBased ? pathParts[projectsIndex + 1] : null;
+          if (isFolderBased) {
+            const { slug, locale } = detectSlugAndLocale(projectsIndex);
+            contentSlug = slug;
+            detectedLocale = locale;
+          }
         }
         // Check for docs
         else if (normalizedPath.includes("/docs/")) {
           collection = "docs";
           const docsIndex = pathParts.indexOf("docs");
           isFolderBased = normalizedPath.endsWith("/index.md");
-          contentSlug = isFolderBased ? pathParts[docsIndex + 1] : null;
+          if (isFolderBased) {
+            const { slug, locale } = detectSlugAndLocale(docsIndex);
+            contentSlug = slug;
+            detectedLocale = locale;
+          }
         }
         // Check for pages
         else if (normalizedPath.includes("/pages/")) {
           collection = "pages";
           const pagesIndex = pathParts.indexOf("pages");
           isFolderBased = normalizedPath.endsWith("/index.md");
-          contentSlug = isFolderBased ? pathParts[pagesIndex + 1] : null;
+          if (isFolderBased) {
+            const { slug, locale } = detectSlugAndLocale(pagesIndex);
+            contentSlug = slug;
+            detectedLocale = locale;
+          }
         }
         // Check for special pages (they also use pages collection paths)
         else if (normalizedPath.includes("/special/")) {
@@ -1935,8 +1962,12 @@ export function remarkFolderImages() {
         if (cleanImagePath.startsWith('images/') || cleanImagePath.startsWith('attachments/')) {
           cleanImagePath = cleanImagePath.replace(/^(images|attachments)\//, '');
         }
-        // Image is relative to the folder: /posts/my-post/image.png
-        let finalUrl = `/${collection}/${contentSlug}/${cleanImagePath}`;
+        // i18n (ADR-002): when content lives under src/content/<collection>/<locale>/<slug>/
+        // the synced output is at public/<locale-prefix>/<collection>/<slug>/<file>.
+        // DE has no prefix; EN has /en. See scripts/sync-images.js.
+        const langPrefix = detectedLocale === 'en' ? '/en' : '';
+        // Image is relative to the folder: /<lang>/posts/my-post/image.png
+        let finalUrl = `${langPrefix}/${collection}/${contentSlug}/${cleanImagePath}`;
         // Convert to WebP if applicable (sync-images.js creates WebP versions)
         finalUrl = convertToWebP(finalUrl);
         node.url = finalUrl;

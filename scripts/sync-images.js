@@ -100,20 +100,34 @@ async function syncFolderBasedImages(contentType) {
     for (const item of items) {
       const itemPath = path.join(contentDir, item);
       const stat = await fs.stat(itemPath);
-      
+
       // Check if it's a directory (folder-based content)
       if (stat.isDirectory()) {
-        const targetDir = path.join(publicContentDir, item);
-        
+        // i18n layout (ADR-002): if the top-level item is a locale folder ('de'/'en'),
+        // route output to the ADR-002 URL convention so that page URLs match image URLs:
+        //   src/content/posts/de/<slug>/<…>/file.png  →  public/posts/<slug>/<…>/file.webp
+        //   src/content/posts/en/<slug>/<…>/file.png  →  public/en/posts/<slug>/<…>/file.webp
+        // and strip any nested `attachments/` segment so URLs don't need it either.
+        // Non-locale top-level items keep the legacy flat layout
+        //   src/content/posts/<slug>/attachments/file.png  →  public/posts/<slug>/file.webp
+        const isLocaleSubfolder = item === 'de' || item === 'en';
+        const targetDir = isLocaleSubfolder
+          ? path.join('public', item === 'en' ? 'en' : '', contentType)
+          : path.join(publicContentDir, item);
+
         // Find all media files recursively
         const imageFiles = await findImageFiles(itemPath);
-        
+
         for (const imageFile of imageFiles) {
           // Handle attachments subfolder within folder-based content
           // Convert src/content/posts/post-name/attachments/image.png -> public/posts/post-name/image.png
           let targetRelativePath = imageFile.relativePath;
           // Handle both forward and backward slashes for cross-platform compatibility
-          if (targetRelativePath.startsWith('attachments/') || targetRelativePath.startsWith('attachments\\')) {
+          if (isLocaleSubfolder) {
+            // Strip every `attachments/` segment, not just the leading one — i18n posts
+            // nest the segment inside <slug>/attachments/<file>.
+            targetRelativePath = targetRelativePath.replace(/(^|[/\\])attachments[/\\]/g, '$1');
+          } else if (targetRelativePath.startsWith('attachments/') || targetRelativePath.startsWith('attachments\\')) {
             targetRelativePath = targetRelativePath.replace(/^attachments[/\\]/, '');
           }
           
