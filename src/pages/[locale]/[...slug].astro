@@ -1,0 +1,43 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { shouldShowContent } from '@/utils/markdown';
+import { LOCALES, DEFAULT_LOCALE, getLocalisedPages, pageSlug } from '@/utils/i18n';
+import PageLayout from '@/layouts/PageLayout.astro';
+
+// ADR-005 Phase 2: parameterised page-slug route for non-default locales.
+// Default-locale pages + special-page fallbacks live at src/pages/[...slug].astro.
+export const getStaticPaths: GetStaticPaths = async () => {
+  const isDev = import.meta.env.DEV;
+  const nonDefaultLocales = LOCALES.filter((l) => l !== DEFAULT_LOCALE);
+
+  const paths = [];
+  for (const locale of nonDefaultLocales) {
+    const pages = await getLocalisedPages(locale);
+    const visiblePages = pages.filter((page) => shouldShowContent(page, isDev));
+    for (const page of visiblePages) {
+      paths.push({
+        params: { locale, slug: pageSlug(page) },
+        props: { page },
+      });
+    }
+  }
+  return paths;
+};
+
+export interface Props {
+  page: any;
+}
+
+const { page } = Astro.props as Props;
+
+if (!page) {
+  return Astro.redirect('/404');
+}
+
+const isDev = import.meta.env.DEV;
+if (!shouldShowContent(page, isDev)) {
+  return Astro.redirect('/404');
+}
+---
+
+<PageLayout page={page} />

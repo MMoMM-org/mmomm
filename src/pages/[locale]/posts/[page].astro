@@ -1,10 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
-import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { type Locale, getLocalisedPosts, lt } from '@/utils/i18n';
+import { LOCALES, DEFAULT_LOCALE, type Locale, getLocalisedPosts, lt, localePrefix } from '@/utils/i18n';
 import { t, tPageOfTotal } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
@@ -12,37 +10,33 @@ import Tags from '@/components/Tags.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
 
-const lang = 'en' as Locale;
-
+// ADR-005 Phase 2: parameterised pagination route for non-default locales.
+// Default-locale pagination lives at src/pages/posts/[page].astro.
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Get DE posts (i18n: see ADR-002 — EN locale)
-  const allPosts = await getLocalisedPosts('en');
-
-  // Filter posts based on environment
   const isDev = import.meta.env.DEV;
-  const visiblePosts = allPosts.filter(post => shouldShowPost(post, isDev));
-
-  // Sort posts by date
-  const sortedPosts = sortPostsByDate(visiblePosts);
-
-  // Calculate total pages
   const postsPerPage = siteConfig.postOptions.postsPerPage;
-  const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
+  const nonDefaultLocales = LOCALES.filter((l) => l !== DEFAULT_LOCALE);
 
-  // Generate paths for each page (starting from page 2)
   const paths = [];
-  for (let page = 2; page <= totalPages; page++) {
-    paths.push({
-      params: { page: page.toString() },
-      props: {
-        posts: sortedPosts,
-        currentPage: page,
-        totalPages,
-        postsPerPage
-      }
-    });
-  }
+  for (const locale of nonDefaultLocales) {
+    const allPosts = await getLocalisedPosts(locale);
+    const visiblePosts = allPosts.filter((post) => shouldShowPost(post, isDev));
+    const sortedPosts = sortPostsByDate(visiblePosts);
+    const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
 
+    // Generate paths for each page (starting from page 2)
+    for (let page = 2; page <= totalPages; page++) {
+      paths.push({
+        params: { locale, page: page.toString() },
+        props: {
+          posts: sortedPosts,
+          currentPage: page,
+          totalPages,
+          postsPerPage,
+        },
+      });
+    }
+  }
   return paths;
 };
 
@@ -54,6 +48,8 @@ export interface Props {
 }
 
 const { posts, currentPage, totalPages, postsPerPage } = Astro.props as Props;
+const lang = Astro.params.locale as Locale;
+const prefix = localePrefix(lang);
 
 // Get query parameters
 const url = new URL(Astro.request.url);
@@ -93,12 +89,12 @@ const pagination = {
   totalPages,
   hasNext: currentPage < totalPages,
   hasPrev: currentPage > 1,
-  nextUrl: currentPage < totalPages ? `/en/posts/${currentPage + 1}` : undefined,
-  prevUrl: currentPage > 2 ? `/en/posts/${currentPage - 1}` : '/en/posts'
+  nextUrl: currentPage < totalPages ? `${prefix}/posts/${currentPage + 1}` : undefined,
+  prevUrl: currentPage > 2 ? `${prefix}/posts/${currentPage - 1}` : `${prefix}/posts`
 };
 ---
 
-<BaseLayout seoData={seoData} lang="en">
+<BaseLayout seoData={seoData} lang={lang}>
   <div class="py-8 relative">
     <div class="mx-auto px-4 sm:px-6 lg:px-8 mb-12" style={`max-width: ${siteConfig.layout.contentWidth}`}>
       <!-- Header -->
@@ -146,7 +142,7 @@ const pagination = {
 
         <div class="mt-4">
           <a
-            href="/en/posts"
+            href={`${prefix}/posts`}
             class="inline-flex items-center text-sm text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
           >
             <Icon name="arrow-left" class="w-4 h-4 mr-1" />
@@ -168,7 +164,7 @@ const pagination = {
               </div>
 
               <!-- Pagination -->
-              <Pagination pagination={pagination} baseUrl="/en/posts" lang="en" />
+              <Pagination pagination={pagination} baseUrl={`${prefix}/posts`} lang={lang} />
             </>
           ) : (
             <!-- No posts found -->
@@ -181,7 +177,7 @@ const pagination = {
                 Try going back to an earlier page or removing filters.
               </p>
               <div class="space-x-4">
-                <a href="/en/posts" class="btn-secondary">
+                <a href={`${prefix}/posts`} class="btn-secondary">
                   {t(lang, 'posts.viewAllPosts')}
                 </a>
                 {currentPage > 1 && (

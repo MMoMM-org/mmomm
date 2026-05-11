@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { shouldShowPost } from '@/utils/markdown';
+import { LOCALES, DEFAULT_LOCALE, getLocalisedPosts, postSlug } from '@/utils/i18n';
+import PostLayout from '@/layouts/PostLayout.astro';
+
+// ADR-005 Phase 2: parameterised post-detail route for non-default locales.
+// Default-locale post details live at src/pages/posts/[...slug].astro.
+export const getStaticPaths: GetStaticPaths = async () => {
+  const isDev = import.meta.env.DEV;
+  const nonDefaultLocales = LOCALES.filter((l) => l !== DEFAULT_LOCALE);
+
+  const paths = [];
+  for (const locale of nonDefaultLocales) {
+    const posts = await getLocalisedPosts(locale);
+    const visiblePosts = posts.filter((post) => shouldShowPost(post, isDev));
+    for (const post of visiblePosts) {
+      paths.push({
+        params: { locale, slug: postSlug(post) },
+        props: { post },
+      });
+    }
+  }
+  return paths;
+};
+
+export interface Props {
+  post: any;
+}
+
+const { post } = Astro.props;
+
+// Validate post data
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+// Check if post should be visible in production
+const isDev = import.meta.env.DEV;
+if (!shouldShowPost(post, isDev)) {
+  return Astro.redirect('/404');
+}
+---
+
+<PostLayout post={post} />

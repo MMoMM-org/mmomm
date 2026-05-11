@@ -1,9 +1,9 @@
 ---
+import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
-import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { type Locale, getLocalisedPosts, lt } from '@/utils/i18n';
+import { LOCALES, DEFAULT_LOCALE, type Locale, getLocalisedPosts, lt, localePrefix } from '@/utils/i18n';
 import { optimizePostImagePath } from '@/utils/images';
 import { t } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -12,7 +12,15 @@ import Tags from '@/components/Tags.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
 
-const lang = 'en' as Locale;
+// ADR-005 Phase 2: parameterised posts-list root for non-default locales.
+// Default-locale list lives at src/pages/posts/index.astro.
+export const getStaticPaths = (() =>
+  LOCALES
+    .filter((l) => l !== DEFAULT_LOCALE)
+    .map((locale) => ({ params: { locale } }))) satisfies GetStaticPaths;
+
+const lang = Astro.params.locale as Locale;
+const prefix = localePrefix(lang);
 
 // Get special content for posts page
 let postsPageContent;
@@ -29,8 +37,8 @@ const postsPageData = postsPageContent.length > 0 ? postsPageContent[0] : null;
 const url = new URL(Astro.request.url);
 const selectedTag = url.searchParams.get('tag');
 
-// Get DE posts (i18n: see ADR-002 — EN locale)
-const allPosts = await getLocalisedPosts('en');
+// Get posts for this locale
+const allPosts = await getLocalisedPosts(lang);
 
 // Filter posts based on environment
 const isDev = import.meta.env.DEV;
@@ -72,18 +80,18 @@ const seoData = {
 };
 
 // Pagination info
-const baseUrl = selectedTag ? `/en/posts/tag/${encodeURIComponent(selectedTag)}` : '/en/posts';
+const baseUrl = selectedTag ? `${prefix}/posts/tag/${encodeURIComponent(selectedTag)}` : `${prefix}/posts`;
 const pagination = {
   currentPage,
   totalPages,
   hasNext: currentPage < totalPages,
   hasPrev: false,
-  nextUrl: totalPages > 1 ? '/en/posts/2' : undefined,
+  nextUrl: totalPages > 1 ? `${prefix}/posts/2` : undefined,
   prevUrl: undefined
 };
 ---
 
-<BaseLayout seoData={seoData} lang="en">
+<BaseLayout seoData={seoData} lang={lang}>
   <Fragment slot="head">
     <!-- Preload only the first post's image to avoid unused preload warnings -->
     {paginatedPosts.length > 0 && (() => {
@@ -149,7 +157,7 @@ const pagination = {
         {selectedTag && (
           <div class="mt-4">
             <a
-              href="/en/posts"
+              href={`${prefix}/posts`}
               class="inline-flex items-center text-sm text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
             >
               <Icon name="arrow-left" class="w-4 h-4 mr-1" />
@@ -172,7 +180,7 @@ const pagination = {
               </div>
 
               <!-- Pagination -->
-              <Pagination pagination={pagination} baseUrl={baseUrl} lang="en" />
+              <Pagination pagination={pagination} baseUrl={baseUrl} lang={lang} />
             </>
           ) : selectedTag ? (
             <!-- No posts for selected tag -->
@@ -183,7 +191,7 @@ const pagination = {
               </h2>
               <p class="text-primary-600 dark:text-primary-300 mb-8 max-w-md mx-auto">
                 There are no posts tagged with "{selectedTag}". Try browsing other tags or
-                <a href="/posts" class="text-primary-600 dark:text-primary-300 hover:underline">view all posts</a>.
+                <a href={`${prefix}/posts`} class="text-primary-600 dark:text-primary-300 hover:underline">view all posts</a>.
               </p>
             </div>
           ) : (
