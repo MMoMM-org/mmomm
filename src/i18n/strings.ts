@@ -81,33 +81,65 @@ export function tOpt(locale: Locale, key: string | undefined, fallback: string):
   return table[key] ?? fallback;
 }
 
+// BCP-47 tag per locale, used for Intl number/date formatters.
+// Adding a new locale = add a tag here; TypeScript enforces exhaustiveness.
+const bcp47Tag: Record<Locale, string> = {
+  de: 'de-DE',
+  en: 'en-US',
+};
+
+// Per-locale formatter tables (ADR-005 Decision 6). Each entry produces the
+// final localised string for the given inputs. Replacing the previous
+// `locale === 'de' ? a : b` ternaries means adding a third locale
+// (e.g. 'fr') becomes a missing-key compile error rather than a silent
+// English fallback.
+
+const pageOfTotalFormatters: Record<Locale, (current: number, total: number) => string> = {
+  de: (current, total) => `Seite ${current} von ${total}`,
+  en: (current, total) => `Page ${current} of ${total}`,
+};
+
+const readingTimeFormatters: Record<Locale, (minutes: number) => string> = {
+  de: (minutes) => `${minutes} Min. Lesezeit`,
+  en: (minutes) => `${minutes} min read`,
+};
+
+const wordCountFormatters: Record<Locale, (count: number) => string> = {
+  de: (count) => {
+    const formatted = count.toLocaleString(bcp47Tag.de);
+    return count === 1 ? '1 Wort' : `${formatted} Wörter`;
+  },
+  en: (count) => {
+    const formatted = count.toLocaleString(bcp47Tag.en);
+    return count === 1 ? '1 word' : `${formatted} words`;
+  },
+};
+
+const moreTagsFormatters: Record<Locale, (count: number) => string> = {
+  de: (count) => `+ ${count} weitere`,
+  en: (count) => `+ ${count} more`,
+};
+
 // "Page N of M" — small interpolation helper kept here so the phrase stays
 // in one place and stays in sync with `t`-driven strings.
 export function tPageOfTotal(locale: Locale, current: number, total: number): string {
-  return locale === 'de'
-    ? `Seite ${current} von ${total}`
-    : `Page ${current} of ${total}`;
+  return pageOfTotalFormatters[locale](current, total);
 }
 
 // "N min read" — formatted on demand from numeric minutes so the i18n surface
 // stays at the render boundary, not in calculateReadingTime() (which returns
 // a default English `.text` for non-locale-aware callers).
 export function tReadingTime(locale: Locale, minutes: number): string {
-  return locale === 'de'
-    ? `${minutes} Min. Lesezeit`
-    : `${minutes} min read`;
+  return readingTimeFormatters[locale](minutes);
 }
 
 // "N word(s)" with pluralization. DE: Wort/Wörter, EN: word/words.
 // Number is formatted via toLocaleString so 1234 -> "1,234" (en) or "1.234" (de).
 export function tWordCount(locale: Locale, count: number): string {
-  const tag = locale === 'de' ? 'de-DE' : 'en-US';
-  const formatted = count.toLocaleString(tag);
-  if (count === 1) return locale === 'de' ? '1 Wort' : '1 word';
-  return locale === 'de' ? `${formatted} Wörter` : `${formatted} words`;
+  return wordCountFormatters[locale](count);
 }
 
 // "+ N more" trailing label after a truncated list (used by PostCard tag chips).
 export function tMoreTags(locale: Locale, count: number): string {
-  return locale === 'de' ? `+ ${count} weitere` : `+ ${count} more`;
+  return moreTagsFormatters[locale](count);
 }
