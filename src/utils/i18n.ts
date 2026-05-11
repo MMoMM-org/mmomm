@@ -40,3 +40,29 @@ export async function findTranslation(
   const others = await getLocalisedPosts(otherLocale);
   return others.find((p) => p.data.translationKey === post.data.translationKey) ?? null;
 }
+
+/** Strip the locale folder prefix from a page id to get the bare slug. */
+export function pageSlug(page: CollectionEntry<'pages'>): string {
+  return page.id.replace(/^(de|en)\//, '');
+}
+
+/** Build the canonical URL path for a page (locale-aware). */
+export function pageUrl(page: CollectionEntry<'pages'>): string {
+  return `${localePrefix(page.data.lang)}/${pageSlug(page)}`;
+}
+
+/** Filter the pages collection to a single locale. */
+export async function getLocalisedPages(locale: Locale) {
+  const all = await getCollection('pages');
+  return all.filter((p) => p.data.lang === locale);
+}
+
+/** Find the translation counterpart of a page (or null). */
+export async function findPageTranslation(
+  page: CollectionEntry<'pages'>,
+): Promise<CollectionEntry<'pages'> | null> {
+  if (!page.data.translationKey) return null;
+  const otherLocale: Locale = page.data.lang === 'de' ? 'en' : 'de';
+  const others = await getLocalisedPages(otherLocale);
+  return others.find((p) => p.data.translationKey === page.data.translationKey) ?? null;
+}

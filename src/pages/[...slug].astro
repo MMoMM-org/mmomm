@@ -3,30 +3,25 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { shouldShowContent } from '@/utils/markdown';
+import { getLocalisedPages, pageSlug } from '@/utils/i18n';
 import PageLayout from '@/layouts/PageLayout.astro';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Get all pages
-  const pages = await getCollection('pages');
+  // Get DE pages only (i18n: see docs/XDD/adr/ADR-002).
+  // EN pages are served by src/pages/en/[...slug].astro.
+  const pages = await getLocalisedPages('de');
 
   // Get all special pages
   const specialPages = await getCollection('special');
 
   // Filter pages based on environment (in dev, show all including drafts)
   const isDev = import.meta.env.DEV;
-  const visiblePages = pages.filter(page => {
-    // Filter out special pages that are handled by dedicated routes
-    const specialPageSlugs = ['home', '404'];
-    if (specialPageSlugs.includes(page.id)) {
-      return false;
-    }
-    // Filter drafts in production
-    return shouldShowContent(page, isDev);
-  });
+  const visiblePages = pages.filter(page => shouldShowContent(page, isDev));
 
-  // Generate paths for regular pages
+  // Generate paths — strip the de/ folder prefix so URLs are /<slug>/,
+  // not /de/<slug>/. (Symmetric folder layout, see ADR-002.)
   const pagePaths = visiblePages.map(page => ({
-    params: { slug: page.id },
+    params: { slug: pageSlug(page) },
     props: { page }
   }));
 
