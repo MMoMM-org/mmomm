@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { formatDate, processMarkdown, isValidDate } from '../utils/markdown';
+import { DEFAULT_LOCALE } from '../utils/i18n';
 import { siteConfig, getPostCardAspectRatio } from '../config';
 import { normalizeStatus, getStatusDisplayText, hasStatusStyling, getStatusClasses } from '../utils/status';
 import { optimizeContentImagePath, getOptimizedFormat } from '../utils/images';
@@ -157,7 +158,7 @@ const shouldShowCoverImage = true;
             ? 'text-white/90 bg-black/20'
             : 'text-primary-700 dark:text-primary-200 bg-white/80 dark:bg-black/20'
         }`}>
-          {formatDate(date)}
+          {formatDate(date, DEFAULT_LOCALE)}
         </time>
       </div>
     )}

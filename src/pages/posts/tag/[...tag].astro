@@ -138,7 +138,7 @@ const pagination = {
           </div>
         </div>
         <p class="text-base text-primary-600 dark:text-primary-300">
-          {lang === 'de' ? 'Zeige' : 'Showing'} <strong>{filteredPosts.length}</strong> {t(lang, 'posts.postsTaggedWith')}
+          {t(lang, 'posts.showingPrefix')} <strong>{filteredPosts.length}</strong> {t(lang, 'posts.postsTaggedWith')}
           <span class="inline-flex items-center px-2 py-1 bg-highlight-100 dark:bg-highlight-900/30 text-highlight-800 dark:text-highlight-200 rounded text-sm font-medium ml-1">
             #{tag}
           </span>

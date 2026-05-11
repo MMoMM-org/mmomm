@@ -1,4 +1,4 @@
-import type { Post, PostData, ReadingTime, Heading } from "@/types";
+import type { Post, PostData, ReadingTime, Heading, Locale } from "@/types";
 import { render } from "astro:content";
 
 // Check if a date is valid (not January 1, 1970 or invalid)
@@ -169,10 +169,10 @@ export async function processPost(post: any) {
 // short Locale and don't sprinkle "en-US" / "de-DE" through the codebase.
 const LOCALE_TAGS = { de: "de-DE", en: "en-US" } as const;
 
-// Format date for display. Locale defaults to DE (site default) — pass the
-// post/page's `data.lang` when available so dates render in the reader's
-// locale rather than English-only.
-export function formatDate(date: Date, locale: "de" | "en" = "de"): string {
+// Format date for display. Callers MUST pass an explicit locale — see
+// ADR-005 Decision 1 / Phase 1 step 7 (default removed to prevent silent
+// English-only dates on pages that forgot to thread locale through).
+export function formatDate(date: Date, locale: Locale): string {
   const tag = LOCALE_TAGS[locale];
   // If the date is at midnight UTC, it was likely a YYYY-MM-DD date
   // that was parsed as UTC but should be treated as local
@@ -202,7 +202,7 @@ export function formatDate(date: Date, locale: "de" | "en" = "de"): string {
 }
 
 // Format date for mobile display (shorter format).
-export function formatDateMobile(date: Date, locale: "de" | "en" = "de"): string {
+export function formatDateMobile(date: Date, locale: Locale): string {
   const tag = LOCALE_TAGS[locale];
   // If the date is at midnight UTC, it was likely a YYYY-MM-DD date
   // that was parsed as UTC but should be treated as local

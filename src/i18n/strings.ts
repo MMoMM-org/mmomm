@@ -14,6 +14,9 @@ type StringMap = {
   'posts.totalPosts': string;
   'posts.postsTagged': string;
   'posts.postsTaggedWith': string;
+  'posts.showingPrefix': string;
+  'posts.exploreAllPrefix': string;
+  'posts.postsNoun': string;
   'nav.posts': string;
   'nav.videos': string;
   'nav.now': string;
@@ -37,6 +40,9 @@ const strings: Record<Locale, StringMap> = {
     'posts.totalPosts': 'Beiträge insgesamt',
     'posts.postsTagged': 'Beiträge mit Tag',
     'posts.postsTaggedWith': 'Beiträge mit Tag',
+    'posts.showingPrefix': 'Zeige',
+    'posts.exploreAllPrefix': 'Erkunde alle',
+    'posts.postsNoun': 'Beiträge',
     'nav.posts': 'Beiträge',
     'nav.videos': 'Videos',
     'nav.now': 'Jetzt',
@@ -58,6 +64,9 @@ const strings: Record<Locale, StringMap> = {
     'posts.totalPosts': 'total posts',
     'posts.postsTagged': 'Posts tagged',
     'posts.postsTaggedWith': 'posts tagged with',
+    'posts.showingPrefix': 'Showing',
+    'posts.exploreAllPrefix': 'Explore all',
+    'posts.postsNoun': 'posts',
     'nav.posts': 'Posts',
     'nav.videos': 'Videos',
     'nav.now': 'Now',

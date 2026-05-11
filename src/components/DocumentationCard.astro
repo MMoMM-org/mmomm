@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { formatDate, processMarkdown, isValidDate } from '../utils/markdown';
+import { DEFAULT_LOCALE } from '../utils/i18n';
 import { siteConfig } from '../config';
 import ImageWrapper from './ImageWrapper.astro';
 import Icon from './Icon.astro';
@@ -153,7 +154,7 @@ const showCoverImage = shouldShowCoverImage && image && context !== 'home';
         <div class="pt-2 border-t border-primary-200 dark:border-primary-700 mt-auto">
           {isValidDate(lastModified) && (
             <time datetime={lastModified.toISOString()} class="text-xs text-primary-500 dark:text-primary-400">
-              Updated {formatDate(lastModified)}
+              Updated {formatDate(lastModified, DEFAULT_LOCALE)}
             </time>
           )}
         </div>

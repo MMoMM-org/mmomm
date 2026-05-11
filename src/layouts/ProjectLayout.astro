@@ -255,10 +255,10 @@ const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProject
               {isValidDate(project.data.date) && (
                 <time datetime={project.data.date.toISOString()} class="font-medium">
                   <span class="hidden sm:inline">
-                    {formatDate(project.data.date)}
+                    {formatDate(project.data.date, projectLocale)}
                   </span>
                   <span class="sm:hidden">
-                    {formatDateMobile(project.data.date)}
+                    {formatDateMobile(project.data.date, projectLocale)}
                   </span>
                 </time>
               )}

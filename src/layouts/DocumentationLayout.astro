@@ -220,10 +220,10 @@ const structuredData = {
                   )}
                   <time datetime={documentation.data.lastModified.toISOString()} class="text-xs">
                     <span class="hidden sm:inline">
-                      Updated {formatDate(documentation.data.lastModified)}
+                      Updated {formatDate(documentation.data.lastModified, docsLocale)}
                     </span>
                     <span class="sm:hidden">
-                      Updated {formatDate(documentation.data.lastModified)}
+                      Updated {formatDate(documentation.data.lastModified, docsLocale)}
                     </span>
                   </time>
                 </>
