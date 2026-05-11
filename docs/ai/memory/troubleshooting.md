@@ -1,7 +1,11 @@
 # Troubleshooting — astro-mmomm
-<!-- Known issues and proven fixes. Updated: 2026-05-09 -->
+<!-- Known issues and proven fixes. Updated: 2026-05-11 -->
 <!-- Format: ## [Issue title] — Status: open/resolved — [fix description] -->
 <!-- Resolved entries are archived by /memory-cleanup, not deleted -->
+
+## `/projects/` and `/docs/` stubs emitted even with `optionalContentTypes.X = false` — Status: known-behaviour
+<!-- 2026-05-11 -->
+Setting `siteConfig.optionalContentTypes.projects = false` (and same for `docs`) disables the optional content sections but does **not** prevent astro-modular from emitting `dist/projects/index.html` and `dist/docs/index.html`. The fallback logic in `src/pages/projects/index.astro:16-29` (and the equivalent in `src/pages/projects/[...slug].astro` and the docs siblings) tries `getEntry('pages', 'projects')` to render a content-collection fallback first, and only redirects to `/404` when no such entry exists. The resulting HTML is a thin redirect stub, not a real page — visible in `dist/` and in the sitemap inputs. Harmless, but easy to mistake for a real route. **If you want clean URLs**: either provide a `src/content/pages/{de,en}/projects.md` (and `docs.md`) acting as a deliberate landing page (the fallback will then render it), or delete the `src/pages/{projects,docs}/` route trees entirely. Neither is needed right now — the redirect stubs cost ~1KB each.
 
 ## `pnpm run update` clobbers the build allowlist — Status: resolved
 <!-- 2026-05-09 -->
