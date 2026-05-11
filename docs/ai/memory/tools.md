@@ -1,17 +1,28 @@
 # Tools — astro-mmomm
 <!-- CI, build pipeline, API clients, local dev setup. Updated: 2026-05-11 -->
 
-## Astro Modular Settings plugin: edit nav in `src/config.ts`, not in the plugin UI
-<!-- 2026-05-11 -->
-The Astro Modular Settings plugin (`src/content/.obsidian/plugins/astro-modular-settings/`) is a UI for editing `src/config.ts` via `[CONFIG:KEY]` markers. Its own `data.json` is a UI mirror; the build never reads it. **Most fields are safe to edit either way** — single-string values, booleans, social links etc. round-trip cleanly between config.ts and data.json.
+## Astro Modular Settings plugin clobbers `src/config.ts` on "Apply"
+<!-- 2026-05-11 — observed clobber confirmed during a347b0b → restore session -->
+The Astro Modular Settings plugin (`src/content/.obsidian/plugins/astro-modular-settings/`) is a UI for editing `src/config.ts` via 174 `[CONFIG:KEY]` markers. Its own `data.json` is the in-memory model; the Astro build never reads it. The plugin writes config.ts on **user-action** ("Apply all settings" / "Apply template preset" / "Apply to config.ts" buttons — confirmed by grep of `main.js`), NOT on plugin auto-load. So config.ts is stable as long as the plugin's UI is not used to apply settings. (Astro Composer is a different plugin entirely — 0 markers, never writes config.ts; it only opens the file via `configFilePath` for the ribbon "Open config" command.)
 
-**Exception: `siteConfig.navigation.pages`.** Our bilingual nav (ADR-003) carries two fields the plugin does not understand: `i18nKey?` (T9 lookup key) and `urlEn?` (slug-divergent EN URL override, ADR-003 revision). If the plugin reads config.ts, stores nav in data.json with those fields stripped, and later writes back — it would clobber the bilingual config. Two rules:
-1. Always edit `siteConfig.navigation.pages` directly in `src/config.ts`, never in the plugin's nav editor.
-2. Leave `astro-modular-settings/data.json`'s `navigation.pages` stale on purpose (currently demo defaults). Syncing it would invite the plugin to round-trip and lose i18nKey/urlEn on the next save.
+**The clobber failure mode** — observed in this session — happens when:
+1. Plugin's data.json contains stale or lossy values (e.g. demo nav, or nav stripped of fields the plugin doesn't know about), AND
+2. The user triggers an "Apply" action in the plugin UI (including the Setup Wizard's apply/skip flow), THEN
+3. The plugin writes the FULL marked block from data.json to config.ts, dropping fields the plugin model doesn't recognise.
 
-The same holds for any future `[CONFIG:KEY]` field where we extend the shape beyond what astro-modular ships with — extensions live in config.ts, the plugin sees a lossy view.
+**Fields the plugin model does NOT understand** (will be dropped on any Apply):
+- `siteConfig.navigation.pages[].i18nKey` (ADR-003 T9 lookup key)
+- `siteConfig.navigation.pages[].urlEn` (ADR-003 revision — slug-divergent EN URLs)
+- `siteConfig.navigation.pages[].external` (icon-only GitHub external link flag)
+- `siteConfig.navigation.footer` (entire array — no `[CONFIG:NAVIGATION_FOOTER]` marker exists; the plugin writes the whole `navigation: {}` block and silently drops the footer key)
 
-`runWizardOnStartup` lives in data.json (not config.ts) — flip it to `false` to suppress the 10-step setup wizard.
+**Operating rules** (in priority order):
+1. **Never click "Apply" or "Apply template" in the Astro Modular Settings UI.** Edit `src/config.ts` directly, in the editor. The plugin UI is read-only-acceptable; settings-edit-via-plugin is forbidden.
+2. **Keep `astro-modular-settings/data.json` synced to MMoMM values** (without i18nKey/urlEn/footer) as damage limitation — if rule 1 is broken accidentally, the resulting clobber at least lands MMoMM titles/URLs in config.ts rather than astro-modular demo defaults.
+3. **After any Obsidian session that touched the Astro Modular Settings UI, run `git diff src/config.ts` before moving on.** Catches a clobber while git history still has the good state.
+4. **Optional hardening**: remove `astro-modular-settings` from `enabledPlugins` in `vault-cms/data.json` to fully prevent the plugin from running. Trade-off: no UI for settings-edits — fine since rule 1 already excludes that path.
+
+`runWizardOnStartup` lives in data.json (not config.ts) — flip it to `false` to suppress the 10-step setup wizard. Note that even with the wizard off, "Apply" buttons remain reachable through the plugin's regular settings UI.
 
 ## Vault CMS + Astro Composer keep parallel content-type lists
 <!-- 2026-05-11 -->

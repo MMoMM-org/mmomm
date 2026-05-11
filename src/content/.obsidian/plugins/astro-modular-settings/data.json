@@ -41,30 +41,25 @@
     "showMobileMenu": true,
     "pages": [
       {
-        "title": "Posts",
+        "title": "Beiträge",
         "url": "/posts/"
       },
       {
-        "title": "Projects",
-        "url": "/projects/"
+        "title": "Videos",
+        "url": "/videos/"
       },
       {
-        "title": "Docs",
-        "url": "/docs/"
+        "title": "Jetzt",
+        "url": "/now/"
       },
       {
-        "title": "About",
-        "url": "/about/",
-        "children": [
-          {
-            "title": "Privacy Policy",
-            "url": "/privacy-policy/"
-          }
-        ]
+        "title": "Über mich",
+        "url": "/ueber-mich/"
       },
       {
         "title": "GitHub",
-        "url": "https://github.com/davidvkimball/astro-modular"
+        "url": "https://github.com/MMoMM-org",
+        "icon": "github"
       }
     ],
     "social": [
