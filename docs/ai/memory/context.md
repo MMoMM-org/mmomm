@@ -45,22 +45,31 @@ Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **as
 
 **UI string migrations Phase 2** (`1b67aa4`, 2026-05-11): the visible-on-DE English strings exposed by Phase 1's spot-check are now i18n. `formatDate`/`formatDateMobile` (`src/utils/markdown.ts`) take a `Locale` parameter and route through `Intl` with `de-DE`/`en-US` BCP-47 tags. PostCard derives `post.data.lang` and threads it through dates, reading-time, word-count (new `tWordCount` helper with proper de/en pluralization), and the "+N more" tag chip (new `tMoreTags`). PostLayout gets the same treatment. All 8 posts-list routes (DE+EN: `index`, `[page]`, `tag/[...tag]`, `tag/[...tag]/[page]`) now declare `const lang = '<x>' as Locale` and route pageTitle, pageDescription, h1, "Page N of M • K total posts" counter, "Showing N posts tagged with #X" line, "Show all posts" / "View All Posts" links, and the empty-state "Previous Page" button through `t()`/`tPageOfTotal`. New T9 keys: `posts.allPosts`, `posts.allPostsTagged`, `posts.showAllPosts`, `posts.viewAllPosts`, `posts.totalPosts`, `posts.postsTagged` (cap, headings), `posts.postsTaggedWith` (lowercase, mid-sentence). Folded in 5 more EN-route URL bugs of the same class as Phase 1. Bonus: a long-standing `Astro.props` destructure typing issue in both `[page].astro` files fixed by `as Props` cast — total `astro check` error count dropped from 66 → 32.
 
-**ADR-005 multi-locale architecture written** (2026-05-11, no commit yet — uncommitted in working tree): Pivot from "fork plugin for `urlEn`/`i18nKey` preservation" to "N-locale-ready design with DE/EN MVP" after user signalled "kompletter Umbau auf multi language" direction. Six locked-in decisions: (1) `Locale = 'de' \| 'en'` union stays for MVP, APIs N-shaped so widening = one line; (2) `siteConfig.locales` + `defaultLocale` become source of truth, legacy `language: "de"` removed; (3) `LocalisedString = Record<Locale, string>` required-all with `lt(locale, value)` migration helper; (4) `urlEn` → `urlByLocale: Partial<Record<Locale, string>>` with centralised resolver in `i18n.ts`; (5) routes parameterised as `src/pages/[locale]/...` over non-default locales (kills 7-file `src/pages/en/` duplication); (6) plugin fork = Phase 3, locale-aware from start. ADR-002 Decision 4 + ADR-003 Decision 3 revised in-line; ADR-004 Decision 1 reaffirmed (Vault CMS scales linearly per locale). Blast-radius audit attached as ADR Findings: 21 hardcoded locale-equality branches across 11 files, 42 `/en/` URL hits across 19 files, 4 inline T9-coverage gaps (`'Zeige' / 'Showing'` ternaries Phase 2 missed). 4-phase plan; Phase 1 begins next session pending no further user input.
+**ADR-005 multi-locale architecture** (2026-05-11, `0429e07`): Pivot from "fork plugin for `urlEn`/`i18nKey` preservation" to "N-locale-ready design with DE/EN MVP" after user signalled "kompletter Umbau auf multi language" direction. Six locked-in decisions, blast-radius audit attached as ADR Findings, 4-phase plan; ADR-002 Decision 4 + ADR-003 Decision 3 revised in-line. See [ADR-005](../XDD/adr/ADR-005-multi-locale-architecture.md) for full text.
 
-## Active plan — ADR-005 Phase 1 (Schema foundation)
+**ADR-005 Phase 1 shipped** (2026-05-11, commits `c4c9006`..`29c577c`, 6 commits): All 9 Phase 1 steps landed in one session. Build remains at 59 pages, astro check stable at 32 pre-existing errors.
 
-ADR-005 phased migration to multi-locale architecture. Phase 1 next, ~1 session:
-1. Add `siteConfig.locales` + `defaultLocale`; remove legacy `language` field; update `[CONFIG:*]` markers (`[CONFIG:LOCALES]`, `[CONFIG:DEFAULT_LOCALE]` replace `[CONFIG:SITE_LANGUAGE]`)
-2. Update `src/utils/i18n.ts` to re-source `LOCALES`/`DEFAULT_LOCALE` from config; add `LocalisedString` type + `lt()` helper
-3. Migrate 6 site-info fields to `LocalisedString` (title, description, homepageTitle, defaultOgImageAlt, footer.content, profilePicture.alt)
-4. Refactor `urlEn` → `urlByLocale` (types.ts, config.ts, Header/Footer resolver extracted to i18n.ts)
-5. Refactor 6 `locale === 'de' ? a : b` branches in `src/i18n/strings.ts` to per-locale function tables
-6. Fix 4 inline-string leaks in `posts/index.astro`, `posts/tag/[...tag].astro`, and their EN mirrors (`'Zeige' / 'Showing'` → `t()` calls)
-7. Drop `formatDate`/`formatDateMobile` default `= 'de'`; require explicit locale
-8. Refactor `tools/migrate-from-hugo.mjs` + `rename-image-attachments.mjs` to locale-parameterised source-dir tables
-9. Verify `pnpm build` produces same page count + same URLs as today
+- `c4c9006` **Commit A** (Decision 2): siteConfig.locales + defaultLocale source of truth. Locale + LocalisedString types moved to `src/types.ts`. `src/utils/i18n.ts` re-sources LOCALES/DEFAULT_LOCALE from config. New `lt(locale, value)` migration helper. Markers `[CONFIG:LOCALES]` + `[CONFIG:DEFAULT_LOCALE]` replace `[CONFIG:SITE_LANGUAGE]`. llms.txt.ts migrated.
+- `95e1aa4` **Commit B** (Decision 3): 6 site-info fields → LocalisedString. EN description: "PKM, Obsidian, MiYo, AI, and other oddments". footer.content fully bilingual ("Gebaut mit ..." / "Built with ..."). 25 files touched, every consumer threads locale via lt(). seo.ts generate*SEO functions take explicit locale; entity-typed (post/page) functions derive from data.lang. ProjectLayout/DocumentationLayout use DEFAULT_LOCALE (collections have no lang schema today per ADR-004 Decision 4).
+- `1ae64d8` **Commit C** (Decision 4): urlEn → urlByLocale: Partial<Record<Locale, string>>. New shared navUrl() resolver in i18n.ts (subsumes duplicate Header.localizedNavUrl + Footer.navUrl). 3 nav items (Jetzt, Über mich, Datenschutz) migrated.
+- `cc311e9` **Commit D** (Decision 6): strings.ts ternaries → per-locale function tables. tPageOfTotal/tReadingTime/tWordCount/tMoreTags + bcp47Tag now Record<Locale, Formatter> — missing key on a 3rd locale = compile error.
+- `db82b8e` **Commit E** (steps 6+7): 4 inline-string leaks fixed (3 new T9 keys: posts.showingPrefix, posts.exploreAllPrefix, posts.postsNoun). formatDate/formatDateMobile defaults removed; 7 callers updated with explicit locale.
+- `29c577c` **Commit F** (step 8): Hugo migration tooling locale-parameterised. LOCALE_SOURCES + LOCALE_HUGO_BASES tables replace hardcoded HUGO_DE/HUGO_EN constants and inline ternaries. Adding a 3rd locale = add a key, validation rejects unknowns with a list-the-valid-options error.
 
-After Phase 1: Phase 2 (route deduplication `src/pages/[locale]/`), Phase 3 (plugin fork `MMoMM-org/astro-modular-settings-mmomm`, locale-aware), Phase 4 (runbook + memory updates).
+## Active plan — ADR-005 Phase 2 (Route deduplication)
+
+Phase 2 of ADR-005 — collapse the 7-file `src/pages/en/` clone tree into a parameterised `src/pages/[locale]/...` tree. ~1-2 sessions. Steps:
+
+1. Create `src/pages/[locale]/posts/...` tree mirroring current `posts/` shape — `index.astro`, `[page].astro`, `[...slug].astro`, `tag/[...tag].astro`, `tag/[...tag]/[page].astro`
+2. `getStaticPaths` in each parameterised file iterates `LOCALES.filter(l => l !== DEFAULT_LOCALE)` and emits `params: { locale, ... }`
+3. Each route's frontmatter derives `lang` from `Astro.params.locale as Locale`
+4. Delete `src/pages/en/posts/...` files one-by-one as parameterised replacements build-clean
+5. Verify all URLs unchanged via build-output diff (snapshot `dist/` pre-vs-post)
+6. Verify hreflang/sitemap/RSS output unchanged
+
+Default-locale tree (`src/pages/posts/...`) stays at root URL paths because Astro's `i18n.routing.prefixDefaultLocale: false` (ADR-002 Decision 4) requires non-prefixed default routes. Only non-default locales move to `[locale]/`.
+
+After Phase 2: Phase 3 (plugin fork `MMoMM-org/astro-modular-settings-mmomm`, locale-aware), Phase 4 (runbook + memory updates).
 
 ## Next moves outside ADR-005 (pick when ADR-005 has free space)
 
