@@ -29,6 +29,24 @@ function pathForOtherLocale(currentPath: string, otherLocale: Locale): string {
 
 const urlLocale: Locale = deriveLocaleFromPath(Astro.url.pathname);
 const otherLocale: Locale = urlLocale === 'de' ? 'en' : 'de';
+
+// Prefix absolute-path nav URLs with the current URL's locale. siteConfig.navigation.pages
+// declares URLs against the DE root ("/posts/") for plugin-compat (ADR-003); when rendering on
+// EN routes the same items must point to "/en/posts/" etc. External links and anchors are
+// untouched.
+function localizedNavUrl(url: string | undefined, locale: Locale): string {
+  if (!url) return '#';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('mailto:')) {
+    return url;
+  }
+  if (url.startsWith('/')) return `${localePrefix(locale)}${url}`;
+  return url;
+}
+const navPages = siteConfig.navigation.pages.map(p => ({
+  ...p,
+  url: localizedNavUrl(p.url, urlLocale),
+  children: p.children?.map(c => ({ ...c, url: localizedNavUrl(c.url, urlLocale) })),
+}));
 let switcherHref: string;
 if (post) {
   const counterpart = post.data.translationKey ? await findTranslation(post) : null;
@@ -95,7 +113,7 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
         {siteConfig.navigation.showNavigation && (  
     <nav class={`nav-desktop-audit-visible flex items-center ${  
       siteConfig.navigation.style === 'minimal' ? `space-x-5 ${siteConfig.featureButton === 'none' && !siteConfig.commandPalette.enabled ? '' : 'mr-4'}` : 'space-x-5' }`} aria-label="Main navigation">
-            {siteConfig.navigation.pages.map((page, index) => {
+            {navPages.map((page, index) => {
               const hasChildren = page.children && page.children.length > 0;
               const hasUrl = page.url && page.url.trim() !== '';
               
@@ -267,7 +285,7 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
           aria-modal="true"
           aria-label="Mobile navigation menu">
         <nav class="flex flex-col space-y-1">
-          {siteConfig.navigation.pages.map((page, index) => {
+          {navPages.map((page, index) => {
             const hasChildren = page.children && page.children.length > 0;
             const hasUrl = page.url && page.url.trim() !== '';
             
