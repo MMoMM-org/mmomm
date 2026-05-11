@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { siteConfig } from '../config';
-import type { Locale, LocalisedString } from '../types';
+import type { Locale, LocalisedString, NavigationItem } from '../types';
 
 // Re-export so existing imports `from '@/utils/i18n'` keep working — Locale is
 // now defined in src/types.ts per ADR-005 Decision 2.
@@ -25,6 +25,32 @@ export function localePrefix(locale: Locale): string {
  */
 export function lt(locale: Locale, value: LocalisedString | string): string {
   return typeof value === 'string' ? value : value[locale];
+}
+
+/**
+ * Resolve a navigation item's URL for the current locale (ADR-005 Decision 4).
+ *
+ * Precedence:
+ *   1. `urlByLocale[locale]` — explicit per-locale override (use for slug-divergent
+ *      pages like /ueber-mich/ -> /en/about/, or locale-neutral routes like /now/).
+ *   2. Missing url -> '#' (dropdown-only parent).
+ *   3. External or absolute URL (http(s)://, #, mailto:) -> verbatim.
+ *   4. Relative path -> prefixed with localePrefix(locale).
+ *
+ * Replaces the duplicated localizedNavUrl/navUrl resolvers that previously
+ * lived in Header.astro and Footer.astro.
+ */
+export function navUrl(item: Pick<NavigationItem, 'url' | 'urlByLocale' | 'external'>, locale: Locale): string {
+  const override = item.urlByLocale?.[locale];
+  if (override) return override;
+  const url = item.url;
+  if (!url) return '#';
+  if (item.external) return url;
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('mailto:')) {
+    return url;
+  }
+  if (url.startsWith('/')) return `${localePrefix(locale)}${url}`;
+  return url;
 }
 
 /** Strip the locale folder prefix from a post id to get the bare slug. */

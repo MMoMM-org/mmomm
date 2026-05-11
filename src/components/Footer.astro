@@ -1,6 +1,6 @@
 ---
 import { siteConfig } from '@/config';
-import { type Locale, localePrefix, lt } from '@/utils/i18n';
+import { type Locale, lt, navUrl } from '@/utils/i18n';
 import { tOpt } from '@/i18n/strings';
 import Icon from './Icon.astro';
 
@@ -13,17 +13,10 @@ const footerEnabled = siteConfig.footer.enabled;
 
 // Locale-aware footer links (Impressum, Datenschutz/Privacy Policy). Derive locale
 // from URL — same pattern as Header (PageLayout/404 don't always propagate lang).
+// navUrl + lt are shared resolvers in @/utils/i18n (ADR-005 Decision 4).
 function deriveLocaleFromPath(path: string): Locale {
   if (path === '/en' || path === '/en/' || path.startsWith('/en/')) return 'en';
   return 'de';
-}
-function navUrl(item: { url?: string; urlEn?: string }, locale: Locale): string {
-  const url = item.url;
-  if (!url) return '#';
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('mailto:')) return url;
-  if (locale === 'en' && item.urlEn) return item.urlEn;
-  if (url.startsWith('/')) return `${localePrefix(locale)}${url}`;
-  return url;
 }
 const urlLocale: Locale = deriveLocaleFromPath(Astro.url.pathname);
 const legalLinks = (siteConfig.navigation.footer ?? []).map(p => ({

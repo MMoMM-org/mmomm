@@ -46,9 +46,11 @@ export interface ReadingTime {
 export interface NavigationItem {
   title: string;
   url?: string;  // Optional - if missing, item is dropdown-only.
-                 // For bilingual pages this is the DE-canonical URL; see urlEn.
-  urlEn?: string; // EN URL override when the slug differs (e.g. /jetzt/ -> /en/now/).
-                  // When omitted, Header naively prefixes url with /en for EN routes.
+                 // For bilingual pages this is the URL on the default locale; see urlByLocale.
+  urlByLocale?: Partial<Record<Locale, string>>; // Per-locale URL override.
+                  // When omitted, navUrl() prefixes url with /<locale>/ for non-default locales.
+                  // Use when the slug differs across locales (e.g. /jetzt/ -> /en/now/) or
+                  // when a route is intentionally locale-neutral (set every locale to the same URL).
   i18nKey?: string; // T9 key (in src/i18n/strings.ts) for the translated label.
                     // When omitted or unknown, title is used verbatim.
   external?: boolean;

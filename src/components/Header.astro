@@ -1,7 +1,7 @@
 ---
 import { siteConfig } from '../config';
 import type { Post, Page } from '@/types';
-import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, pageUrl, findTranslation, findPageTranslation, lt } from '@/utils/i18n';
+import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, pageUrl, findTranslation, findPageTranslation, lt, navUrl } from '@/utils/i18n';
 import { tOpt } from '@/i18n/strings';
 import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
@@ -36,30 +36,16 @@ function pathForOtherLocale(currentPath: string, otherLocale: Locale): string {
 const urlLocale: Locale = deriveLocaleFromPath(Astro.url.pathname);
 const otherLocale: Locale = urlLocale === 'de' ? 'en' : 'de';
 
-// Resolve a nav item's URL for the current locale. siteConfig.navigation.pages
-// declares URLs against the DE root ("/posts/") for plugin-compat (ADR-003); when
-// rendering on EN routes:
-//  - if the item has an explicit `urlEn` (different slug across locales,
-//    e.g. /jetzt/ -> /en/now/), use that verbatim;
-//  - otherwise, prefix the canonical URL with /en (works for slug-equal sections).
-// External links and anchors are untouched.
-function localizedNavUrl(item: { url?: string; urlEn?: string }, locale: Locale): string {
-  const url = item.url;
-  if (!url) return '#';
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('mailto:')) {
-    return url;
-  }
-  if (locale === 'en' && item.urlEn) return item.urlEn;
-  if (url.startsWith('/')) return `${localePrefix(locale)}${url}`;
-  return url;
-}
+// URL resolution and label translation are centralised in navUrl/tOpt; see
+// ADR-005 Decision 4. Nav items declare URLs against the default locale and
+// may pin per-locale overrides via urlByLocale.
 const navPages = siteConfig.navigation.pages.map(p => ({
   ...p,
-  url: localizedNavUrl(p, urlLocale),
+  url: navUrl(p, urlLocale),
   label: tOpt(urlLocale, p.i18nKey, p.title),
   children: p.children?.map(c => ({
     ...c,
-    url: localizedNavUrl(c, urlLocale),
+    url: navUrl(c, urlLocale),
     label: tOpt(urlLocale, c.i18nKey, c.title),
   })),
 }));
