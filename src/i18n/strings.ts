@@ -7,6 +7,13 @@ type StringMap = {
   'pagination.next': string;
   'post.published': string;
   'post.minReadFallback': string;
+  'posts.allPosts': string;
+  'posts.allPostsTagged': string;
+  'posts.showAllPosts': string;
+  'posts.viewAllPosts': string;
+  'posts.totalPosts': string;
+  'posts.postsTagged': string;
+  'posts.postsTaggedWith': string;
   'nav.posts': string;
   'nav.videos': string;
   'nav.now': string;
@@ -23,6 +30,13 @@ const strings: Record<Locale, StringMap> = {
     'pagination.next': 'Weiter',
     'post.published': 'Veröffentlicht',
     'post.minReadFallback': '1 Min. Lesezeit',
+    'posts.allPosts': 'Alle Beiträge',
+    'posts.allPostsTagged': 'Alle Beiträge mit Tag',
+    'posts.showAllPosts': 'Alle Beiträge anzeigen',
+    'posts.viewAllPosts': 'Alle Beiträge ansehen',
+    'posts.totalPosts': 'Beiträge insgesamt',
+    'posts.postsTagged': 'Beiträge mit Tag',
+    'posts.postsTaggedWith': 'Beiträge mit Tag',
     'nav.posts': 'Beiträge',
     'nav.videos': 'Videos',
     'nav.now': 'Jetzt',
@@ -37,6 +51,13 @@ const strings: Record<Locale, StringMap> = {
     'pagination.next': 'Next',
     'post.published': 'Published',
     'post.minReadFallback': '1 min read',
+    'posts.allPosts': 'All Posts',
+    'posts.allPostsTagged': 'All posts tagged with',
+    'posts.showAllPosts': 'Show all posts',
+    'posts.viewAllPosts': 'View All Posts',
+    'posts.totalPosts': 'total posts',
+    'posts.postsTagged': 'Posts tagged',
+    'posts.postsTaggedWith': 'posts tagged with',
     'nav.posts': 'Posts',
     'nav.videos': 'Videos',
     'nav.now': 'Now',
@@ -75,4 +96,18 @@ export function tReadingTime(locale: Locale, minutes: number): string {
   return locale === 'de'
     ? `${minutes} Min. Lesezeit`
     : `${minutes} min read`;
+}
+
+// "N word(s)" with pluralization. DE: Wort/Wörter, EN: word/words.
+// Number is formatted via toLocaleString so 1234 -> "1,234" (en) or "1.234" (de).
+export function tWordCount(locale: Locale, count: number): string {
+  const tag = locale === 'de' ? 'de-DE' : 'en-US';
+  const formatted = count.toLocaleString(tag);
+  if (count === 1) return locale === 'de' ? '1 Wort' : '1 word';
+  return locale === 'de' ? `${formatted} Wörter` : `${formatted} words`;
+}
+
+// "+ N more" trailing label after a truncated list (used by PostCard tag chips).
+export function tMoreTags(locale: Locale, count: number): string {
+  return locale === 'de' ? `+ ${count} weitere` : `+ ${count} more`;
 }

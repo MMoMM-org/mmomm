@@ -3,12 +3,15 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { getLocalisedPosts } from '@/utils/i18n';
+import { type Locale, getLocalisedPosts } from '@/utils/i18n';
+import { t } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
+
+const lang = 'en' as Locale;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const isDev = import.meta.env.DEV;
@@ -82,8 +85,8 @@ const endIndex = Math.min(postsPerPage, totalPosts);
 const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
 
 // Generate SEO data
-const pageTitle = `Posts tagged "${tag}"`;
-const pageDescription = `All posts tagged with "${tag}"`;
+const pageTitle = `${t(lang, 'posts.postsTagged')} "${tag}"`;
+const pageDescription = `${t(lang, 'posts.allPostsTagged')} "${tag}"`;
 
 const seoData = {
   title: `${pageTitle} | ${siteConfig.title}`,
@@ -135,19 +138,19 @@ const pagination = {
           </div>
         </div>
         <p class="text-base text-primary-600 dark:text-primary-300">
-          Showing <strong>{filteredPosts.length}</strong> posts tagged with 
+          {lang === 'de' ? 'Zeige' : 'Showing'} <strong>{filteredPosts.length}</strong> {t(lang, 'posts.postsTaggedWith')}
           <span class="inline-flex items-center px-2 py-1 bg-highlight-100 dark:bg-highlight-900/30 text-highlight-800 dark:text-highlight-200 rounded text-sm font-medium ml-1">
             #{tag}
           </span>
         </p>
 
         <div class="mt-4">
-          <a 
-            href="/posts"
+          <a
+            href="/en/posts"
             class="inline-flex items-center text-sm text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
           >
             <Icon name="arrow-left" class="w-4 h-4 mr-1" />
-            Show all posts
+            {t(lang, 'posts.showAllPosts')}
           </a>
         </div>
       </header>

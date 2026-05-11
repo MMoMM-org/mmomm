@@ -3,13 +3,16 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { getLocalisedPosts } from '@/utils/i18n';
+import { type Locale, getLocalisedPosts } from '@/utils/i18n';
 import { optimizePostImagePath } from '@/utils/images';
+import { t } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
+
+const lang = 'de' as Locale;
 
 // Get special content for posts page
 let postsPageContent;
@@ -55,11 +58,11 @@ const allTags = extractTags(sortedPosts);
 
 // Generate SEO data
 const pageTitle = selectedTag
-  ? `Posts tagged "${selectedTag}"`
-  : (postsPageData?.data.title || 'All Posts');
+  ? `${t(lang, 'posts.postsTagged')} "${selectedTag}"`
+  : (postsPageData?.data.title || t(lang, 'posts.allPosts'));
 const pageDescription = selectedTag
-  ? `All posts tagged with "${selectedTag}"`
-  : (postsPageData?.data.description || `Browse all ${totalPosts} posts on ${siteConfig.title}`);
+  ? `${t(lang, 'posts.allPostsTagged')} "${selectedTag}"`
+  : (postsPageData?.data.description || `${t(lang, 'posts.allPosts')} — ${siteConfig.title}`);
 
 const seoData = {
   title: `${pageTitle} | ${siteConfig.title}`,
@@ -133,13 +136,13 @@ const pagination = {
         <p class="text-base text-primary-600 dark:text-primary-300">
           {selectedTag ? (
             <>
-              Showing <strong>{filteredPosts.length}</strong> posts tagged with
+              {lang === 'de' ? 'Zeige' : 'Showing'} <strong>{filteredPosts.length}</strong> {t(lang, 'posts.postsTaggedWith')}
               <span class="inline-flex items-center px-2 py-1 bg-highlight-100 dark:bg-highlight-900/30 text-highlight-800 dark:text-highlight-200 rounded text-sm font-medium ml-1">
                 #{selectedTag}
               </span>
             </>
           ) : (
-            <>Explore all <strong>{totalPosts}</strong> posts</>
+            <>{lang === 'de' ? 'Erkunde alle' : 'Explore all'} <strong>{totalPosts}</strong> {lang === 'de' ? 'Beiträge' : 'posts'}</>
           )}
         </p>
 
@@ -150,7 +153,7 @@ const pagination = {
               class="inline-flex items-center text-sm text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
             >
               <Icon name="arrow-left" class="w-4 h-4 mr-1" />
-              Show all posts
+              {t(lang, 'posts.showAllPosts')}
             </a>
           </div>
         )}

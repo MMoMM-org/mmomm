@@ -4,6 +4,7 @@ import { formatDate, formatDateMobile, processMarkdown, calculateReadingTime, ge
 import { siteConfig, getPostCardAspectRatio } from '../config';
 import { getOptimizedFormat } from '@/utils/images';
 import { postUrl, tagUrl } from '@/utils/i18n';
+import { t, tReadingTime, tWordCount, tMoreTags } from '@/i18n/strings';
 import ImageWrapper from './ImageWrapper.astro';
 
 interface Props {
@@ -156,8 +157,8 @@ const shouldShowCoverImage = (() => {
     <div class={`p-4 ${image && shouldShowCoverImage ? 'rounded-b-lg' : 'rounded-lg'}`}>
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-primary-500 dark:text-primary-400 mb-1">
         <time datetime={date.toISOString()}>
-          <span class="hidden sm:inline">{formatDate(date)}</span>
-          <span class="sm:hidden">{formatDateMobile(date)}</span>
+          <span class="hidden sm:inline">{formatDate(date, post.data.lang)}</span>
+          <span class="sm:hidden">{formatDateMobile(date, post.data.lang)}</span>
         </time>
 
         {siteConfig.postOptions.readingTime && readingTime && (
@@ -165,7 +166,7 @@ const shouldShowCoverImage = (() => {
             <span class="text-primary-300 dark:text-primary-600 hidden sm:inline">•</span>
             <span class="text-primary-300 dark:text-primary-600 sm:hidden">•</span>
             <span>
-              <span class="hidden sm:inline">{readingTime.text && readingTime.text !== 'read0' && readingTime.text !== '' ? readingTime.text : '1 min read'}</span>
+              <span class="hidden sm:inline">{readingTime.minutes > 0 ? tReadingTime(post.data.lang, readingTime.minutes) : t(post.data.lang, 'post.minReadFallback')}</span>
               <span class="sm:hidden">{getReadingTimeMobile(readingTime)}</span>
             </span>
           </>
@@ -176,8 +177,8 @@ const shouldShowCoverImage = (() => {
             <span class="text-primary-300 dark:text-primary-600 hidden sm:inline">•</span>
             <span class="text-primary-300 dark:text-primary-600 sm:hidden">•</span>
             <span class="min-w-0">
-              <span class="hidden sm:inline">{wordCount === 1 ? '1 word' : `${wordCount} words`}</span>
-              <span class="sm:hidden">{wordCount === 1 ? '1 word' : `${wordCount.toLocaleString()} words`}</span>
+              <span class="hidden sm:inline">{tWordCount(post.data.lang, wordCount)}</span>
+              <span class="sm:hidden">{tWordCount(post.data.lang, wordCount)}</span>
             </span>
           </>
         )}
@@ -211,7 +212,7 @@ const shouldShowCoverImage = (() => {
               class="inline-block text-xs text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 mr-2 mb-1"
               aria-label={`${tags.length - 3} more tags available`}
             >
-              + {tags.length - 3} more
+              {tMoreTags(post.data.lang, tags.length - 3)}
             </span>
           )}
         </div>

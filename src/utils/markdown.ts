@@ -165,8 +165,15 @@ export async function processPost(post: any) {
   };
 }
 
-// Format date for display
-export function formatDate(date: Date): string {
+// BCP-47 locale tags for Intl.DateTimeFormat. Centralized so callers pass a
+// short Locale and don't sprinkle "en-US" / "de-DE" through the codebase.
+const LOCALE_TAGS = { de: "de-DE", en: "en-US" } as const;
+
+// Format date for display. Locale defaults to DE (site default) — pass the
+// post/page's `data.lang` when available so dates render in the reader's
+// locale rather than English-only.
+export function formatDate(date: Date, locale: "de" | "en" = "de"): string {
+  const tag = LOCALE_TAGS[locale];
   // If the date is at midnight UTC, it was likely a YYYY-MM-DD date
   // that was parsed as UTC but should be treated as local
   if (
@@ -180,22 +187,23 @@ export function formatDate(date: Date): string {
       date.getUTCMonth(),
       date.getUTCDate()
     );
-    return localDate.toLocaleDateString("en-US", {
+    return localDate.toLocaleDateString(tag, {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
   }
 
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(tag, {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 }
 
-// Format date for mobile display (shorter format)
-export function formatDateMobile(date: Date): string {
+// Format date for mobile display (shorter format).
+export function formatDateMobile(date: Date, locale: "de" | "en" = "de"): string {
+  const tag = LOCALE_TAGS[locale];
   // If the date is at midnight UTC, it was likely a YYYY-MM-DD date
   // that was parsed as UTC but should be treated as local
   if (
@@ -209,14 +217,14 @@ export function formatDateMobile(date: Date): string {
       date.getUTCMonth(),
       date.getUTCDate()
     );
-    return localDate.toLocaleDateString("en-US", {
+    return localDate.toLocaleDateString(tag, {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
   }
 
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(tag, {
     year: "numeric",
     month: "short",
     day: "numeric",

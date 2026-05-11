@@ -4,12 +4,15 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
-import { getLocalisedPosts } from '@/utils/i18n';
+import { type Locale, getLocalisedPosts } from '@/utils/i18n';
+import { t, tPageOfTotal } from '@/i18n/strings';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
+
+const lang = 'en' as Locale;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Get DE posts (i18n: see ADR-002 — EN locale)
@@ -50,7 +53,7 @@ export interface Props {
   postsPerPage: number;
 }
 
-const { posts, currentPage, totalPages, postsPerPage } = Astro.props;
+const { posts, currentPage, totalPages, postsPerPage } = Astro.props as Props;
 
 // Get query parameters
 const url = new URL(Astro.request.url);
@@ -71,11 +74,11 @@ const allTags = extractTags(posts);
 
 // Generate SEO data
 const pageTitle = selectedTag
-  ? `Posts tagged "${selectedTag}" - Page ${currentPage}`
-  : `All Posts - Page ${currentPage}`;
+  ? `${t(lang, 'posts.postsTagged')} "${selectedTag}" - ${tPageOfTotal(lang, currentPage, totalPages)}`
+  : `${t(lang, 'posts.allPosts')} - ${tPageOfTotal(lang, currentPage, totalPages)}`;
 const pageDescription = selectedTag
-  ? `Page ${currentPage} of posts tagged with "${selectedTag}"`
-  : `Page ${currentPage} of all posts on ${siteConfig.title}`;
+  ? `${tPageOfTotal(lang, currentPage, totalPages)}, ${t(lang, 'posts.postsTaggedWith')} "${selectedTag}"`
+  : `${tPageOfTotal(lang, currentPage, totalPages)} — ${t(lang, 'posts.allPosts')} on ${siteConfig.title}`;
 
 const seoData = {
   title: `${pageTitle} | ${siteConfig.title}`,
@@ -90,8 +93,8 @@ const pagination = {
   totalPages,
   hasNext: currentPage < totalPages,
   hasPrev: currentPage > 1,
-  nextUrl: currentPage < totalPages ? `/posts/${currentPage + 1}` : undefined,
-  prevUrl: currentPage > 2 ? `/posts/${currentPage - 1}` : '/posts'
+  nextUrl: currentPage < totalPages ? `/en/posts/${currentPage + 1}` : undefined,
+  prevUrl: currentPage > 2 ? `/en/posts/${currentPage - 1}` : '/en/posts'
 };
 ---
 
@@ -103,9 +106,9 @@ const pagination = {
         <div class="flex items-start justify-between mb-3">
           <h1 class="text-lg font-bold text-primary-900 dark:text-primary-50">
             {selectedTag ? (
-              <>Posts tagged "{selectedTag}"</>
+              <>{t(lang, 'posts.postsTagged')} "{selectedTag}"</>
             ) : (
-              <>All Posts</>
+              <>{t(lang, 'posts.allPosts')}</>
             )}
           </h1>
           <div class="flex items-center space-x-2">
@@ -130,24 +133,24 @@ const pagination = {
           </div>
         </div>
         <p class="text-base text-primary-600 dark:text-primary-300">
-          Page {currentPage} of {totalPages} • <strong>{filteredPosts.length}</strong>
+          {tPageOfTotal(lang, currentPage, totalPages)} • <strong>{filteredPosts.length}</strong>
           {selectedTag ? (
-            <>posts tagged with
+            <>{' '}{t(lang, 'posts.postsTaggedWith')}
             <span class="inline-flex items-center px-2 py-1 bg-highlight-100 dark:bg-highlight-900/30 text-highlight-800 dark:text-highlight-200 rounded text-sm font-medium ml-1">
               #{selectedTag}
             </span></>
           ) : (
-            <>total posts</>
+            <>{' '}{t(lang, 'posts.totalPosts')}</>
           )}
         </p>
 
         <div class="mt-4">
           <a
-            href="/posts"
+            href="/en/posts"
             class="inline-flex items-center text-sm text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
           >
             <Icon name="arrow-left" class="w-4 h-4 mr-1" />
-            Show all posts
+            {t(lang, 'posts.showAllPosts')}
           </a>
         </div>
       </header>
@@ -178,12 +181,12 @@ const pagination = {
                 Try going back to an earlier page or removing filters.
               </p>
               <div class="space-x-4">
-                <a href="/posts" class="btn-secondary">
-                  View All Posts
+                <a href="/en/posts" class="btn-secondary">
+                  {t(lang, 'posts.viewAllPosts')}
                 </a>
                 {currentPage > 1 && (
                   <a href={pagination.prevUrl} class="btn-outline">
-                    Previous Page
+                    {t(lang, 'pagination.previous')}
                   </a>
                 )}
               </div>
