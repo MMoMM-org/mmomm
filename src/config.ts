@@ -236,7 +236,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:FOOTER_ENABLED]
     enabled: true,
     // [CONFIG:FOOTER_CONTENT]
-    content: `© 2026 {author}. Built with the <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a> theme.`,
+    content: `© 2026 {author}. Built with <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a> (a bilingual fork of <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
     // [CONFIG:FOOTER_SHOW_SOCIAL_ICONS]
     showSocialIconsInFooter: true,
   },
@@ -361,9 +361,9 @@ export const siteConfig: SiteConfig = {
   // Optional Content Types - Enable/disable optional content sections (takes priority over homeOptions)
   optionalContentTypes: {
     // [CONFIG:OPTIONAL_CONTENT_TYPES_PROJECTS]
-    projects: true, // Enable projects section
+    projects: false, // Enable projects section — disabled per ADR-004 Decision 5 (no projects content)
     // [CONFIG:OPTIONAL_CONTENT_TYPES_DOCS]
-    docs: true, // Enable documentation section
+    docs: false, // Enable documentation section — disabled per ADR-004 Decision 5 (no docs content)
   },
 
   // Home Options

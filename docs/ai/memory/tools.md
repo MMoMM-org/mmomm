@@ -1,6 +1,18 @@
 # Tools — astro-mmomm
 <!-- CI, build pipeline, API clients, local dev setup. Updated: 2026-05-11 -->
 
+## Astro Modular Settings plugin: edit nav in `src/config.ts`, not in the plugin UI
+<!-- 2026-05-11 -->
+The Astro Modular Settings plugin (`src/content/.obsidian/plugins/astro-modular-settings/`) is a UI for editing `src/config.ts` via `[CONFIG:KEY]` markers. Its own `data.json` is a UI mirror; the build never reads it. **Most fields are safe to edit either way** — single-string values, booleans, social links etc. round-trip cleanly between config.ts and data.json.
+
+**Exception: `siteConfig.navigation.pages`.** Our bilingual nav (ADR-003) carries two fields the plugin does not understand: `i18nKey?` (T9 lookup key) and `urlEn?` (slug-divergent EN URL override, ADR-003 revision). If the plugin reads config.ts, stores nav in data.json with those fields stripped, and later writes back — it would clobber the bilingual config. Two rules:
+1. Always edit `siteConfig.navigation.pages` directly in `src/config.ts`, never in the plugin's nav editor.
+2. Leave `astro-modular-settings/data.json`'s `navigation.pages` stale on purpose (currently demo defaults). Syncing it would invite the plugin to round-trip and lose i18nKey/urlEn on the next save.
+
+The same holds for any future `[CONFIG:KEY]` field where we extend the shape beyond what astro-modular ships with — extensions live in config.ts, the plugin sees a lossy view.
+
+`runWizardOnStartup` lives in data.json (not config.ts) — flip it to `false` to suppress the 10-step setup wizard.
+
 ## Vault CMS + Astro Composer keep parallel content-type lists
 <!-- 2026-05-11 -->
 The astro-modular Obsidian plugin stack stores content-type configuration in TWO `data.json` files that overlap:

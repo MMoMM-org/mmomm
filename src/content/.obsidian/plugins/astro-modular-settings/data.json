@@ -1,5 +1,5 @@
 {
-  "runWizardOnStartup": true,
+  "runWizardOnStartup": false,
   "currentTemplate": "standard",
   "currentTheme": "oxygen",
   "customThemeFile": "custom",
@@ -12,13 +12,13 @@
     }
   },
   "siteInfo": {
-    "site": "https://astro-modular.netlify.app",
-    "title": "Astro Modular",
-    "description": "A flexible blog theme designed for Obsidian users.",
-    "author": "David V. Kimball",
-    "language": "en",
+    "site": "https://www.mmomm.org",
+    "title": "MingleMangleOfMyMind",
+    "description": "PKM, Obsidian, MiYo, AI und anderes Gedöns",
+    "author": "Marcus Breiden",
+    "language": "de",
     "faviconThemeAdaptive": true,
-    "defaultOgImageAlt": "Astro Modular logo."
+    "defaultOgImageAlt": "MingleMangleOfMyMind logo."
   },
   "layout": {
     "contentWidth": "45rem"
@@ -29,11 +29,11 @@
   },
   "footer": {
     "enabled": true,
-    "content": "© 2026 {author}. Built with the <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a> theme.",
+    "content": "© 2026 {author}. Built with <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a> (a bilingual fork of <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>).",
     "showSocialIconsInFooter": true
   },
   "seo": {
-    "defaultOgImageAlt": "Astro Modular logo."
+    "defaultOgImageAlt": "MingleMangleOfMyMind logo."
   },
   "navigation": {
     "showNavigation": true,
@@ -69,14 +69,24 @@
     ],
     "social": [
       {
-        "title": "X",
-        "url": "https://x.com/davidvkimball",
-        "icon": "x-twitter"
+        "title": "GitHub",
+        "url": "https://github.com/MMoMM-org",
+        "icon": "github"
       },
       {
-        "title": "GitHub",
-        "url": "https://github.com/davidvkimball",
-        "icon": "github"
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/marcusbreiden/",
+        "icon": "linkedin"
+      },
+      {
+        "title": "YouTube",
+        "url": "https://www.youtube.com/@mmomm-org",
+        "icon": "youtube"
+      },
+      {
+        "title": "Xing",
+        "url": "https://www.xing.com/profile/Marcus_Breiden",
+        "icon": "xing"
       }
     ]
   },
@@ -113,11 +123,11 @@
       "count": 7
     },
     "projects": {
-      "enabled": true,
+      "enabled": false,
       "count": 2
     },
     "docs": {
-      "enabled": true,
+      "enabled": false,
       "count": 3
     },
     "blurb": {
@@ -243,8 +253,8 @@
     }
   },
   "optionalContentTypes": {
-    "projects": true,
-    "docs": true
+    "projects": false,
+    "docs": false
   },
   "availableThemes": "default",
   "customThemes": "",
