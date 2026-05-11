@@ -32,7 +32,12 @@ export interface ReadingTime {
 
 export interface NavigationItem {
   title: string;
-  url?: string;  // Optional - if missing, item is dropdown-only
+  url?: string;  // Optional - if missing, item is dropdown-only.
+                 // For bilingual pages this is the DE-canonical URL; see urlEn.
+  urlEn?: string; // EN URL override when the slug differs (e.g. /jetzt/ -> /en/now/).
+                  // When omitted, Header naively prefixes url with /en for EN routes.
+  i18nKey?: string; // T9 key (in src/i18n/strings.ts) for the translated label.
+                    // When omitted or unknown, title is used verbatim.
   external?: boolean;
   icon?: string;
   children?: NavigationItem[];  // Single level only

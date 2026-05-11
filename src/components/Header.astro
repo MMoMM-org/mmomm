@@ -2,6 +2,7 @@
 import { siteConfig } from '../config';
 import type { Post, Page } from '@/types';
 import { DEFAULT_LOCALE, type Locale, localePrefix, postUrl, pageUrl, findTranslation, findPageTranslation } from '@/utils/i18n';
+import { tOpt } from '@/i18n/strings';
 import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
 
@@ -31,22 +32,32 @@ function pathForOtherLocale(currentPath: string, otherLocale: Locale): string {
 const urlLocale: Locale = deriveLocaleFromPath(Astro.url.pathname);
 const otherLocale: Locale = urlLocale === 'de' ? 'en' : 'de';
 
-// Prefix absolute-path nav URLs with the current URL's locale. siteConfig.navigation.pages
-// declares URLs against the DE root ("/posts/") for plugin-compat (ADR-003); when rendering on
-// EN routes the same items must point to "/en/posts/" etc. External links and anchors are
-// untouched.
-function localizedNavUrl(url: string | undefined, locale: Locale): string {
+// Resolve a nav item's URL for the current locale. siteConfig.navigation.pages
+// declares URLs against the DE root ("/posts/") for plugin-compat (ADR-003); when
+// rendering on EN routes:
+//  - if the item has an explicit `urlEn` (different slug across locales,
+//    e.g. /jetzt/ -> /en/now/), use that verbatim;
+//  - otherwise, prefix the canonical URL with /en (works for slug-equal sections).
+// External links and anchors are untouched.
+function localizedNavUrl(item: { url?: string; urlEn?: string }, locale: Locale): string {
+  const url = item.url;
   if (!url) return '#';
   if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('mailto:')) {
     return url;
   }
+  if (locale === 'en' && item.urlEn) return item.urlEn;
   if (url.startsWith('/')) return `${localePrefix(locale)}${url}`;
   return url;
 }
 const navPages = siteConfig.navigation.pages.map(p => ({
   ...p,
-  url: localizedNavUrl(p.url, urlLocale),
-  children: p.children?.map(c => ({ ...c, url: localizedNavUrl(c.url, urlLocale) })),
+  url: localizedNavUrl(p, urlLocale),
+  label: tOpt(urlLocale, p.i18nKey, p.title),
+  children: p.children?.map(c => ({
+    ...c,
+    url: localizedNavUrl(c, urlLocale),
+    label: tOpt(urlLocale, c.i18nKey, c.title),
+  })),
 }));
 let switcherHref: string;
 if (post) {
@@ -139,15 +150,15 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                             : `flex items-center space-x-1 text-sm font-medium transition-colors hover:text-highlight-600 dark:hover:text-highlight-400 text-primary-600 dark:text-primary-300`
                         }
                         target={page.url.startsWith('http') ? '_blank' : undefined}
-                        aria-label={`Navigate to ${page.title}`}
+                        aria-label={`Navigate to ${page.label}`}
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <span>{siteConfig.navigation.style === 'minimal' ? page.title.toLowerCase() : page.title}</span>
+                        <span>{siteConfig.navigation.style === 'minimal' ? page.label.toLowerCase() : page.label}</span>
                         {page.url.startsWith('http') && (
                           <Icon name="external-link" class="w-3 h-3 text-primary-400 dark:text-primary-500" />
                         )}
-                        <Icon name="chevron-down" class="w-3 h-3 ml-1 text-primary-400 dark:text-primary-500" title={page.title} />
+                        <Icon name="chevron-down" class="w-3 h-3 ml-1 text-primary-400 dark:text-primary-500" title={page.label} />
                       </a>
                     ) : (
                       // Dropdown-only parent (non-clickable trigger)
@@ -157,12 +168,12 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                             ? `flex items-center space-x-1 text-xs font-normal transition-colors hover:text-highlight-600 dark:hover:text-highlight-400 text-primary-500 dark:text-primary-400`
                             : `flex items-center space-x-1 text-sm font-medium transition-colors hover:text-highlight-600 dark:hover:text-highlight-400 text-primary-600 dark:text-primary-300`
                         }
-                        aria-label={`${page.title} menu`}
+                        aria-label={`${page.label} menu`}
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <span>{siteConfig.navigation.style === 'minimal' ? page.title.toLowerCase() : page.title}</span>
-                        <Icon name="chevron-down" class="w-3 h-3 ml-1 text-primary-400 dark:text-primary-500" title={page.title} />
+                        <span>{siteConfig.navigation.style === 'minimal' ? page.label.toLowerCase() : page.label}</span>
+                        <Icon name="chevron-down" class="w-3 h-3 ml-1 text-primary-400 dark:text-primary-500" title={page.label} />
                       </button>
                     )}
                     {/* Dropdown menu */}
@@ -172,9 +183,9 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                           href={child.url || '#'}
                           class="block px-4 py-2 text-sm text-primary-700 dark:text-primary-200 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors"
                           target={child.url?.startsWith('http') ? '_blank' : undefined}
-                          aria-label={`Navigate to ${child.title}`}
+                          aria-label={`Navigate to ${child.label}`}
                         >
-                          {child.title}
+                          {child.label}
                           {child.url?.startsWith('http') && (
                             <Icon name="external-link" class="w-3 h-3 ml-2 inline text-primary-400 dark:text-primary-500" />
                           )}
@@ -194,13 +205,13 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                         : `flex items-center space-x-1 text-sm font-medium transition-colors hover:text-highlight-600 dark:hover:text-highlight-400 text-primary-600 dark:text-primary-300`
                     }
                     target={page.url?.startsWith('http') ? '_blank' : undefined}
-                    aria-label={`Navigate to ${page.title}`}
+                    aria-label={`Navigate to ${page.label}`}
                   >
                     {page.icon ? (
-                      <Icon name={page.icon} class="w-5 h-5" title={page.title} />
+                      <Icon name={page.icon} class="w-5 h-5" title={page.label} />
                     ) : (
                       <>
-                        <span>{siteConfig.navigation.style === 'minimal' ? page.title.toLowerCase() : page.title}</span>
+                        <span>{siteConfig.navigation.style === 'minimal' ? page.label.toLowerCase() : page.label}</span>
                         {page.url?.startsWith('http') && (
                           <Icon name="external-link" class="w-3 h-3 text-primary-400 dark:text-primary-500" />
                         )}
@@ -308,9 +319,9 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                         href={page.url}
                         class="flex-1 flex items-center justify-between px-3 py-2 text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 hover:bg-primary-50 dark:hover:bg-primary-800 transition-colors font-medium rounded-md"
                         target={page.url.startsWith('http') ? '_blank' : undefined}
-                        aria-label={`Navigate to ${page.title}`}
+                        aria-label={`Navigate to ${page.label}`}
                       >
-                        <span>{page.title}</span>
+                        <span>{page.label}</span>
                         {page.url.startsWith('http') && (
                           <Icon name="external-link" class="w-3 h-3 text-primary-400 dark:text-primary-500" />
                         )}
@@ -318,16 +329,16 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                     ) : (
                       // Non-clickable parent (just title)
                       <span class="flex-1 px-3 py-2 text-primary-600 dark:text-primary-300 font-medium">
-                        {page.title}
+                        {page.label}
                       </span>
                     )}
                     <button
                       class="mobile-nav-toggle px-3 py-2 text-primary-500 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-800 rounded-md transition-colors"
-                      aria-label={`Toggle ${page.title} submenu`}
+                      aria-label={`Toggle ${page.label} submenu`}
                       aria-expanded="false"
                       data-toggle-index={index}
                     >
-                      <Icon name="chevron-down" class="w-4 h-4 transition-transform" title={page.title} />
+                      <Icon name="chevron-down" class="w-4 h-4 transition-transform" title={page.label} />
                     </button>
                   </div>
                   {/* Children menu (collapsed by default) */}
@@ -337,9 +348,9 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                         href={child.url || '#'}
                         class="block px-3 py-2 text-sm text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 hover:bg-primary-50 dark:hover:bg-primary-800 transition-colors font-medium rounded-md"
                         target={child.url?.startsWith('http') ? '_blank' : undefined}
-                        aria-label={`Navigate to ${child.title}`}
+                        aria-label={`Navigate to ${child.label}`}
                       >
-                        {child.title}
+                        {child.label}
                         {child.url?.startsWith('http') && (
                           <Icon name="external-link" class="w-3 h-3 ml-2 inline text-primary-400 dark:text-primary-500" />
                         )}
@@ -355,13 +366,13 @@ const paletteIcon = allSectionsDisabled ? 'search' : 'command';
                   href={page.url || '#'}
                   class="flex items-center justify-between px-3 py-2 text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 hover:bg-primary-50 dark:hover:bg-primary-800 transition-colors font-medium rounded-md"
                   target={page.url?.startsWith('http') ? '_blank' : undefined}
-                  aria-label={`Navigate to ${page.title}`}
+                  aria-label={`Navigate to ${page.label}`}
                 >
                   <span class="flex items-center">
                     {page.icon && (
                       <Icon name={page.icon} class="w-5 h-5 mr-2" />
                     )}
-                    {page.title}
+                    {page.label}
                   </span>
                   {page.url?.startsWith('http') && (
                     <Icon name="external-link" class="w-3 h-3 text-primary-400 dark:text-primary-500" />

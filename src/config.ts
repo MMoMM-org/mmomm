@@ -97,6 +97,8 @@ export interface SiteConfig {
     style: "minimal" | "traditional";
     showMobileMenu: boolean;
     pages: NavigationItem[];
+    /** Legal / secondary links rendered in the Footer (e.g. Impressum, Privacy Policy). */
+    footer?: NavigationItem[];
     social: Array<{ title: string; url: string; icon: string }>;
   };
   
@@ -314,9 +316,19 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:NAVIGATION_SHOW_MOBILE_MENU]
     showMobileMenu: true,
     // [CONFIG:NAVIGATION_PAGES]
+    // title acts as the canonical (DE) label and as fallback if i18nKey is unknown.
+    // urlEn overrides the URL on EN routes when the slug differs across locales
+    // (per ADR-003 + bilingual page slugs from ADR-004).
     pages: [
-      { title: "Posts", url: "/posts/" },
-      { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github" }
+      { title: "Beiträge", i18nKey: "nav.posts", url: "/posts/" },
+      { title: "Videos", i18nKey: "nav.videos", url: "/videos/" },
+      { title: "Jetzt", i18nKey: "nav.now", url: "/jetzt/", urlEn: "/en/now/" },
+      { title: "Über mich", i18nKey: "nav.about", url: "/ueber-mich/", urlEn: "/en/about/" },
+      { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github", external: true }
+    ],
+    footer: [
+      { title: "Impressum", i18nKey: "nav.impressum", url: "/impressum/" },
+      { title: "Datenschutz", i18nKey: "nav.privacy", url: "/datenschutz/", urlEn: "/en/privacy-policy/" },
     ],
     // [CONFIG:NAVIGATION_SOCIAL]
     social: [
