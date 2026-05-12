@@ -2,7 +2,7 @@
 
 ## Core Philosophy
 Static site for MMoMM.org built with Astro. Content-first, type-safe, no client JS unless required.
-Lighthouse-perfect, RSS + sitemap supported.
+Lighthouse-perfect, RSS + sitemap supported. Bilingual DE/EN (N-locale-ready) — see [MULTILANG.md](MULTILANG.md) for the day-to-day i18n workflow.
 
 ## Memory & Context
 @docs/ai/memory/memory.md
