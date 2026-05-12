@@ -45,8 +45,8 @@
   "footer": {
     "enabled": true,
     "content": {
-      "de": "© 2026 {author}. Gebaut mit <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a> (ein zweisprachiger Fork von <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>).",
-      "en": "© 2026 {author}. Built with <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a> (a bilingual fork of <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>)."
+      "de": "© 2026 {author}. Gebaut mit <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a><br>(ein zweisprachiger Fork von <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>).",
+      "en": "© 2026 {author}. Built with <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a><br>(a bilingual fork of <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>)."
     },
     "showSocialIconsInFooter": true
   },
@@ -71,11 +71,7 @@
       {
         "title": "Jetzt",
         "i18nKey": "nav.now",
-        "url": "/now/",
-        "urlByLocale": {
-          "de": "/now/",
-          "en": "/now/"
-        }
+        "url": "/now/"
       },
       {
         "title": "Über mich",
@@ -221,7 +217,7 @@
     "hideScrollBar": false,
     "scrollToTop": true,
     "showSocialIconsInFooter": true,
-    "profilePicture": false,
+    "profilePicture": true,
     "comments": false,
     "featureButton": "mode",
     "showPostCardCoverImages": "featured-and-posts",
@@ -249,7 +245,7 @@
   },
   "optionalFeatures": {
     "profilePicture": {
-      "enabled": false,
+      "enabled": true,
       "image": "/profile.jpg",
       "alt": "Profile picture",
       "size": "md",
@@ -276,7 +272,7 @@
     }
   },
   "deployment": {
-    "platform": "netlify"
+    "platform": "github-pages"
   },
   "pluginConfig": {
     "obsidianSettings": {
