@@ -86,6 +86,30 @@
       "ignoreSubfolders": false,
       "enableUnderscorePrefix": false,
       "modifiedDateField": "lastModified"
+    },
+    {
+      "id": "special-de-1779148800000",
+      "name": "Special Pages (DE)",
+      "folder": "special/de",
+      "linkBasePath": "/",
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nlang: de\n---\n",
+      "enabled": true,
+      "creationMode": "file",
+      "indexFileName": "index",
+      "ignoreSubfolders": false,
+      "enableUnderscorePrefix": false
+    },
+    {
+      "id": "special-en-1779148800000",
+      "name": "Special Pages (EN)",
+      "folder": "special/en",
+      "linkBasePath": "/en/",
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nlang: en\n---\n",
+      "enabled": true,
+      "creationMode": "file",
+      "indexFileName": "index",
+      "ignoreSubfolders": false,
+      "enableUnderscorePrefix": false
     }
   ],
   "migrationCompleted": true,

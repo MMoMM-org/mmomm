@@ -39,13 +39,22 @@
       "enabled": true
     },
     {
-      "id": "content-type-1769839757487-w482ctdm8",
-      "name": "Special Pages",
-      "folder": "special",
+      "id": "special-de-1779148800000",
+      "name": "Special Pages (DE)",
+      "folder": "special/de",
       "fileOrganization": "file",
-      "enabled": true,
       "indexFileName": "index",
-      "linkBasePath": "/"
+      "linkBasePath": "/",
+      "enabled": true
+    },
+    {
+      "id": "special-en-1779148800000",
+      "name": "Special Pages (EN)",
+      "folder": "special/en",
+      "fileOrganization": "file",
+      "indexFileName": "index",
+      "linkBasePath": "/en/",
+      "enabled": true
     },
     {
       "id": "content-1765432406133",
@@ -125,11 +134,17 @@
       "imageProperty": "image",
       "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\ndate: {{date}}\ncategories: []\nrepositoryUrl:\nprojectUrl: \"\"\nstatus: \"\"\nimage: \"\"\nimageAlt: \"\"\nhideCoverImage: false\nhideTOC: false\ndraft: false\nfeatured: false\n---\n"
     },
-    "content-type-1769839757487-w482ctdm8": {
+    "special-de-1779148800000": {
       "titleProperty": "title",
       "descriptionProperty": "description",
       "hasDraftStatus": false,
-      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\n---\n"
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nlang: de\n---\n"
+    },
+    "special-en-1779148800000": {
+      "titleProperty": "title",
+      "descriptionProperty": "description",
+      "hasDraftStatus": false,
+      "template": "---\ntitle: \"{{title}}\"\ndescription: \"\"\nlang: en\n---\n"
     }
   },
   "attachmentHandlingMode": "subfolder",
