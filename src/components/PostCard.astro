@@ -190,11 +190,21 @@ const shouldShowCoverImage = (() => {
         {title}
       </h3>
 
-      {featured && description && (
-        <p class="text-primary-600 dark:text-primary-300 line-clamp-3 text-sm leading-relaxed mt-1">
-          {description}
-        </p>
-      )}
+      {/*
+        Show description on every card (not just featured). Schema's
+        default('No description provided') means description is never nullish,
+        so check explicitly against that default value before falling back
+        to the body-derived excerpt.
+      */}
+      {(() => {
+        const hasRealDesc = description && description !== 'No description provided';
+        const text = hasRealDesc ? description : excerpt;
+        return text ? (
+          <p class="text-primary-600 dark:text-primary-300 line-clamp-3 text-sm leading-relaxed mt-1">
+            {text}
+          </p>
+        ) : null;
+      })()}
 
       {tags && tags.length > 0 && siteConfig.postOptions.tags && (
         <div class="mt-3">
