@@ -80,12 +80,6 @@
         "urlByLocale": {
           "en": "/en/about/"
         }
-      },
-      {
-        "title": "GitHub",
-        "url": "https://github.com/MMoMM-org",
-        "icon": "github",
-        "external": true
       }
     ],
     "social": [
@@ -250,7 +244,7 @@
       "alt": "Profile picture",
       "size": "md",
       "url": "",
-      "placement": "footer",
+      "placement": "header",
       "style": "circle"
     },
     "comments": {

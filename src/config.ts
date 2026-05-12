@@ -314,7 +314,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:PROFILE_PICTURE_URL]
     url: "", // Optional
     // [CONFIG:PROFILE_PICTURE_PLACEMENT]
-    placement: "footer", // "footer" or "header"
+    placement: "header", // "footer" or "header"
     // [CONFIG:PROFILE_PICTURE_STYLE]
     style: "circle", // "circle", "square", or "none"
   },
@@ -339,8 +339,7 @@ export const siteConfig: SiteConfig = {
       { title: "Beiträge", i18nKey: "nav.posts", url: "/posts/" },
       { title: "Videos", i18nKey: "nav.videos", url: "/videos/" },
       { title: "Jetzt", i18nKey: "nav.now", url: "/now/" },
-      { title: "Über mich", i18nKey: "nav.about", url: "/ueber-mich/", urlByLocale: { en: "/en/about/" } },
-      { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github", external: true }
+      { title: "Über mich", i18nKey: "nav.about", url: "/ueber-mich/", urlByLocale: { en: "/en/about/" } }
     ],
     // [CONFIG:NAVIGATION_FOOTER]
     footer: [
