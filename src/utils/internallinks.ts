@@ -90,23 +90,34 @@ function getSlugLangMap(): Map<string, "de" | "en"> {
   return g[SLUG_LANG_SYMBOL]!;
 }
 
-// Resolve a bare slug to its locale-aware post URL. Tries the in-memory post
-// cache first (populated by layouts when available), then falls back to a
-// filesystem-derived slug→lang map. Returns null if no match — callers must
-// preserve their existing fallback URL in that case.
+// Resolve a slug to its locale-aware post URL. Accepts either a bare slug
+// (`miyo-ace` — locale inferred from cache/slug-map) or an explicit
+// locale-prefixed path (`de/miyo-ace/index`, `en/miyo-ace`, etc. — locale
+// trusted from the path). The explicit form is what Obsidian writes when a
+// wikilink is created via path completion; the bare form is what the simple
+// `[[slug]]` syntax produces. Returns null if the slug doesn't resolve —
+// callers must preserve their existing fallback URL in that case.
 function resolveLocaleAwarePostUrl(bareSlug: string): string | null {
   if (!bareSlug) return null;
+  const langMatch = bareSlug.match(/^(de|en)\//);
+  const explicitLang = langMatch ? (langMatch[1] as "de" | "en") : null;
+  const slug = bareSlug.replace(/^(de|en)\//, "").replace(/\/index$/, "");
+  if (!slug) return null;
+  if (explicitLang) {
+    const prefix = explicitLang === "de" ? "" : `/${explicitLang}`;
+    return `${prefix}/posts/${slug}`;
+  }
   const cache = getCache();
   if (cache.length) {
     const target = cache.find(
-      (p) => p && typeof p.id === "string" && p.id.replace(/^(de|en)\//, "") === bareSlug
+      (p) => p && typeof p.id === "string" && p.id.replace(/^(de|en)\//, "") === slug
     );
     if (target) return postUrlFromPost(target as Post);
   }
-  const lang = getSlugLangMap().get(bareSlug);
+  const lang = getSlugLangMap().get(slug);
   if (!lang) return null;
   const prefix = lang === "de" ? "" : `/${lang}`;
-  return `${prefix}/posts/${bareSlug}`;
+  return `${prefix}/posts/${slug}`;
 }
 
 // Function to set the global posts cache
@@ -1080,6 +1091,11 @@ export function remarkStandardLinks() {
           // Locale-aware /posts/ URL override (mirrors remarkWikilinks). Splits
           // off the anchor, looks up the target post in globalPostsCache, and
           // swaps the prefix to /en/posts/ when the target's lang === 'en'.
+          // Skip if the bare slug looks already-resolved (no `/` left after
+          // stripping the leading `/posts/` — i.e. no `<lang>/` folder, no
+          // trailing `/index`); otherwise the slug-lang-map's locale-blind
+          // collisions for cross-locale slugs (DE+EN sharing a name) would
+          // mis-rewrite final-form URLs to the wrong locale.
           if (
             typeof node.url === "string" &&
             node.url.startsWith("/posts/")
@@ -1088,8 +1104,10 @@ export function remarkStandardLinks() {
             const pathPart = hashIdx === -1 ? node.url : node.url.slice(0, hashIdx);
             const anchorPart = hashIdx === -1 ? "" : node.url.slice(hashIdx);
             const bareSlug = pathPart.replace(/^\/posts\//, "");
-            const localised = resolveLocaleAwarePostUrl(bareSlug);
-            if (localised) node.url = `${localised}${anchorPart}`;
+            if (bareSlug.includes("/")) {
+              const localised = resolveLocaleAwarePostUrl(bareSlug);
+              if (localised) node.url = `${localised}${anchorPart}`;
+            }
           }
 
           // Add wikilink styling to internal links for visual consistency
