@@ -1,7 +1,11 @@
 # Troubleshooting — astro-mmomm
-<!-- Known issues and proven fixes. Updated: 2026-05-11 (image-rename pass) -->
+<!-- Known issues and proven fixes. Updated: 2026-05-12 (obsidian-comments multi-node bug) -->
 <!-- Format: ## [Issue title] — Status: open/resolved — [fix description] -->
 <!-- Resolved entries are archived by /memory-cleanup, not deleted -->
+
+## `remark-obsidian-comments` doesn't strip `%%...%%` when comment contains inline code — Status: workaround (theme-fork fix backlog'd)
+<!-- 2026-05-12 — discovered while debugging DE homepage rendering -->
+`src/utils/remark-obsidian-comments.ts` calls `visit(tree, 'text', ...)` and runs `node.value.replace(/%%[\s\S]*?%%/g, '')` on each text node individually. When a comment contains inline code (`` `foo` ``), markdown parses the comment as multiple sibling AST nodes (text → inlineCode → text → inlineCode → text) and neither outer text node contains both `%%` delimiters, so the regex never matches — the comment renders as visible plain text in the output. **Symptom**: a `%%` block at the top of a content file shows up on the rendered page in DE but works fine in EN (or vice versa) — check whether the broken one has backticks inside the `%%`. **Workaround for content authors**: avoid backticks inside `%%...%%` comments. Use plain text for filenames / config keys / etc. (e.g. write `src/config.ts` not `` `src/config.ts` ``). **Real fix**: theme-fork enhancement to walk paragraph children, detect `%%` across sibling nodes, splice the entire range. Tracked as TaskList #55, not blocking.
 
 ## `tools/migrate-from-hugo.mjs` in-loop body mutation invalidates match indices — Status: resolved
 <!-- 2026-05-11 — discovered during image-rename pass (957060e), fixed in 2f8fc77 -->
