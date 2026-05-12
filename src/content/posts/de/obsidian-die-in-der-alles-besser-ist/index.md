@@ -9,6 +9,7 @@ description: |
 date: 2022-11-27
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 translationKey: obsidian-the-better-one
 draft: false

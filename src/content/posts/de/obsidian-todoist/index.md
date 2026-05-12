@@ -8,6 +8,7 @@ date: 2022-12-12
 tags:
   - obsidian
   - plugins
+  - plugin
 image: "[[cover.png]]"
 imageAlt: Todoist Logo
 draft: false

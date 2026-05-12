@@ -4,6 +4,7 @@ description: Visualising additional information without changing the note name. 
 date: 2022-12-26
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 draft: false
 lang: en

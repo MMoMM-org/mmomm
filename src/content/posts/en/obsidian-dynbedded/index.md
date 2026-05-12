@@ -4,6 +4,7 @@ description: "Hello and welcome.Today I want to review Dynbedded.Dynbedded will 
 date: 2022-10-30
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 draft: false
 lang: en

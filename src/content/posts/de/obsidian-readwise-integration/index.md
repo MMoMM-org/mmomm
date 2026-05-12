@@ -4,6 +4,7 @@ description: Obsidian Readwise Integration und wie ich es nutze
 date: 2023-03-23
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 translationKey: obsidian-readwise
 draft: false

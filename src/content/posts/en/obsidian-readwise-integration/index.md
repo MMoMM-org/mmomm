@@ -4,6 +4,7 @@ description: "Obsidian Readwise Integration, Tips & Tricks and how I use it."
 date: 2023-03-23
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 draft: false
 lang: en

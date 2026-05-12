@@ -4,6 +4,7 @@ description: "Kleine Obsidian Helfer: Editing Toolbar, Emoji Toolbar, Icon Short
 date: 2022-11-13
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 translationKey: obsidian-helpers-backup
 draft: false

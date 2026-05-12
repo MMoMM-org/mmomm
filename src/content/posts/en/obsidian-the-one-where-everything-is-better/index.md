@@ -9,6 +9,7 @@ description: |
 date: 2022-11-27
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 draft: false
 lang: en

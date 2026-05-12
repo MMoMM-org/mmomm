@@ -4,6 +4,7 @@ description: "Hallo und Willkommen.Heute möchte ich euch Dynbedded vorstellen. 
 date: 2022-10-30
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 translationKey: obsidian-dynbedded
 draft: false

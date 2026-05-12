@@ -4,6 +4,7 @@ description: Obsidian Automatisierung mit Buttons
 date: 2023-02-01
 tags:
   - obsidian
+  - plugin
 image: "[[cover.png]]"
 translationKey: obsidian-buttons
 draft: false
