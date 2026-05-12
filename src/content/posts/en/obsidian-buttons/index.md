@@ -43,6 +43,8 @@ Easier said:
 > Button-ID Tip
 > Don't forget a blank line after the Button-ID, otherwise your button will be "Undefined"
 
+
+> [!NOTE] And those buttons can even self-destruct.
 [And those buttons can even self-destruct.](https://youtu.be/4y9NtHlJvbY?t=98)
 
 ## Advantages
@@ -142,17 +144,17 @@ directly beneath the button.
 
 You can use values from outside the button too:
 
-```
 Bananas Have: 5  
 Bananas Lost: 5
 
+````
 ```button
 name How Many Bananas Today?
 type calculate
 action $1-$2
 color yellow
 ```
-```
+````
 
 There is a slight issue with that though.. $1 ist the first row of the note and $2 is the second row of the note.
 
@@ -160,16 +162,16 @@ So if you would like to use this function you need to exactly know in which rows
 
 The same is true if you would like to use "Natural Language Math" (Only works with english words, see https://github.com/bugwheels94/math-expression-evaluator/blob/master/src/functions.ts).
 
-```
 5 dogs plus 2 cats divided by 2 people
 
+````
 ```button
 name Who Get The Pets?
 type calculate
 action $1
 class sad-button
 ```
-```
+````
 
 class sad-button defines a customized style for the button (later more)
 
@@ -185,19 +187,21 @@ So you define the buttons somewhere together with their Button-ID!:
 
 and use them in a Swap Button incl. Button-ID!
 
-```
+````
 ```button
 name Crazy Swap Button
 swap [add,meeting,forum]
 ```
 ^button-swap
-```
+````
 
 And now you can add this Swap Button inline somewhere else
 
+````
 ```
 `button-swap`
 ```
+````
 
 > Limitations
 > Inline Button normally only work in Reading View, not PreView oder Edit Mode. A workaround would be to use Dynbedded.
@@ -299,9 +303,6 @@ As you will see, the colour support is quite limited, and sometimes it just has 
 
 ```
 class button-red
-```
-
-```
 .button-purple {
 
     color: white;
@@ -396,7 +397,6 @@ As already mentioned Buttons has some quircks:
 - After the Button-ID you need an empty line, otherwise the button can not be found.
 - Sometimes the buttons will disappear in Edit / PreView mode. In this case it helps to refresh the note or to scroll through the codeblock with the cursor.
 - You can spam the button, which leads to strange result:
-
   - Remove = you remove more then just the button
   - Templater = the templater syntax will be overwritten
 - Templater functions are not executed, just try it slowly again (see above)
@@ -423,7 +423,7 @@ For example:
 
 My Obsidian Homepage
 
-I already talked about the Buttons for Todoist in [[obsidian-todoist|Obsidian: Todoist]] if you want examples for the other buttons let me know.
+I already talked about the Buttons for Todoist in [[posts/en/obsidian-todoist/index|Obsidian: Todoist]] if you want examples for the other buttons let me know.
 
 In my repeating meetings I have a button which appends a template below the button with all the necessary entries for the next meeting.
 
@@ -464,7 +464,7 @@ Ever tried having several buttons in a line next to each other?
 One way would be to use inline buttons and place them on a line.
 
 ```
-`button-eins` `button-zwei` `button-drei`
+`button-one` `button-two` `button-three`
 ```
 
 But this only works in Read Mode 😞
@@ -495,7 +495,7 @@ I'm using the Multi-Column Markdown Plugin and create 2 columns. At the beginnin
 There are some issues though:
 
 - The buttons disappear in Edit mode.. from time to time you can get them displayed if you run the cursor through the codeblocks.
-- It wasn't that easy to get the Multi-Column Markdown Plugin to work. I needed to proceed step by step to get to the end result. First copy the example from the plugin page, after that making tiny changes. Just tipping everything from scratch didn't work.
+- It wasn't that easy to get the Multi-Column Markdown Plugin to work. I needed to proceed step by step to get to the end result. First copy the example from the plugin page, after that making tiny changes. Just typing everything from scratch didn't work.
 
 My "Homepage" is completely read only and it works, so the issues above don't bother me anymore.
 
@@ -516,11 +516,11 @@ I don't want to miss Buttons, it makes a lot of things easier and faster.
 
 There are some posts in the forums and also some example vaults which use buttons. But I haven't found some really cool tricks, perhaps you know some?
 
-## Fussnote
+## Footnote
 
 - [The Movie to the Post](https://youtu.be/mj0zGgNbpfQ)
 - [Todoist](https://doist.grsm.io/1wx938b4rtun)
-- [[obsidian-dynbedded|Obsidian: Dynbedded]]
-- [[obsidian-todoist|Obsidian: Todoist]]
+- [[posts/en/obsidian-dynbedded/index|Obsidian: Dynbedded]]
+- [[posts/en/obsidian-todoist/index|Obsidian: Todoist]]
 - [Natural Language Math](https://github.com/bugwheels94/math-expression-evaluator)
 - 40-06

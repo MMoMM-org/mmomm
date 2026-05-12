@@ -41,6 +41,8 @@ Aber das ist noch nicht alles, es gibt so genannte "Inline Buttons", das sind Bu
 > Button-ID Tipp
 > Vergeßt nicht nach einer Button-ID eine Leerzeile zu haben, ansonsten ist der Button nachher "Undefined"
 
+
+> [!NOTE] Außerdem können sich die Buttons nach der Benutzung in Luft auflösen.
 [Außerdem können sich die Buttons nach der Benutzung in Luft auflösen.](https://www.youtube.com/watch?v=e6zrnv_u05o)
 
 ## Vorteile
@@ -140,17 +142,18 @@ direkt unter dem Button.
 
 Man kann aber auch Werte ausserhalb des Buttons nutzen:
 
-```
+
 Bananas Have: 5  
 Bananas Lost: 5
 
+````
 ```button
 name How Many Bananas Today?
 type calculate
 action $1-$2
 color yellow
 ```
-```
+````
 
 Da gibt es aber ein Problem... $1 ist die erste Zeile der Notiz und $2 ist die zweite Zeile der Notiz.
 
@@ -158,16 +161,17 @@ Wenn ihr diese Funktion also nutzen wollt müßt ihr genau wissen in welcher Zei
 
 Dieselbe Einschränkung gibt es auch falls ihr "Natural Language Math" (Geht nur mit englischen "Funktionen", siehe https://github.com/bugwheels94/math-expression-evaluator/blob/master/src/functions.ts) nutzen wollt.
 
-```
+
 5 dogs plus 2 cats divided by 2 people
 
+````
 ```button
 name Who Get The Pets?
 type calculate
 action $1
 class sad-button
 ```
-```
+````
 
 class sad-button definiert hier übrigens einen Custom Style für den Button. (Später mehr darüber)
 
@@ -183,13 +187,13 @@ Ihr definiert also irgendwo die Buttons inkl. Button-ID!:
 
 und dann irgendwo den Swap Button inkl. Button-ID!
 
-```
+````
 ```button
 name Crazy Swap Button
 swap [add,meeting,forum]
 ```
 ^button-swap
-```
+````
 
 Und dann könnt ihr diesen Swap Button irgendwo als Inline Button einfügen:
 
@@ -299,9 +303,6 @@ unter "Apperance/CSS Snippets" aktiviert sein.
 
 ```
 class button-red
-```
-
-```
 .button-purple {
 
     color: white;
@@ -318,6 +319,7 @@ class button-red
 
 }
 ```
+
 
 ### Color
 
@@ -396,7 +398,6 @@ Wie schon oben besprochen hat Buttons ein paar Macken
 - Nach der Button-ID solltet ihr immer eine Leerzeile haben, sonst werden die Button nachher nicht gefunden.
 - Im Edit / PreView Modus verschwinden die Buttons manchmal, dann muss man entweder die Notiz refreshen oder den Cursor durch den Codeblock bewegen
 - Ihr könnt Buttons spammen, das kann zu komischen Effekten führen:
-
   - Remove = es wird mehr als der Button entfernt
   - Templater = die Templater Syntax wird überschrieben
 - Templater Funktionen werden teilweise nicht ausgeführt, einfach in Ruhe noch mal probieren (siehe auch spammen 😀 )
@@ -420,7 +421,7 @@ Meine "Homepage" ist ein Workspace mit verschiedenen Notizen für Gestern, Heute
 
 Meine Obsidian Homepage
 
-Die Todoist Buttons habe ich ja schon in [[obsidian-todoist|Obsidian: Todoist]] besprochen, wenn ihr die anderen Buttons als Beispiele haben möchtet last es mich wissen.
+Die Todoist Buttons habe ich ja schon in [[posts/de/obsidian-todoist/index|Obsidian: Todoist]] besprochen, wenn ihr die anderen Buttons als Beispiele haben möchtet last es mich wissen.
 
 In meinen wiederkehrenden Meetings habe ich z.B. einen Button der ein Template in die Notiz einfügt mit den notwendigen Einträgen.
 
@@ -517,7 +518,7 @@ Es gibt ein paar Posts im Forum und auch Beispiel Vaults die über Buttons neue 
 
 - [Der Film zum Post](https://youtu.be/cri5zprSfvw)
 - [Todoist](https://doist.grsm.io/1wx938b4rtun)
-- [[obsidian-dynbedded|Obsidian: Dynbedded]]
-- [[obsidian-todoist|Obsidian: Todoist]]
+- [[posts/de/obsidian-dynbedded/index|Obsidian: Dynbedded]]
+- [[posts/de/obsidian-todoist/index|Obsidian: Todoist]]
 - [Natural Language Math](https://github.com/bugwheels94/math-expression-evaluator)
 - 40-06
