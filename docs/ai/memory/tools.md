@@ -52,6 +52,25 @@ The Astro Modular Settings plugin (`src/content/.obsidian/plugins/astro-modular-
 
 The location to enable/disable the plugin is `src/content/.obsidian/community-plugins.json` (Obsidian's own list) — **not** `vault-cms/data.json`'s `enabledPlugins` array, which is vault-cms's own concept and does not include astro-modular-settings.
 
+## Translation-gap triage = Bases CMS views (no code, no grep)
+<!-- 2026-05-12 -->
+Finding untranslated posts / pages — anything in `posts/` or `pages/` with
+empty/null `translationKey` — is a Bases CMS lookup, not a grep over
+`src/content/`. Two entry points:
+
+- **`src/content/bases/Translation-Pairs.base`** (dedicated triage base, 3 views):
+  posts grouped by `translationKey`, pages grouped by `translationKey`,
+  and a flat "🔴 Missing translation key" list across both.
+- **`src/content/bases/Home.base` → "🔴 Translation gaps" view** (one view on
+  the default landing tab, same filter as the missing-key view above).
+
+Both files share two formulas — `Locale` (🇩🇪/🇬🇧/❓ from `note.lang`) and
+the gap-detection guard `if(note.translationKey == "" \|\| ... == null, "🔴 MISSING ...", ...)`.
+Keep the formulas identical across both files so future locale-widening (e.g.
+add `fr`) is a single-line change in two places. No code, no schema change —
+pure Bases CMS configuration over the existing `lang` + `translationKey`
+frontmatter (ADR-002 / ADR-004 Decision 4).
+
 ## Vault CMS + Astro Composer keep parallel content-type lists
 <!-- 2026-05-11 -->
 The astro-modular Obsidian plugin stack stores content-type configuration in TWO `data.json` files that overlap:
