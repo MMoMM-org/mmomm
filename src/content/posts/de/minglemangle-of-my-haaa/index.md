@@ -6,6 +6,7 @@ image: "[[cover.png]]"
 translationKey: minglemangle-haaa
 draft: false
 lang: de
+targetKeyword: "minglemangle of my haaa"
 ---
 Leute fragen mich oft was eigentlich Mingle Mangle of My Mind (MMoMM) sein soll?
 

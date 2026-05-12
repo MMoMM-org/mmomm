@@ -9,6 +9,7 @@ image: "[[cover.png]]"
 translationKey: obsidian-dynbedded
 draft: false
 lang: de
+targetKeyword: "obsidian dynbedded"
 ---
 Hallo und Willkommen.
 

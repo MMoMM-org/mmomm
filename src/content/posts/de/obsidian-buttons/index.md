@@ -9,6 +9,7 @@ image: "[[cover.png]]"
 translationKey: obsidian-buttons
 draft: false
 lang: de
+targetKeyword: "obsidian buttons"
 ---
 Hallo und Willkommen,
 

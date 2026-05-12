@@ -5,6 +5,7 @@ date: 2024-09-17
 translationKey: rabu-hoteru
 draft: false
 lang: de
+targetKeyword: "virtualisierung ist wie ein rabu hoteru"
 ---
 Ohne den Sex! "ラブホテル" (rabu hoteru) ist ein [Stundenhotel](https://de.wikipedia.org/wiki/Stundenhotel), eine Art Kurzzeit-Unterkunft, die in Japan für, nun ja, du weißt schon was, beliebt ist.
 

@@ -7,6 +7,7 @@ tags:
 draft: false
 lang: en
 translationKey: rabu-hoteru
+targetKeyword: "virtualization is like a rabu hoteru"
 ---
 Without the Sex! "ラブホテル" (rabu hoteru) is a [love hotel](https://en.wikipedia.org/wiki/Love_hotel) , a type of short-stay accommodation that's popular in Japan for, well, you know what.
 

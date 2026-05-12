@@ -9,6 +9,7 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: obsidian-readwise
+targetKeyword: "obsidian readwise integration"
 ---
 Hello and welcome,
 

@@ -9,8 +9,9 @@ image: "[[cover.png]]"
 translationKey: miyo-aggregate
 draft: false
 lang: de
+targetKeyword: "miyo aggregate informationssammlung"
 ---
-Wie schon in [[miyo-ace|MiYo - ACE]]  besprochen will ich hier ein wenig mehr auf das
+Wie schon in [[posts/de/miyo-ace/index|MiYo - ACE]]  besprochen will ich hier ein wenig mehr auf das
 
 > A von ACE
 
@@ -57,7 +58,7 @@ Nachdem ich oberflächig erklärt habe, wie ich meine Informationen finde, schau
 
 Informationen kommen nur dann ins System, wenn sie die folgenden Kriterien erfüllen:
 
-- Sie passen in einen Bereich meiner [PARA](miyo-aggregate-informationssammlung.html#viewer-6bk7v) angelehnten Struktur.
+- Sie passen in einen Bereich meiner [PARA](#para-struktur) angelehnten Struktur.
 - Sie sind nicht einfach zu besorgen
 - Sie sind beständig
 - Sie werden benötigt.

@@ -13,6 +13,7 @@ imageAlt: Todoist Logo
 draft: false
 lang: de
 translationKey: obsidian-todoist
+targetKeyword: "obsidian todoist"
 ---
 
 Hallo und Willkommen,

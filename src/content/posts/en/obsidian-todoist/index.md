@@ -12,6 +12,7 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: obsidian-todoist
+targetKeyword: "obsidian todoist"
 ---
 Hello and welcome,
 

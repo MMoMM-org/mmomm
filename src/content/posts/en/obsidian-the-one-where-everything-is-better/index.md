@@ -14,6 +14,7 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: obsidian-the-better-one
+targetKeyword: "obsidian the one where everything is better"
 ---
 Hello and welcome,
 
@@ -111,7 +112,7 @@ I mainly use it for the capability to click on boolean Datafields and handle the
 
 Better Inline Field - Checkboxes
 
-Another function is to get some note suggestions for other specific datafields (which you need to configure), so that you don't need to type [[ ]] all the time and are limited to a specific directory.
+Another function is to get some note suggestions for other specific datafields (which you need to configure), so that you don't need to type `[[ ]]` all the time and are limited to a specific directory.
 
 ![Better Inline Field - Note Suggester](attachments/better-inline-field-note-suggester.png)
 

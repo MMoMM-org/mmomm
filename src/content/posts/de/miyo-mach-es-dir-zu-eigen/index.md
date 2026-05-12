@@ -8,6 +8,7 @@ image: "[[cover.png]]"
 translationKey: miyo-make-it-your-own
 draft: false
 lang: de
+targetKeyword: "miyo mach es dir zu eigen"
 ---
 [![red circle with miyo in kanji - miyo logo](attachments/image-1.png)](https://jisho.org/word/%E4%B8%89%E4%B8%96-1)
 

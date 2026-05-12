@@ -9,6 +9,7 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: obsidian-supercharged-links
+targetKeyword: "obsidian supercharged links"
 ---
 Hello and welcome,
 

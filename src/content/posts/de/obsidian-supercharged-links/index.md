@@ -7,4 +7,5 @@ tags:
 translationKey: obsidian-supercharged-links
 draft: false
 lang: de
+targetKeyword: "obsidian supercharged links"
 ---

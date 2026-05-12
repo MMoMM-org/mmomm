@@ -9,8 +9,9 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: miyo-ace
+targetKeyword: "miyo ace"
 ---
-[[the-2-aspects-of-miyo|Last time]] I did write a little about the 2 aspects of #MiYo:
+[[posts/en/the-2-aspects-of-miyo/index|Last time]] I did write a little about the 2 aspects of #MiYo:
 
 - ACE = Gathering of knowledge
 - Framework = Gain new abilities, adapt new frameworks / processes etc.

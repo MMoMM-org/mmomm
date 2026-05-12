@@ -9,6 +9,7 @@ image: "[[cover.png]]"
 translationKey: obsidian-helpers-backup
 draft: false
 lang: de
+targetKeyword: "obsidian helfer beim schreiben backup"
 ---
 Hallo und Willkommen,
 

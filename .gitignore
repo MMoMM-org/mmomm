@@ -68,3 +68,6 @@ public/_headers
 
 # Per-machine state for fork-sync (last pulled commit SHA — see scripts/update.mjs)
 .astro-modular-source
+
+# SEO plugin audit exports (regenerated on demand from the Obsidian plugin)
+seo-vault-audit.csv

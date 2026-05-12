@@ -6,6 +6,7 @@ image: "[[cover.jpg]]"
 draft: false
 lang: en
 translationKey: pardon-the-dust
+targetKeyword: "pardon the dust"
 ---
 Wellcome,
 

@@ -14,6 +14,7 @@ image: "[[cover.png]]"
 translationKey: obsidian-the-better-one
 draft: false
 lang: de
+targetKeyword: "obsidian die in der alles besser ist"
 ---
 Hallo und Willkommen,
 
@@ -111,7 +112,7 @@ Ich nutze es eigentlich nur für die Möglichkeit Boolean Datafields wie einen T
 
 Better Inline Field - Checkboxen
 
-Aber eine andere Funktion ist für bestimmte Felder Notizen vorgeschlagen zu bekommen ohne immer [[ ]] tippen zu müssen und dabei auf ein bestimmtes Verzeichnis beschränkt zu sein (Das muss man in der Konfiguration definieren).
+Aber eine andere Funktion ist für bestimmte Felder Notizen vorgeschlagen zu bekommen ohne immer `[[ ]]` tippen zu müssen und dabei auf ein bestimmtes Verzeichnis beschränkt zu sein (Das muss man in der Konfiguration definieren).
 
 ![Better Inline Field - Note Suggester](attachments/better-inline-field-note-suggester.png)
 

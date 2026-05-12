@@ -9,6 +9,7 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: obsidian-helpers-backup
+targetKeyword: "obsidian useful editing helpers backup"
 ---
 Hello and welcome,
 

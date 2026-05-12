@@ -6,6 +6,7 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: minglemangle-haaa
+targetKeyword: "minglemangle of my lol wut"
 ---
 A lot of people ask me what is behind Mingle Mangle of My Mind (MMoMM).
 

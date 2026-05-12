@@ -8,10 +8,11 @@ tags:
 translationKey: miyo-2-aspekte
 draft: false
 lang: de
+targetKeyword: "die 2 aspekte von miyo"
 ---
 Zuletzt habe ich ein wenig über meine Art geschrieben wie ich meine Notizen bearbeite bzw. ich meinen Ansatz ausgewählt habe. Viele sagen jetzt bestimmt... hää?
 
-Und da gebe ich euch recht. [[miyo-mach-es-dir-zu-eigen|MiYo - Mach es dir zu eigen]] war jetzt nicht wirklich eine riesige zusammenhängende Erklärung was dahinter steckt.
+Und da gebe ich euch recht. [[posts/de/miyo-mach-es-dir-zu-eigen/index|MiYo - Mach es dir zu eigen]] war jetzt nicht wirklich eine riesige zusammenhängende Erklärung was dahinter steckt.
 
 Es war mehr ein Teaser, bzw. ein Start, für eine Reise die nicht immer den kürzesten Weg zu ihrem Ziel nimmt.
 

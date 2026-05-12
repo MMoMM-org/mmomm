@@ -8,10 +8,11 @@ tags:
 draft: false
 lang: en
 translationKey: miyo-2-aspekte
+targetKeyword: "the 2 aspects of miyo"
 ---
 Last time I talked about how I tackle note taking or which approach I'm using from all of the available ones. Some people may say now... lol wut?
 
-And you are right. [[miyo-make-it-your-own|MiYo - Make it your own]] wasn't really a big overarching describe everything kind of blog posts which explains everything.
+And you are right. [[posts/en/miyo-make-it-your-own/index|MiYo - Make it your own]] wasn't really a big overarching describe everything kind of blog posts which explains everything.
 
 It was a teaser, a start of a journey which doesn't always takes the shortest route to get to it's destination.
 

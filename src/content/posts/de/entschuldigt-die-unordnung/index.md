@@ -6,6 +6,7 @@ image: "[[cover.jpg]]"
 translationKey: pardon-the-dust
 draft: false
 lang: de
+targetKeyword: "entschuldigt die unordnung"
 ---
 Willkommen,
 

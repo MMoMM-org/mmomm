@@ -9,8 +9,9 @@ image: "[[cover.png]]"
 draft: false
 lang: en
 translationKey: miyo-aggregate
+targetKeyword: "miyo aggregate collecting information"
 ---
-As already discussed in [[miyo-ace|MiYo - ACE]]  I want to take a closer look at the
+As already discussed in [[posts/en/miyo-ace/index|MiYo - ACE]]  I want to take a closer look at the
 
 > A from ACE.
 
@@ -55,7 +56,7 @@ I quickly glanced over how I get my information, so let's take a look which info
 
 Information only finds their way into my system if the meet the following critera:
 
-- They fit into a sector of my structure which is based on [PARA](miyo-aggregate-collecting-information.html#viewer-6bk7v).
+- They fit into a sector of my structure which is based on [PARA](#para-structur).
 - They are not easy to get
 - They are lasting
 - They are needed
