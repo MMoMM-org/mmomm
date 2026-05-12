@@ -59,10 +59,14 @@ const remarkInlineTags: Plugin<[], Root> = () => {
           }
         }
         
-        // Create HTML node for the tag link
+        // Create HTML node for the tag link.
+        // Display preserves the author's casing (#MiYo, #PKM, etc.); href is
+        // lowercase so it matches Astro's getStaticPaths output (which is
+        // driven by frontmatter tags — all lowercase by convention) and stays
+        // deployment-stable on case-sensitive filesystems.
         const tagHtml = {
           type: 'html',
-          value: `<a href="/posts/tag/${encodeURIComponent(tag)}" class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 transition-colors hover:bg-highlight-100 dark:hover:bg-highlight-800">#${tag}</a>`
+          value: `<a href="/posts/tag/${encodeURIComponent(tag.toLowerCase())}" class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 transition-colors hover:bg-highlight-100 dark:hover:bg-highlight-800">#${tag}</a>`
         };
         
         newChildren.push(tagHtml);
