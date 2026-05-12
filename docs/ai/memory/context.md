@@ -83,6 +83,14 @@ a non-ADR-005 move from the list below.
 - **Release-mirror workflow for the plugin fork** (analog ADR-001 Deferred Work #1): GitHub Action that mirrors releases from `davidvkimball/obsidian-astro-modular-settings` upstream onto our fork so we know when upstream advances and can plan merges. Low priority — manual `git fetch upstream && git log upstream/master..HEAD` works fine for now.
 - **PR the fork's `feat/multi-locale-aware` branch back to upstream** if davidvkimball is interested in landing locale-awareness in canonical. The work is general-purpose enough to be a reasonable contribution.
 
+## Future ideas (not blocking)
+
+- **Tag-Cloud fallback on unknown `/posts/tag/<x>`**: inline `#tags` whose lowercase
+  form has no frontmatter equivalent currently 404 (e.g. `#PWM`, `#Dataview`,
+  `#Tasks`, `#Templater`, `#Buttons` as of 2026-05-12). Instead of a hard 404,
+  render a tag-cloud / "did you mean" page listing all known tags. Better UX
+  than a dead link. Theme-fork edit, low priority.
+
 ## Next moves outside ADR-005 (pick when ADR-005 has free space)
 
 These survived the ADR-005 reframe — they're orthogonal to the multi-locale migration:
