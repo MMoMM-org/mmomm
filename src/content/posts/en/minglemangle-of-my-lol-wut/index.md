@@ -3,6 +3,7 @@ title: MingleMangle of My lol wut?
 description: What does Mingle Mangle of My Mind mean?
 date: 2022-11-22
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: minglemangle-haaa
 ---

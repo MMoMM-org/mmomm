@@ -5,6 +5,7 @@ date: 2022-12-26
 tags:
   - obsidian
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: obsidian-supercharged-links
 ---

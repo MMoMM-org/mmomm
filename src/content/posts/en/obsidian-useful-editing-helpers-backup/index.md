@@ -5,6 +5,7 @@ date: 2022-11-13
 tags:
   - obsidian
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: obsidian-helpers-backup
 ---

@@ -3,6 +3,7 @@ title: "Virtualisierung ist wie ein \"ラブホテル\" (rabu hoteru)"
 description: "Ohne den Sex! \"ラブホテル\" (rabu hoteru) ist ein Stundenhotel, eine Art Kurzzeit-Unterkunft, die in Japan für, nun ja, du weißt schon was, beliebt ist.Kürzlich stellte ich eine Frage auf LinkedIn darüber, wie man jemandem, der nicht weiß, was ein Computer ist, Virtualisierung erklärt. Nun, ich verrate dir ein kleines Geheimnis: Diese freche Analogie hatte ich schon im Kopf, bevor ich auf \"Veröffentlichen\" geklickt habe. Manchmal muss man eben seine eigenen verrückten Ideen validieren, nicht wahr?Währ"
 date: 2024-09-17
 translationKey: rabu-hoteru
+draft: false
 lang: de
 ---
 Ohne den Sex! "ラブホテル" (rabu hoteru) ist ein [Stundenhotel](https://de.wikipedia.org/wiki/Stundenhotel), eine Art Kurzzeit-Unterkunft, die in Japan für, nun ja, du weißt schon was, beliebt ist.

@@ -5,6 +5,7 @@ date: 2023-02-01
 tags:
   - obsidian
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: obsidian-buttons
 ---

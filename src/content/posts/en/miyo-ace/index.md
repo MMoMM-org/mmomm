@@ -6,6 +6,7 @@ tags:
   - pkm
   - miyo
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: miyo-ace
 ---

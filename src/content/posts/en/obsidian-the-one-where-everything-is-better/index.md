@@ -10,6 +10,7 @@ date: 2022-11-27
 tags:
   - obsidian
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: obsidian-the-better-one
 ---

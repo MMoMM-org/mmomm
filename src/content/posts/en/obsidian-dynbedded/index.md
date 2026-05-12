@@ -5,6 +5,7 @@ date: 2022-10-30
 tags:
   - obsidian
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: obsidian-dynbedded
 ---

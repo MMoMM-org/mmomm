@@ -6,6 +6,7 @@ tags:
   - obsidian
 image: "[[cover.png]]"
 translationKey: obsidian-readwise
+draft: false
 lang: de
 ---
 Hallo und Willkommen,

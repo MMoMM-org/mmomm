@@ -5,6 +5,7 @@ date: 2022-10-25
 tags:
   - miyo
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: miyo-make-it-your-own
 ---

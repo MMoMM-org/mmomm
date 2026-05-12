@@ -8,6 +8,7 @@ date: 2022-12-12
 tags:
   - obsidian
 image: "[[cover.png]]"
+draft: false
 lang: en
 translationKey: obsidian-todoist
 ---

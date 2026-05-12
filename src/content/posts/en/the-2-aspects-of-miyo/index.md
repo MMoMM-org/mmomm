@@ -5,6 +5,7 @@ date: 2022-12-04
 tags:
   - miyo
   - pkm
+draft: false
 lang: en
 translationKey: miyo-2-aspekte
 ---
