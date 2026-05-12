@@ -7,12 +7,12 @@ description: |
 date: 2022-12-12
 tags:
   - obsidian
-  - todoist
   - plugins
 image: "[[cover.png]]"
-imageAlt: "Todoist Logo"
+imageAlt: Todoist Logo
 draft: false
 lang: de
+translationKey: obsidian-todoist
 ---
 
 Hallo und Willkommen,
