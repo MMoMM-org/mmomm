@@ -343,6 +343,7 @@ export const siteConfig: SiteConfig = {
       { title: "Über mich", i18nKey: "nav.about", url: "/ueber-mich/", urlByLocale: { en: "/en/about/" } },
       { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github", external: true }
     ],
+    // [CONFIG:NAVIGATION_FOOTER]
     footer: [
       { title: "Impressum", i18nKey: "nav.impressum", url: "/impressum/" },
       { title: "Datenschutz", i18nKey: "nav.privacy", url: "/datenschutz/", urlByLocale: { en: "/en/privacy-policy/" } }

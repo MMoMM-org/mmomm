@@ -60,14 +60,23 @@ Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **as
 
 **ADR-005 Phase 3 shipped** (2026-05-12, fork `MMoMM-org/astro-modular-settings-mmomm` `feat/multi-locale-aware` branch, commits `c816b24`..`ef6ac68`; vault commit `39ae100`): The Astro Modular Settings plugin is now **re-enabled** in the vault with an i18n-safe round-trip. Four fork commits cover (a) round-trip passthrough parser/serializer + new markers `[CONFIG:LOCALES]`/`[CONFIG:DEFAULT_LOCALE]` + tolerant validator, (b) NavigationTab UI editor extensions for `i18nKey` / `urlByLocale` / `external` (rendered when `locales.length > 1`), (c) `lt()` resolver + LocalisedString-aware reads/writes across SiteInfoTab/FeaturesTab/wizard, (d) **the four bug-fix lessons that emerged from smoke testing**: load-time config.ts overlay in `loadSettings()` (data.json is a cache, config.ts is the source of truth), in-place array rewrite (replace only the `[...]` body, not the wipe-between-markers anti-pattern), comment-aware value parser (skip `//` + `/* */` wherever whitespace is skipped), and marker-anchored index-scan replacing the fragile `\s*\n\s*<field>:` regex. Smoke test (toggle showSocialIconsInFooter through the plugin UI): all 6 `i18nKey`, 3 `urlByLocale`, 1 `external:true`, the `navigation.footer` array (2 items with i18n fields), `locales`, `defaultLocale`, and LocalisedString title/description/footer.content shapes survived. Comments must live ABOVE `pages:`/`footer:` — see tools.md rule.
 
-## Active plan — ADR-005 Phase 4 (Runbook + cleanup)
+**ADR-005 Phase 4 shipped** (2026-05-12): The N-locale runbook lives at
+[`docs/runbooks/add-a-locale.md`](../../runbooks/add-a-locale.md) — widen `Locale`
+union → add `siteConfig.locales[]` entry → populate `LocalisedString` + T9
+strings → extend collection `lang` enums → add Vault CMS content-types →
+optional `urlByLocale` overrides → build → verify hreflang/sitemap fan-out.
+Three known cliffs documented (bilingual `findTranslation`, switcher renders a
+single link, hreflang scaling for N>2). ADR-005 status flipped from Proposed
+to Accepted with Phase 3 fork commits cross-linked
+(`c816b24`/`8b73433`/`d6596b4`/`ef6ac68` + vault `39ae100`). `// [CONFIG:NAVIGATION_FOOTER]`
+marker added to `src/config.ts` immediately above the `footer:` array for
+explicit-marker round-trip robustness. Build verified — 59 pages, no regression.
 
-Phase 1, 2, 3 of ADR-005 shipped. Phase 4 is the documentation-and-housekeeping wrap:
+## Active plan
 
-1. Write `docs/runbooks/add-a-locale.md`: widen `Locale` union → add `siteConfig.locales[]` entry → populate `LocalisedString` values + T9 strings table → add Vault CMS content-types for the new locale → optionally add `urlByLocale` overrides for slug-divergent pages → `pnpm build` → verify hreflang/sitemap fan-out
-2. Move ADR-005 status from Proposed to Accepted; cross-link the four fork commits as the Phase 3 record
-3. Optionally: add `// [CONFIG:NAVIGATION_FOOTER]` marker to `src/config.ts` immediately before `footer:` for explicit-marker round-trip (current structural detection works, marker just makes the round-trip more robust against future structural changes)
-4. Memory cleanup pass via `/memory-cleanup` — archive resolved items, prune stale context
+ADR-005 Phases 1–4 all shipped. No active multi-locale work. Memory cleanup
+(`/memory-cleanup`) is the recommended next housekeeping step before picking up
+a non-ADR-005 move from the list below.
 
 ## Optional follow-ups (separate from ADR-005)
 

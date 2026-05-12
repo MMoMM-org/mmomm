@@ -1,7 +1,8 @@
 # ADR-005: Multi-Locale Architecture — N-Locale-Ready Design with DE/EN MVP
 
-Status: Proposed
+Status: Accepted
 Date: 2026-05-11
+Accepted: 2026-05-12 (after Phases 1–3 shipped and the plugin re-enable smoke test passed)
 
 ## Context
 
@@ -385,6 +386,22 @@ Each phase is independently shippable. Phase boundaries are commit-revertable.
 6. Push fork; add release-mirror workflow (analog ADR-001 Deferred Work #1)
 7. Re-enable plugin in `src/content/.obsidian/community-plugins.json`
 
+**Shipped 2026-05-12** via four fork commits on `feat/multi-locale-aware`:
+`c816b24` (round-trip passthrough parser/serializer + `[CONFIG:LOCALES]` /
+`[CONFIG:DEFAULT_LOCALE]` markers + tolerant validator), `8b73433` (NavigationTab
+UI extensions for `i18nKey` / `urlByLocale` / `external`, rendered when
+`locales.length > 1`), `d6596b4` (`lt()` resolver + LocalisedString-aware reads
+and writes across SiteInfoTab/FeaturesTab/wizard), `ef6ac68` (the four bug-fix
+lessons from smoke testing: load-time `config.ts` overlay in `loadSettings()`,
+in-place array rewrite that replaces only the `[...]` body, comment-aware value
+parser that skips `//` and `/* */` like whitespace, marker-anchored index-scan
+replacing the fragile `\s*\n\s*<field>:` regex). Vault commit `39ae100` re-enabled
+the plugin. Smoke-tested by toggling `showSocialIconsInFooter` through the plugin
+UI: all 6 `i18nKey`, 3 `urlByLocale`, 1 `external:true`, the `navigation.footer`
+array (2 items with i18n fields), `locales`, `defaultLocale`, and the
+LocalisedString `title` / `description` / `footer.content` shapes survived.
+Release-mirror workflow deferred (analog ADR-001 Deferred Work #1).
+
 ### Phase 4 — Documentation + "add a locale" runbook (~0.5 sessions)
 
 1. Write `docs/runbooks/add-a-locale.md`:
@@ -393,6 +410,11 @@ Each phase is independently shippable. Phase boundaries are commit-revertable.
 2. Update memory: `tools.md` durable rule on the Locale anchor; `decisions.md`
    ADR-005 entry; `context.md` next-move-list rewrite
 3. Update README if it references "bilingual" specifically
+
+**Shipped 2026-05-12** — runbook lives at
+[`docs/runbooks/add-a-locale.md`](../../runbooks/add-a-locale.md); ADR status flipped
+to Accepted; `// [CONFIG:NAVIGATION_FOOTER]` marker added to `src/config.ts`
+immediately above the `footer:` array for explicit-marker round-trip robustness.
 
 ### Deferred — Locale type generalisation
 
