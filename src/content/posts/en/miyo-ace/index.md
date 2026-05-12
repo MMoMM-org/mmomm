@@ -10,7 +10,7 @@ draft: false
 lang: en
 translationKey: miyo-ace
 ---
-[Last time](/en/blog/the-2-aspects-of-miyo/) I did write a little about the 2 aspects of `#MiYo`:
+[Last time](/en/blog/the-2-aspects-of-miyo/) I did write a little about the 2 aspects of #MiYo:
 
 - ACE = Gathering of knowledge
 - Framework = Gain new abilities, adapt new frameworks / processes etc.
@@ -40,7 +40,7 @@ And that already started the short overview. And the [attentive reader](http://w
 
 We will take a closer look at those subjects in later posts.
 
-For me one of the key points of `#PKM` is to not create a dataswamp, which sucks in more and more information and never releases it again. You will generally hear this in conjunction with the [Collectors Fallacy](https://observer.com/2017/05/the-collectors-fallacy-why-we-gather-things-we-dont-need/). This expression describes the warm fuzzy feeling you get when you collect data. **MiYo - Aggregate**
+For me one of the key points of #PKM is to not create a dataswamp, which sucks in more and more information and never releases it again. You will generally hear this in conjunction with the [Collectors Fallacy](https://observer.com/2017/05/the-collectors-fallacy-why-we-gather-things-we-dont-need/). This expression describes the warm fuzzy feeling you get when you collect data. **MiYo - Aggregate**
 
 The problem is though, only collection data is not enough. I need to be able to connect the data to create meaningful relationships and value. **MiYo - Compose**
 
@@ -94,7 +94,7 @@ quiet a bit.
 
 While writing the post I noticed that the base note I have is quite long and can without problem be broken down into sub parts. I added those subcategories already here in this text, e.g. MiYo - Emerge and added more links.
 
-The `#Obsidian` GraphView for this note looks like this at the moment:
+The #Obsidian GraphView for this note looks like this at the moment:
 
 ![Obsidian GraphView MiYo Ace](attachments/obsidian-graphview-miyo-ace.png)
 

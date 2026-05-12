@@ -99,11 +99,11 @@ Dort ist zwar Standardmäßig ein **-** drin, aber das ist nur ein Vorschlag und
 
 Better File Link - File List
 
-Und das letzte Plugin in der Liste ist ein kleiner Helfer für `#Dataview`
+Und das letzte Plugin in der Liste ist ein kleiner Helfer für #Dataview
 
 ## Better Inline Fields
 
-Geschrieben von [David Šarman ist das Plugin](https://github.com/dsarman/better-inline-fields) ein kleiner Helfer für `#Dataview` Inline Datafields.
+Geschrieben von [David Šarman ist das Plugin](https://github.com/dsarman/better-inline-fields) ein kleiner Helfer für #Dataview Inline Datafields.
 
 Ich nutze es eigentlich nur für die Möglichkeit Boolean Datafields wie einen Task zu nutzen.
 

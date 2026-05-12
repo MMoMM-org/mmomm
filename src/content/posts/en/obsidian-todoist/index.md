@@ -219,6 +219,6 @@ Let me know in the comments.
 - [The Movie to the Post](https://youtu.be/i4K4oVycfm8)
 - [My Youtube Video Vault](https://github.com/MMoMM-org/obsidian-youtube-vault)
 - 40-04
-- `#Tasks`
-- `#Templater`
-- `#Buttons`
+- #Tasks
+- #Templater
+- #Buttons

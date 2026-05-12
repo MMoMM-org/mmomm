@@ -19,7 +19,7 @@ It was a teaser, a start of a journey which doesn't always takes the shortest ro
 
 So let's start by taking a closer look.
 
-**`#MiYo`** has 2 aspects:
+**#MiYo** has 2 aspects:
 
 The first one which covers the cycle of
 

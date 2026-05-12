@@ -99,11 +99,11 @@ By default you will find a **-**  there, but this is only a suggestion and you s
 
 Better File Link - File List
 
-And the last plugin on the list is a little helper for `#Dataview`
+And the last plugin on the list is a little helper for #Dataview
 
 ## Better Inline Fields
 
-Written by [David Šarman the Plugin](https://github.com/dsarman/better-inline-fields) is a little helper for `#Dataview` Inline Datafields.
+Written by [David Šarman the Plugin](https://github.com/dsarman/better-inline-fields) is a little helper for #Dataview Inline Datafields.
 
 I mainly use it for the capability to click on boolean Datafields and handle them like tasks.
 

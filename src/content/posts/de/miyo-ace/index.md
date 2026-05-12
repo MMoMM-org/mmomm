@@ -10,7 +10,7 @@ translationKey: miyo-ace
 draft: false
 lang: de
 ---
-[Zuletzt](/blog/die-2-aspekte-von-miyo/) habe ich ein wenig über die 2 Aspekte von `#MiYo` geschrieben:
+[Zuletzt](/blog/die-2-aspekte-von-miyo/) habe ich ein wenig über die 2 Aspekte von #MiYo geschrieben:
 
 - ACE = Aneignung von Wissen
 - Framework = Aneignung von Fähigkeiten / Prozessen etc.
@@ -40,7 +40,7 @@ Und damit haben wir auch schon direkt mit dem kurzen Überblick angefangen. Wie 
 
 Die einzelnen Punkte schauen wir uns dann in späteren Posts genauer an.
 
-Einer der Schlüssel Punkte beim `#PWM` ist für mich, nicht einen Datensumpf zu erzeugen, der immer mehr Informationen in sich aufsaugt und nicht wieder freigibt. Generell kommt dann schnell der Begriff der [Collectors Fallacy](https://observer.com/2017/05/the-collectors-fallacy-why-we-gather-things-we-dont-need/) zum Vorschein. Dieser Begriff beschreibt, unter anderem, das gute Gefühl das man hat, wenn man Daten sammelt. **MiYo - Aggregate**
+Einer der Schlüssel Punkte beim #PWM ist für mich, nicht einen Datensumpf zu erzeugen, der immer mehr Informationen in sich aufsaugt und nicht wieder freigibt. Generell kommt dann schnell der Begriff der [Collectors Fallacy](https://observer.com/2017/05/the-collectors-fallacy-why-we-gather-things-we-dont-need/) zum Vorschein. Dieser Begriff beschreibt, unter anderem, das gute Gefühl das man hat, wenn man Daten sammelt. **MiYo - Aggregate**
 
 Das Problem ist nur, das Datensammeln alleine nicht reicht, sondern ich muss diese Daten auch mit anderen Dingen in Verbindung bringen, damit sie Nutzen erzeugen. **MiYo - Compose**
 
@@ -94,7 +94,7 @@ noch ein wenig Arbeiten.
 
 Während des Schreibens des Posts, fiel mir auf, das die Basis Notiz doch recht lang ist und noch in weitere Unterteile her runter gebrochen werden kann. Ich habe deshalb hier in dem Text schon einmal die Unterkategorien einfließen lassen, z.B . MiYo - Emerge, und weitere Verknüpfungen eingebaut.
 
-Der `#Obsidian` GraphView sieht z.B. momentan so für diese Notiz aus:
+Der #Obsidian GraphView sieht z.B. momentan so für diese Notiz aus:
 
 ![Obsidian GraphView MiYo Ace](attachments/obsidian-graphview-miyo-ace.png)
 

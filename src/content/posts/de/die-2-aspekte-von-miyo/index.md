@@ -19,7 +19,7 @@ Es war mehr ein Teaser, bzw. ein Start, für eine Reise die nicht immer den kür
 
 Also fangen wir doch mal an die ganze Sache genauer zu betrachten.
 
-**`#MiYo`** hat zwei Aspekte:
+**#MiYo** hat zwei Aspekte:
 
 Der erste beschäftigt sich mit dem Zyklus der
 

@@ -7,7 +7,6 @@ description: |
 date: 2022-12-12
 tags:
   - obsidian
-  - plugins
   - plugin
 image: "[[cover.png]]"
 imageAlt: Todoist Logo
@@ -211,6 +210,6 @@ Lasst es mich in den Kommentaren wissen.
 - [Der Film zum Artikel](https://youtu.be/DFe4zCxhoWU)
 - [Mein Youtube Video Vault](https://github.com/MMoMM-org/obsidian-youtube-vault)
 - 40-04
-- `#Tasks`
-- `#Templater`
-- `#Buttons`
+- #Tasks
+- #Templater
+- #Buttons
