@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { shouldShowContent } from "@/utils/markdown";
+import { pageUrl } from "@/utils/i18n";
 
 export const GET: APIRoute = async () => {
   try {
@@ -10,11 +11,13 @@ export const GET: APIRoute = async () => {
       return shouldShowContent(page, isDev);
     });
 
+    // pageUrl() emits locale-aware paths (default locale at root,
+    // others under /<locale>/, see ADR-005).
     const result = visiblePages.map((page: any) => ({
       id: page.id,
       title: page.data.title,
       description: page.data.description || "",
-      url: `/${page.id}`,
+      url: pageUrl(page),
       type: "page" as const,
       lastModified: page.data.lastModified?.toISOString(),
     }));
