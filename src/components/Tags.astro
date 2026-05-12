@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '@/config';
+import { tagUrl, LOCALES, DEFAULT_LOCALE, type Locale } from '@/utils/i18n';
 import Icon from './Icon.astro';
 
 export interface Props {
@@ -13,6 +14,15 @@ const { tags, currentTag, showCount = false, variant = 'default' } = Astro.props
 
 // Sort tags alphabetically
 const sortedTags = [...tags].sort();
+
+// Derive locale from URL (per general.md "Cross-cutting components derive
+// locale from URL, not props"). The Tags component is used on listing pages
+// that pass `lang` differently, so URL is the canonical source.
+const path = Astro.url.pathname;
+const localeFromPath = LOCALES.find(
+  (l) => l !== DEFAULT_LOCALE && (path === `/${l}` || path.startsWith(`/${l}/`)),
+);
+const locale: Locale = localeFromPath ?? DEFAULT_LOCALE;
 ---
 
 {siteConfig.postOptions.tags && sortedTags.length > 0 && (
@@ -25,7 +35,7 @@ const sortedTags = [...tags].sort();
     <div class="flex flex-wrap gap-2">
       {sortedTags.map(tag => (
         <a
-          href={`/posts/tag/${encodeURIComponent(tag)}`}
+          href={tagUrl(locale, tag)}
           class={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
             currentTag === tag
               ? 'bg-highlight-100 dark:bg-highlight-900/40 text-highlight-800 dark:text-highlight-200 ring-1 ring-highlight-300 dark:ring-highlight-700'

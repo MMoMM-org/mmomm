@@ -7,7 +7,7 @@ import type {
   OpenGraphImage,
 } from "@/types";
 import siteConfig from "@/config";
-import { DEFAULT_LOCALE, type Locale, lt } from "./i18n";
+import { DEFAULT_LOCALE, type Locale, lt, localePrefix } from "./i18n";
 import {
   getFallbackOGImage,
   optimizePostImagePath,
@@ -289,7 +289,7 @@ export function generateTagSEO(
   const siteTitle = lt(locale, siteConfig.title);
   const title = `Posts tagged with "${tag}" | ${siteTitle}`;
   const description = `Browse all posts tagged with ${tag} on ${siteTitle}`;
-  const baseUrl = `${site}/posts/tag/${tag}`;
+  const baseUrl = `${site}${localePrefix(locale)}/posts/tag/${tag}`;
   const canonical =
     currentPage && currentPage > 1 ? `${baseUrl}/${currentPage}` : baseUrl;
 
