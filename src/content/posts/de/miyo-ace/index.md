@@ -90,8 +90,6 @@ noch ein wenig Arbeiten.
 
 ## Was habe ich beim Schreiben dieses Blog Posts gelernt?
 
-## 
-
 Während des Schreibens des Posts, fiel mir auf, das die Basis Notiz doch recht lang ist und noch in weitere Unterteile her runter gebrochen werden kann. Ich habe deshalb hier in dem Text schon einmal die Unterkategorien einfließen lassen, z.B . MiYo - Emerge, und weitere Verknüpfungen eingebaut.
 
 Der #Obsidian GraphView sieht z.B. momentan so für diese Notiz aus:
@@ -105,8 +103,6 @@ Man kann erkennen das viele Notizen noch nicht existieren (hellgrau), ich es abe
 Aber dazu später mehr.
 
 ## Fazit
-
-## 
 
 Ich hoffe dieser Post macht Interesse an mehr. In den nächsten Posts werden wir uns dann jeden Punkt genauer anschauen und damit den Datensumpf trocken legen.
 

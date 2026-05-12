@@ -265,8 +265,6 @@ I already talked about some of the advanced usage examples above. But let's take
 
 ### Remove
 
-### 
-
 Removes the codeblock after execution.
 
 ```
@@ -281,8 +279,6 @@ remove [id1, id2]
 
 ### Replace
 
-### 
-
 While using text or template you can also let the text replace several lines in your note. Again, be careful to correctly specify the correct lines.
 
 ```
@@ -291,15 +287,11 @@ replace [startLine, endLine]
 
 ### Inherit
 
-### 
-
 This function allows you to use values from other Buttons. You can also overwrite values in the button itself.
 
 ```
 id parentButton
 ```
-
-### 
 
 ### Custom Class
 
@@ -329,8 +321,6 @@ class button-red
 
 ### Color
 
-### 
-
 There are of course also some predefined colurs you can use. Here are the possible colors:
 
 - blue
@@ -343,11 +333,7 @@ There are of course also some predefined colurs you can use. Here are the possib
 color yellow
 ```
 
-### 
-
 ### Inline Buttons
-
-### 
 
 As already described in the Swap Button part, you can give every button an Button-ID by adding a BlockReference beneath it, e.g. **^button-today**
 
@@ -464,8 +450,6 @@ I'm missing some more advanced features like executing "Macros" or Javascript.
 And now some more tips, as promissed.
 
 ### Javascript
-
-### 
 
 One way to execute Javascript would be via Templater..
 

@@ -263,8 +263,6 @@ Ein paar der erweiterten Funktionen sind oben schon erwähnt. Aber schauen wir u
 
 ### Remove
 
-### 
-
 Löscht den Button nach Ausführung.
 
 ```
@@ -279,8 +277,6 @@ remove [id1, id2]
 
 ### Replace
 
-### 
-
 Bei Text und Template Buttons könnt ihr auch bestimmte Zeilen in der Notiz ersetzen lassen, auch hier müßt ihr wieder aufpassen die richtigen Zeilen zu benutzten.
 
 ```
@@ -288,8 +284,6 @@ replace [StartZeile, EndZeile]
 ```
 
 ### Inherit
-
-### 
 
 Diese Funktion ermöglicht es euch Werte aus einem anderen Button in diesem Button zu nutzen. In dem Button können die Werte des anderen Button auch überschrieben werden.
 
@@ -327,8 +321,6 @@ class button-red
 
 ### Color
 
-### 
-
 Hiermit könnt ihr eine vordefinierte Farbe für die Buttons verwenden, mögliche Farben sind:
 
 - blue
@@ -342,8 +334,6 @@ color yellow
 ```
 
 ### Inline Buttons
-
-### 
 
 Wie bereits beim Swap Button beschrieben, ihr könnt jeden Button eine Button-ID geben, in dem ihr nach dem CodeBlock eine BlockReference angibt, e.g. **^button-today**
 
@@ -457,8 +447,6 @@ Was mit fehlt ist die Möglichkeit "Macros" oder Javascript auszuführen.
 Und hier noch die versprochenen Tips.
 
 ### Javascript
-
-### 
 
 Eine Möglichkeit Javascript auszuführen ist via Templater...
 

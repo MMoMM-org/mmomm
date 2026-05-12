@@ -204,8 +204,6 @@ Ich denke aber ich werde mich nochmal an die Notizen geben müssen weil sie doch
 
 ## Zusammenfassung
 
-## 
-
 Wie man erkennen kann, ist das Sammeln gar nicht so schwer, aber die weitere Verarbeitung ist ein ganz anderes Thema.
 
 Ohne konsequente Bearbeitung und Abwägung, ob man die Informationen wirklich benötigt landen zufiel Informationen im Vault die keinen Mehrwert haben.

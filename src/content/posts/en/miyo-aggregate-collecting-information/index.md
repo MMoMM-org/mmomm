@@ -204,8 +204,6 @@ I still think that I need to reprocess these notes as they are still too long. B
 
 ## Summary
 
-## 
-
 As you can see, information gathering isn't that hard, to process the information is the hard and time consuming part.
 
 Without consistent processing and assessment if you really need that information you will have a lot of information in your vault which doesn't add any value.

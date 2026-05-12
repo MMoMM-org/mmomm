@@ -90,8 +90,6 @@ quiet a bit.
 
 ## What did I learn from writing this blog post?
 
-## 
-
 While writing the post I noticed that the base note I have is quite long and can without problem be broken down into sub parts. I added those subcategories already here in this text, e.g. MiYo - Emerge and added more links.
 
 The #Obsidian GraphView for this note looks like this at the moment:
@@ -105,8 +103,6 @@ You can notice that a lot of the notes don't exist yet (light grey), but I deem 
 More about that later.
 
 ## Conclusion
-
-## 
 
 I hope the post created the need for more. In the next posts we will take a closer look and will dry out the dataswamp.
 

@@ -24,8 +24,6 @@ But Supercharged Links is able to cover this gap.
 
 ## Overview
 
-## 
-
 So what does the plugin do?
 
 It allows you to change the way an Obsidian Link is formatted based on your own rules. It not only works in a note but also in the Folderview and other plugins (for an extensive list please take a look at the github page)
@@ -154,8 +152,6 @@ Obsidian links gain the additional information on first sight. You shouldn't ove
 
 ## Noteworthy Tidbits
 
-## 
-
 If you want to give your external links some love you can use [Link Favicon](https://github.com/joethei/obsidian-link-favicon). It only adds the favourite icon in-front of the external link but even that makes the links better visible.
 
 ![Link Favicon](attachments/link-favicon.png)
@@ -163,8 +159,6 @@ If you want to give your external links some love you can use [Link Favicon](htt
 Link Favicon
 
 ## Conclusion
-
-## 
 
 In the beginning I liked the idea to use emojis to make my notes more visual. Then i quickly realised it caused all kind of problems with Dropbox and OneDrive.
 

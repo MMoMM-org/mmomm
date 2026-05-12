@@ -204,8 +204,6 @@ As already said there are other Todoist Plugins around, but I don't use them. I 
 
 ## Conclussion
 
-## 
-
 For the plugin and Todoist fits my processes. The Tasks plugin covers different areas and is also being used by myself.
 
 I don't think that I will ever do my complete Task Management in Obsidian. First of is the "issue" with using Obsidian and Tasks on the phone. Todoist is far better in this area.
