@@ -4,16 +4,34 @@ import type { Root, Text } from 'mdast';
 
 /**
  * Remark plugin for processing inline Obsidian tags
- * 
+ *
  * Converts inline tags like #quick-start into clickable pill-style links
  * that match the theme's tag styling.
- * 
+ *
  * Pattern: #tag-name (must start with #, followed by alphanumeric, hyphens, underscores)
  * Tags are matched when they appear at word boundaries (start of text, after whitespace, or after punctuation)
+ *
+ * Locale awareness: the href is prefixed with /<locale>/ for non-default
+ * locales. Locale is detected from file.path matching /posts/<locale>/ or
+ * /pages/<locale>/. Default locale ('de') uses no prefix. Mirrors the
+ * locale-detection pattern from internallinks.ts to avoid pulling in
+ * i18n.ts (which fails at astro.config-load time — see
+ * troubleshooting.md "astro:content virtual module unavailable").
  */
 
+const DEFAULT_LOCALE = 'de';
+
+function detectLocaleFromPath(filePath: string | undefined): string {
+  if (!filePath) return DEFAULT_LOCALE;
+  const normalized = filePath.replace(/\\/g, '/');
+  const m = normalized.match(/\/(?:posts|pages)\/([a-z]{2})\//);
+  return m?.[1] ?? DEFAULT_LOCALE;
+}
+
 const remarkInlineTags: Plugin<[], Root> = () => {
-  return (tree) => {
+  return (tree, file) => {
+    const locale = detectLocaleFromPath(file?.path);
+    const localePrefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
     visit(tree, 'text', (node: Text, index, parent) => {
       if (!parent || typeof index !== 'number') return;
       
@@ -66,7 +84,7 @@ const remarkInlineTags: Plugin<[], Root> = () => {
         // deployment-stable on case-sensitive filesystems.
         const tagHtml = {
           type: 'html',
-          value: `<a href="/posts/tag/${encodeURIComponent(tag.toLowerCase())}" class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 transition-colors hover:bg-highlight-100 dark:hover:bg-highlight-800">#${tag}</a>`
+          value: `<a href="${localePrefix}/posts/tag/${encodeURIComponent(tag.toLowerCase())}" class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 transition-colors hover:bg-highlight-100 dark:hover:bg-highlight-800">#${tag}</a>`
         };
         
         newChildren.push(tagHtml);
