@@ -246,8 +246,8 @@ export const siteConfig: SiteConfig = {
     enabled: true,
     // [CONFIG:FOOTER_CONTENT]
     content: {
-      de: `© 2026 {author}. Gebaut mit <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a> (ein zweisprachiger Fork von <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
-      en: `© 2026 {author}. Built with <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a> (a bilingual fork of <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
+      de: `© 2026 {author}. Gebaut mit <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a><br>(ein zweisprachiger Fork von <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
+      en: `© 2026 {author}. Built with <a href="https://github.com/MMoMM-org/astro-modular-mmomm" target="_blank">astro-modular-mmomm</a><br>(a bilingual fork of <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a>).`,
     },
     // [CONFIG:FOOTER_SHOW_SOCIAL_ICONS]
     showSocialIconsInFooter: true,
