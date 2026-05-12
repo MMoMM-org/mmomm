@@ -11,7 +11,7 @@ lang: de
 ---
 Zuletzt habe ich ein wenig über meine Art geschrieben wie ich meine Notizen bearbeite bzw. ich meinen Ansatz ausgewählt habe. Viele sagen jetzt bestimmt... hää?
 
-Und da gebe ich euch recht. [MiYo - Mach es dir zu eigen](/blog/miyo-mach-es-dir-zu-eigen/) war jetzt nicht wirklich eine riesige zusammenhängende Erklärung was dahinter steckt.
+Und da gebe ich euch recht. [[miyo-mach-es-dir-zu-eigen|MiYo - Mach es dir zu eigen]] war jetzt nicht wirklich eine riesige zusammenhängende Erklärung was dahinter steckt.
 
 Es war mehr ein Teaser, bzw. ein Start, für eine Reise die nicht immer den kürzesten Weg zu ihrem Ziel nimmt.
 

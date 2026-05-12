@@ -10,7 +10,7 @@ translationKey: miyo-aggregate
 draft: false
 lang: de
 ---
-Wie schon in [MiYo - ACE](/blog/miyo-ace/)  besprochen will ich hier ein wenig mehr auf das
+Wie schon in [[miyo-ace|MiYo - ACE]]  besprochen will ich hier ein wenig mehr auf das
 
 > A von ACE
 

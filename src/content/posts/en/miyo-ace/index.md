@@ -10,7 +10,7 @@ draft: false
 lang: en
 translationKey: miyo-ace
 ---
-[Last time](/en/blog/the-2-aspects-of-miyo/) I did write a little about the 2 aspects of #MiYo:
+[[the-2-aspects-of-miyo|Last time]] I did write a little about the 2 aspects of #MiYo:
 
 - ACE = Gathering of knowledge
 - Framework = Gain new abilities, adapt new frameworks / processes etc.

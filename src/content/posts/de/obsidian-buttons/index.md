@@ -430,7 +430,7 @@ Meine "Homepage" ist ein Workspace mit verschiedenen Notizen für Gestern, Heute
 
 Meine Obsidian Homepage
 
-Die Todoist Buttons habe ich ja schon in [Obsidian: Todoist](/blog/obsidian-todoist/) besprochen, wenn ihr die anderen Buttons als Beispiele haben möchtet last es mich wissen.
+Die Todoist Buttons habe ich ja schon in [[obsidian-todoist|Obsidian: Todoist]] besprochen, wenn ihr die anderen Buttons als Beispiele haben möchtet last es mich wissen.
 
 In meinen wiederkehrenden Meetings habe ich z.B. einen Button der ein Template in die Notiz einfügt mit den notwendigen Einträgen.
 
@@ -529,7 +529,7 @@ Es gibt ein paar Posts im Forum und auch Beispiel Vaults die über Buttons neue 
 
 - [Der Film zum Post](https://youtu.be/cri5zprSfvw)
 - [Todoist](https://doist.grsm.io/1wx938b4rtun)
-- [Obsidian: Dynbedded](/blog/obsidian-dynbedded-1/)
-- [Obsidian: Todoist](/blog/obsidian-todoist/)
+- [[obsidian-dynbedded|Obsidian: Dynbedded]]
+- [[obsidian-todoist|Obsidian: Todoist]]
 - [Natural Language Math](https://github.com/bugwheels94/math-expression-evaluator)
 - 40-06

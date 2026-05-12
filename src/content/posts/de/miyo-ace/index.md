@@ -10,7 +10,7 @@ translationKey: miyo-ace
 draft: false
 lang: de
 ---
-[Zuletzt](/blog/die-2-aspekte-von-miyo/) habe ich ein wenig über die 2 Aspekte von #MiYo geschrieben:
+[[die-2-aspekte-von-miyo|Zuletzt]] habe ich ein wenig über die 2 Aspekte von #MiYo geschrieben:
 
 - ACE = Aneignung von Wissen
 - Framework = Aneignung von Fähigkeiten / Prozessen etc.

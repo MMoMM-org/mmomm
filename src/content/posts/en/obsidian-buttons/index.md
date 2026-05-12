@@ -437,7 +437,7 @@ For example:
 
 My Obsidian Homepage
 
-I already talked about the Buttons for Todoist in [Obsidian: Todoist](/blog/obsidian-todoist/) if you want examples for the other buttons let me know.
+I already talked about the Buttons for Todoist in [[obsidian-todoist|Obsidian: Todoist]] if you want examples for the other buttons let me know.
 
 In my repeating meetings I have a button which appends a template below the button with all the necessary entries for the next meeting.
 
@@ -536,7 +536,7 @@ There are some posts in the forums and also some example vaults which use button
 
 - [The Movie to the Post](https://youtu.be/mj0zGgNbpfQ)
 - [Todoist](https://doist.grsm.io/1wx938b4rtun)
-- [Obsidian: Dynbedded](/en/blog/obsidian-dynbedded/)
-- [Obsidian: Todoist](/en/blog/obsidian-todoist-1/)
+- [[obsidian-dynbedded|Obsidian: Dynbedded]]
+- [[obsidian-todoist|Obsidian: Todoist]]
 - [Natural Language Math](https://github.com/bugwheels94/math-expression-evaluator)
 - 40-06

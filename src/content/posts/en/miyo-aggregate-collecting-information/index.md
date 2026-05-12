@@ -10,7 +10,7 @@ draft: false
 lang: en
 translationKey: miyo-aggregate
 ---
-As already discussed in [MiYo - ACE](/en/blog/miyo-ace-1/)  I want to take a closer look at the
+As already discussed in [[miyo-ace|MiYo - ACE]]  I want to take a closer look at the
 
 > A from ACE.
 
