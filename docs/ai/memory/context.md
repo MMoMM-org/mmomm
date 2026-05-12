@@ -58,21 +58,21 @@ Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **as
 
 **ADR-005 Phase 2 shipped** (2026-05-11, commit `3b09b00`): the 9-file `src/pages/en/` clone tree collapsed into a single parameterised `src/pages/[locale]/` tree in one commit. Each parameterised route's `getStaticPaths` iterates `LOCALES.filter(l => l !== DEFAULT_LOCALE)` and fans out paths. Files migrated: `index`, `[...slug]`, `posts/index`, `posts/[page]`, `posts/[...slug]`, `posts/tag/[...tag]`, `posts/tag/[...tag]/[page]`, `feed.xml.ts`, `rss.xml.ts`. Default-locale (DE) tree at root URLs preserved (ADR-002 Decision 4's `prefixDefaultLocale: false`). All 27 `/en/*` URLs intact; 59 pages built; astro check baseline (32 errors) unchanged. Adding a third locale now requires zero new route files — just data.
 
-## Active plan — ADR-005 Phase 3 (Plugin fork)
+**ADR-005 Phase 3 shipped** (2026-05-12, fork `MMoMM-org/astro-modular-settings-mmomm` `feat/multi-locale-aware` branch, commits `c816b24`..`ef6ac68`; vault commit `39ae100`): The Astro Modular Settings plugin is now **re-enabled** in the vault with an i18n-safe round-trip. Four fork commits cover (a) round-trip passthrough parser/serializer + new markers `[CONFIG:LOCALES]`/`[CONFIG:DEFAULT_LOCALE]` + tolerant validator, (b) NavigationTab UI editor extensions for `i18nKey` / `urlByLocale` / `external` (rendered when `locales.length > 1`), (c) `lt()` resolver + LocalisedString-aware reads/writes across SiteInfoTab/FeaturesTab/wizard, (d) **the four bug-fix lessons that emerged from smoke testing**: load-time config.ts overlay in `loadSettings()` (data.json is a cache, config.ts is the source of truth), in-place array rewrite (replace only the `[...]` body, not the wipe-between-markers anti-pattern), comment-aware value parser (skip `//` + `/* */` wherever whitespace is skipped), and marker-anchored index-scan replacing the fragile `\s*\n\s*<field>:` regex. Smoke test (toggle showSocialIconsInFooter through the plugin UI): all 6 `i18nKey`, 3 `urlByLocale`, 1 `external:true`, the `navigation.footer` array (2 items with i18n fields), `locales`, `defaultLocale`, and LocalisedString title/description/footer.content shapes survived. Comments must live ABOVE `pages:`/`footer:` — see tools.md rule.
 
-Phase 3 of ADR-005 — fork `davidvkimball/obsidian-astro-modular-settings` → `MMoMM-org/astro-modular-settings-mmomm`, make it locale-aware from the start. ~2-3 sessions. Steps:
+## Active plan — ADR-005 Phase 4 (Runbook + cleanup)
 
-1. Fork via `gh repo fork davidvkimball/obsidian-astro-modular-settings --org MMoMM-org --fork-name astro-modular-settings-mmomm` (gh CLI authed as MMoMM-org)
-2. Clone to `/Volumes/Moon/Coding/MMoMM.org/obsidian-astro-modular-settings-mmomm` sibling
-3. Patch `NavigationItem` editor type + UI for `i18nKey`/`urlByLocale`/`external`. The `urlByLocale` map renders as a per-locale URL row generated from `siteConfig.locales` (no hardcoded DE/EN tabs)
-4. Add `LocalisedString` editor: render N inputs (one per locale from `[CONFIG:LOCALES]`) for every site-info field
-5. Add new markers: `[CONFIG:LOCALES]`, `[CONFIG:DEFAULT_LOCALE]`, `[CONFIG:NAVIGATION_FOOTER]`. Plugin marker scheme for `LocalisedString` values uses object-literal parsing under the existing marker (locked-in decision for Phase 3)
-6. Build (`pnpm build` in the fork), install `main.js` + `manifest.json` + `styles.css` into vault's `.obsidian/plugins/astro-modular-settings/`
-7. Smoke test: add `"astro-modular-settings"` back to `community-plugins.json`, reload Obsidian, edit a benign setting via UI, verify config.ts still has `urlByLocale` + footer array + `LocalisedString` shapes intact
-8. Push fork to GitHub. Set up release-mirror workflow (analog ADR-001 Deferred Work #1)
-9. Update memory: `tools.md` re-enable rules, `decisions.md` ADR-005 Phase 3 entry
+Phase 1, 2, 3 of ADR-005 shipped. Phase 4 is the documentation-and-housekeeping wrap:
 
-After Phase 3: Phase 4 (runbook "Adding a locale" + final memory cleanup).
+1. Write `docs/runbooks/add-a-locale.md`: widen `Locale` union → add `siteConfig.locales[]` entry → populate `LocalisedString` values + T9 strings table → add Vault CMS content-types for the new locale → optionally add `urlByLocale` overrides for slug-divergent pages → `pnpm build` → verify hreflang/sitemap fan-out
+2. Move ADR-005 status from Proposed to Accepted; cross-link the four fork commits as the Phase 3 record
+3. Optionally: add `// [CONFIG:NAVIGATION_FOOTER]` marker to `src/config.ts` immediately before `footer:` for explicit-marker round-trip (current structural detection works, marker just makes the round-trip more robust against future structural changes)
+4. Memory cleanup pass via `/memory-cleanup` — archive resolved items, prune stale context
+
+## Optional follow-ups (separate from ADR-005)
+
+- **Release-mirror workflow for the plugin fork** (analog ADR-001 Deferred Work #1): GitHub Action that mirrors releases from `davidvkimball/obsidian-astro-modular-settings` upstream onto our fork so we know when upstream advances and can plan merges. Low priority — manual `git fetch upstream && git log upstream/master..HEAD` works fine for now.
+- **PR the fork's `feat/multi-locale-aware` branch back to upstream** if davidvkimball is interested in landing locale-awareness in canonical. The work is general-purpose enough to be a reasonable contribution.
 
 ## Next moves outside ADR-005 (pick when ADR-005 has free space)
 

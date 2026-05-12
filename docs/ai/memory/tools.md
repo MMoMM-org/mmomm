@@ -1,8 +1,35 @@
 # Tools — astro-mmomm
-<!-- CI, build pipeline, API clients, local dev setup. Updated: 2026-05-11 -->
+<!-- CI, build pipeline, API clients, local dev setup. Updated: 2026-05-12 -->
 
-## Astro Modular Settings plugin clobbers `src/config.ts` — disabled in this vault
-<!-- 2026-05-11 — observed clobber + decision to disable -->
+## Astro Modular Settings plugin — fork re-enabled with i18n-safe round-trip (2026-05-12)
+<!-- 2026-05-12 — fork shipped, plugin re-enabled, smoke test passed -->
+The plugin is now **re-enabled** in this vault via the `MMoMM-org/astro-modular-settings-mmomm` fork (`feat/multi-locale-aware` branch, last commit `ef6ac68`). The fork's parser/serializer round-trip is i18n-safe: `i18nKey`, `urlByLocale`, `external`, `navigation.footer`, `LocalisedString` shapes on title/description/footer.content/etc., and the `[CONFIG:LOCALES]` + `[CONFIG:DEFAULT_LOCALE]` markers all survive UI saves. Smoke test passed by toggling `showSocialIconsInFooter` (2026-05-12). Built artifacts at `src/content/.obsidian/plugins/astro-modular-settings/main.js|manifest.json|styles.css`.
+
+**Why it now works** (architectural keys, condensed from decisions.md):
+1. Plugin's `loadSettings()` overlays config.ts on top of `data.json` for the fields data.json can't faithfully represent without UI support (nav.pages, nav.footer, LocalisedString site-info, locales, defaultLocale, footer.content). config.ts is the source of truth; data.json is a cache.
+2. Serializer is **in-place** (replaces only the `[...]` body) rather than wipe-between-markers. This preserves comments above `pages:`, the sibling marker-less `footer:` block, and any future co-located content.
+3. Parser skips `//` and `/* */` comments and uses index-scanning instead of fragile regex; comments between marker and field, and between array items, are tolerated.
+
+**Critical convention: Comments must live ABOVE `pages:` / `footer:` (not inside the array literal)** — the in-place serializer replaces the `[...]` body, so inline comments between items are destroyed on save. Comments between the marker and the field name are preserved. See the explanatory note at `src/config.ts:330+` for the durable rule.
+
+**Refreshing the plugin** — when the fork advances (new commits on `feat/multi-locale-aware`):
+```
+cd ../obsidian-astro-modular-settings-mmomm
+pnpm install --ignore-scripts    # --ignore-scripts: upstream preinstall references a missing scripts/npm-proxy.mjs
+pnpm build                       # tsc -noEmit -skipLibCheck && esbuild production
+cp main.js manifest.json styles.css ../astro-mmomm/src/content/.obsidian/plugins/astro-modular-settings/
+```
+Then reload Obsidian. Run `git diff src/config.ts` after any plugin-driven save as a sanity check.
+
+**Adding a NAVIGATION_FOOTER marker (optional, recommended)**: the fork's parser/serializer round-trip works on the user's current config.ts which has `footer: [...]` orphaned between `[CONFIG:NAVIGATION_PAGES]` and `[CONFIG:NAVIGATION_SOCIAL]` (no marker). Adding `// [CONFIG:NAVIGATION_FOOTER]` immediately before `footer:` makes the round-trip explicit-marker-anchored (more robust against future structural changes) instead of relying on structural detection between pages-end and SOCIAL marker. Not required for current functioning.
+
+---
+
+## Astro Modular Settings plugin — historical clobber background (pre-fork, 2026-05-11)
+<!-- 2026-05-11 — observed clobber + decision to disable; superseded by the 2026-05-12 fork above -->
+Kept for context: explains why the fork was necessary and what classes of failure the fork prevents.
+
+
 The Astro Modular Settings plugin (`src/content/.obsidian/plugins/astro-modular-settings/`) is a UI for editing `src/config.ts` via 174 `[CONFIG:KEY]` markers. Its own `data.json` is the in-memory model; the Astro build never reads it. The plugin has 2 `writeFileSync(configPath)` calls in main.js — at least one is reachable from a code path that runs **without** user interaction (the user reported "ich habe nur geschaut" / "I only looked", but config.ts was still clobbered). The "Apply all settings" / "Apply template" UI buttons exist as additional write paths. We don't know exactly which path fired in the observed incident; we know the plugin writes config.ts from at least one passive trigger (likely `onload()` or a data.json↔config.ts mismatch sync on load).
 
 **Decision**: the plugin is **disabled** in this vault — removed from `src/content/.obsidian/community-plugins.json`. The Astro Composer plugin remains enabled and is the authoring entry point (0 markers, only opens config.ts via `configFilePath` ribbon command — never writes). Configuration of `src/config.ts` happens **only in the editor**, never through plugin UI.
