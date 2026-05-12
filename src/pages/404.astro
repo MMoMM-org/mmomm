@@ -1,15 +1,17 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import { siteConfig } from '@/config';
 import { DEFAULT_LOCALE, lt } from '@/utils/i18n';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
 
-// Try to get 404 page content from special collection
+// 404 content from the special collection. Astro emits a single static
+// 404.html, so this route uses the default-locale variant. EN 404 content
+// exists in src/content/special/en/404.md for future per-locale 404 routes
+// (ADR-005 Phase C limitation, 2026-05-12).
 let pageContent = null;
 try {
-  const specialPages = await getCollection('special');
-  const notFoundPage = specialPages.find(page => page.id === '404');
+  const notFoundPage = await getEntry('special', `${DEFAULT_LOCALE}/404`);
   if (notFoundPage) {
     pageContent = await render(notFoundPage);
   }

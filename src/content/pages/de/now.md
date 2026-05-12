@@ -1,6 +1,8 @@
 ---
 title: "Now"
 description: "What am I working on at the moment?"
+lang: de
+translationKey: now
 ---
 
 What am I working on at the moment?

@@ -141,14 +141,19 @@ const docsCollection = defineCollection({
 });
 
 // Define schema for special home pages (homepage blurb, 404, projects index, docs index)
+// i18n: each special fragment declares its language. DE variants live under
+// src/content/special/de/*, EN variants under src/content/special/en/* (matches
+// pages/posts layout — see ADR-005 Phase C, 2026-05-12). The file id encodes
+// `<locale>/<name>` (e.g. `de/home`); consumers look up via getEntry('special',
+// `${locale}/${name}`).
 const specialCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/special' }),
   schema: z.object({
     title: z.string().default('Untitled Page'),
     description: z.string().nullable().optional().default('No description provided'),
     hideTOC: z.boolean().optional(),
-    // These pages have fixed URLs and special logic
-    // URLs are determined by the file location, not frontmatter
+    lang: z.enum(['de', 'en']),
+    // URLs are determined by the file location and route handler, not frontmatter.
   }),
 });
 

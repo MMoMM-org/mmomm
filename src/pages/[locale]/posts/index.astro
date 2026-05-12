@@ -22,16 +22,15 @@ export const getStaticPaths = (() =>
 const lang = Astro.params.locale as Locale;
 const prefix = localePrefix(lang);
 
-// Get special content for posts page
-let postsPageContent;
+// Get special content for posts page (locale-keyed — each locale has its
+// own src/content/special/<locale>/posts.md per ADR-005 Phase C, 2026-05-12).
+let postsPageData = null;
 try {
-  postsPageContent = await getCollection('special', ({ slug }) => slug === 'posts');
+  postsPageData = (await getEntry('special', `${lang}/posts`)) ?? null;
 } catch (error) {
   // Fallback if special collection doesn't exist or posts.md doesn't exist
-  postsPageContent = [];
+  postsPageData = null;
 }
-
-const postsPageData = postsPageContent.length > 0 ? postsPageContent[0] : null;
 
 // Get query parameters
 const url = new URL(Astro.request.url);

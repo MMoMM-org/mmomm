@@ -51,7 +51,9 @@ let projectsPageContent = null;
 let ProjectsPageContent = null;
 
 try {
-  projectsPageContent = await getEntry('special', 'projects');
+  // Projects index is default-locale-only today (no [locale]/projects route).
+  // Locale-keyed lookup matches ADR-005 Phase C special-fragment layout (2026-05-12).
+  projectsPageContent = await getEntry('special', `${DEFAULT_LOCALE}/projects`);
   if (projectsPageContent) {
     const { Content } = await render(projectsPageContent);
     ProjectsPageContent = Content;

@@ -1,18 +1,13 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
-import { siteConfig } from '@/config';
 import { shouldShowContent } from '@/utils/markdown';
 import { getLocalisedPages, pageSlug } from '@/utils/i18n';
 import PageLayout from '@/layouts/PageLayout.astro';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Get DE pages only (i18n: see docs/XDD/adr/ADR-002).
-  // EN pages are served by src/pages/en/[...slug].astro.
+  // EN pages are served by src/pages/[locale]/[...slug].astro.
   const pages = await getLocalisedPages('de');
-
-  // Get all special pages
-  const specialPages = await getCollection('special');
 
   // Filter pages based on environment (in dev, show all including drafts)
   const isDev = import.meta.env.DEV;
@@ -25,35 +20,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
     props: { page }
   }));
 
-  // Generate paths for special pages (excluding home and 404 which have special handling)
-  // Special pages serve as fallback content when features are disabled
-  const specialPaths = specialPages
-    .filter(page => {
-      // Always exclude home, 404, and now — each has a dedicated route file
-      // (src/pages/index.astro, 404.astro, now.astro) and the dedicated route
-      // wins, but the static-paths conflict triggers a build warning.
-      if (['home', '404', 'now'].includes(page.id)) {
-        return false;
-      }
-
-      // For projects and docs: only include if their features are disabled
-      // When features are enabled, the dedicated routes handle these paths
-      if (page.id === 'projects') {
-        return !siteConfig.optionalContentTypes.projects;
-      }
-
-      if (page.id === 'docs') {
-        return !siteConfig.optionalContentTypes.docs;
-      }
-
-      return true;
-    })
-    .map(page => ({
-      params: { slug: page.id },
-      props: { page }
-    }));
-
-  return [...pagePaths, ...specialPaths];
+  // Special pages are routed by their dedicated handlers (homepage, 404, posts/,
+  // projects/, docs/). They are NOT emitted as standalone routes by [...slug].astro
+  // since ADR-005 Phase C (2026-05-12) — the special collection only carries
+  // fragment content for those routes, never standalone URLs.
+  return pagePaths;
 };
 
 export interface Props {

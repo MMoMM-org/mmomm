@@ -131,7 +131,9 @@ export async function getHomeData(locale: Locale, currentUrl: string): Promise<H
   let HomeBlurbContent: HomeData['HomeBlurbContent'] = null;
   if (siteConfig.homeOptions.blurb.placement !== 'none') {
     try {
-      const entry = await getEntry('special', 'home');
+      // Locale-keyed lookup: each special fragment lives at
+      // src/content/special/<locale>/<name>.md (ADR-005 Phase C, 2026-05-12).
+      const entry = await getEntry('special', `${locale}/home`);
       if (entry) {
         homeBlurbContent = entry;
         const { Content } = await render(entry);

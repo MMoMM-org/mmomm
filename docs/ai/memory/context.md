@@ -1,8 +1,10 @@
 # Context — astro-mmomm
-<!-- Current sprint focus, active work, known blockers. Updated: 2026-05-11 -->
+<!-- Current sprint focus, active work, known blockers. Updated: 2026-05-12 -->
 <!-- This file is short-lived — prune entries older than 2 weeks via /memory-cleanup -->
 
 ## Active branch: `feat/astro-modular` (58 commits ahead of `main`, pushed to origin MMoMM-org/mmomm)
+
+**Phase C — special-collection bilingual + `/now/` as regular page pair** (2026-05-12): special collection now requires `lang`; 5 fragments × 2 locales live at `src/content/special/{de,en}/{home,404,posts,projects,docs}.md`. `/now/` migrated out of special into regular bilingual pages collection (`src/content/pages/{de,en}/now.md`); both copies authored in EN per user request. `src/pages/now.astro` deleted, `[...slug].astro` simplified (no longer emits standalone special routes), nav config drops `urlByLocale` for Jetzt. Build: 62 pages (was 59). Smoke-tested DE blurb "Danke fürs Lesen" on `/`, EN blurb "Thanks for Reading" on `/en/`, switcher round-trips `/now/` ↔ `/en/now/`. Caveat: 404.astro stays default-locale-only because Astro emits a single static 404.html — EN 404 content exists in `src/content/special/en/404.md` for future per-locale 404 routes if Astro grows the capability.
 
 Migrating MMoMM-org/mmomm (Hugo, live at www.mmomm.org) → Astro using the **astro-modular** theme. Branch not merged to main, not deployed anywhere. Hugo site remains production source of truth.
 

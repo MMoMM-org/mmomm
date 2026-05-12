@@ -42,7 +42,9 @@ let docsPageHideTOC = false;
 let DocsPageContent = null;
 
 try {
-  docsPageContent = await getEntry('special', 'docs');
+  // Docs index is default-locale-only today (no [locale]/docs route).
+  // Locale-keyed lookup matches ADR-005 Phase C special-fragment layout (2026-05-12).
+  docsPageContent = await getEntry('special', `${DEFAULT_LOCALE}/docs`);
   if (docsPageContent) {
     const { Content } = await render(docsPageContent);
     DocsPageContent = Content;

@@ -331,15 +331,14 @@ export const siteConfig: SiteConfig = {
     // title acts as the canonical (default-locale) label and as fallback if i18nKey is unknown.
     // urlByLocale overrides the URL per-locale when slugs differ across locales
     // (per ADR-005 Decision 4 + bilingual page slugs from ADR-004).
-    // The "Jetzt" item is locale-neutral: /now/ is served from the special collection
-    // via src/pages/now.astro; urlByLocale pins both locales to the same URL to
-    // defeat the EN /en/ prefix.
+    // /now/ is a regular bilingual page pair (src/content/pages/{de,en}/now.md)
+    // since ADR-005 Phase C (2026-05-12); same slug both locales so no urlByLocale.
     // Comments must live ABOVE `pages:` (not inside the array) so the
     // astro-modular-settings plugin's in-place serializer preserves them.
     pages: [
       { title: "Beiträge", i18nKey: "nav.posts", url: "/posts/" },
       { title: "Videos", i18nKey: "nav.videos", url: "/videos/" },
-      { title: "Jetzt", i18nKey: "nav.now", url: "/now/", urlByLocale: { de: "/now/", en: "/now/" } },
+      { title: "Jetzt", i18nKey: "nav.now", url: "/now/" },
       { title: "Über mich", i18nKey: "nav.about", url: "/ueber-mich/", urlByLocale: { en: "/en/about/" } },
       { title: "GitHub", url: "https://github.com/MMoMM-org", icon: "github", external: true }
     ],
