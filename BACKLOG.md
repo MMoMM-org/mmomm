@@ -67,12 +67,28 @@ These are the items between "Astro rebuild works locally" and "www.mmomm.org ser
 - Theming + header + BRAT-fork-release work from 2026-05-12 is not summarised — only the Phase C section is up to date.
 - Run `/memory-cleanup` (or do it manually) to fold heavy entries into the archive and bring the rollup current.
 
-### 9. Theme-fork drift on non-Header.astro files
+### 9. `obsidian-buttons` posts: nested triple-backtick fences confuse markdown parser
+- `src/content/posts/de/obsidian-buttons/index.md` and the EN counterpart use a nested-fence pattern to display Obsidian button-syntax literally:
+  ````
+  ```
+  ```button
+  name Foo
+  ```
+  ```
+  ````
+- CommonMark closes the OUTER fence on the FIRST `` ``` `` it sees with no info string, then re-opens on the next bare `` ``` ``. The pattern ends up unbalanced and from roughly the first nested-fence block onward, much of the body is treated as code.
+- Visible symptom: 342× `<span class="line">` (Shiki) vs 41× `<p>` in `dist/posts/obsidian-buttons/index.html`. Wikilinks and other inline syntax in the affected paragraphs render as literal text instead of resolved markup.
+- Two fix paths:
+  1. Rewrite the nested-fence sample blocks with 4-backtick outer fences (`` ```` ``) so the 3-backtick inner content is unambiguously literal. Mechanical, content-only.
+  2. Replace the displayed-code samples with image attachments or a different syntax-display approach.
+- Not blocking — the post is still readable, just visually plain. Tracked here so we don't forget when refining content quality.
+
+### 10. Theme-fork drift on non-Header.astro files
 - The 2026-05-12 fork-sync passes brought 5 + 5 theme files to current site state, but other theme files may have accumulated unmirrored edits (any file under `src/components/`, `src/layouts/`, `src/utils/`, `src/pages/` that was touched during Phase 2b / Track A/B/C / UI strings work and never `cp`'d up to `astro-modular-mmomm`).
 - Detection: `cd ../astro-modular-mmomm && git diff --stat ../astro-mmomm/<theme-paths>` per pass.
 - Practical mitigation: run a "fork-sync audit" pass whenever shipping a new theme-level feature, to keep the drift bounded. See [`docs/ai/memory/tools.md`](docs/ai/memory/tools.md) "Fork-sync workflow".
 
-### 10. Plugin fork `master` vs `feat/multi-locale-aware`
+### 11. Plugin fork `master` vs `feat/multi-locale-aware`
 - The plugin fork (`MMoMM-org/astro-modular-settings-mmomm`) ships releases from `feat/multi-locale-aware` (current state on the release `0.5.4-mmomm.1`). `master` is still an upstream mirror at `c023598`.
 - Either: (a) merge `feat/multi-locale-aware` → master so master = current shipped state, or (b) document the convention that the feature branch is the release line and master mirrors upstream.
 - Today the choice is implicit; making it explicit avoids future confusion.
@@ -81,7 +97,7 @@ These are the items between "Astro rebuild works locally" and "www.mmomm.org ser
 
 ## 👤 User-owned (not for Claude)
 
-### 11. Graph view + wikilinks cleanup
+### 12. Graph view + wikilinks cleanup
 - Original multilang punch list item (g): the graph view of the site doesn't show links between notes properly. User said "das mache ich wenn du fertig bist".
 
 ---
