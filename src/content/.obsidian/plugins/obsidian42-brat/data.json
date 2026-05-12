@@ -9,7 +9,6 @@
     "davidvkimball/obsidian-ui-tweaker",
     "davidvkimball/obsidian-vault-cms",
     "davidvkimball/obsidian-bases-cms",
-    "davidvkimball/obsidian-astro-modular-settings",
     "davidvkimball/obsidian-oxygen-settings",
     "davidvkimball/obsidian-seo",
     "davidvkimball/obsidian-astro-composer"
@@ -49,10 +48,6 @@
     },
     {
       "repo": "davidvkimball/obsidian-bases-cms",
-      "version": "latest"
-    },
-    {
-      "repo": "davidvkimball/obsidian-astro-modular-settings",
       "version": "latest"
     },
     {
