@@ -4,12 +4,12 @@
 > Budget: ≤ 200 lines. Archive entries when stale. Run /memory-sync to check.
 
 ## Files
-- [general.md](general.md) — conventions, style, naming [updated: 2026-05-12 (Phase C: special-collection rule)]
+- [general.md](general.md) — conventions, style, naming [updated: 2026-05-12 (entry.id URL gotcha + wikilink path form)]
 - [tools.md](tools.md) — CI, build, local dev [updated: 2026-05-11]
 - [domain.md](domain.md) — business rules, data models [updated: 2026-05-09]
 - [decisions.md](decisions.md) — architecture choices [updated: 2026-05-12 (Phase C)]
 - [context.md](context.md) — current focus [updated: 2026-05-12 (Phase C)]
-- [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-11 (migrate-from-hugo bug)]
+- [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-12 (slug-lang-map locale-blind)]
 
 ## Archive
 <!-- Archived entries live in archive/YYYY-MM/. Not loaded at session start. -->

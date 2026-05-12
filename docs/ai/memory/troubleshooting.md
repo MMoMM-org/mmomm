@@ -1,7 +1,11 @@
 # Troubleshooting — astro-mmomm
-<!-- Known issues and proven fixes. Updated: 2026-05-12 (obsidian-comments multi-node bug) -->
+<!-- Known issues and proven fixes. Updated: 2026-05-12 (slug-lang-map locale-blind) -->
 <!-- Format: ## [Issue title] — Status: open/resolved — [fix description] -->
 <!-- Resolved entries are archived by /memory-cleanup, not deleted -->
+
+## `getSlugLangMap()` in internallinks.ts is locale-blind on duplicate slugs — Status: known-behaviour
+<!-- 2026-05-12 — discovered while fixing cross-locale wikilink resolution -->
+`buildSlugLangMap()` in `src/utils/internallinks.ts` walks `src/content/posts/`, strips the `de/`/`en/` prefix from each path, and writes `map.set(bareSlug, lang)`. For slugs that exist in both languages (e.g. `miyo-ace` lives at both `posts/de/miyo-ace/` and `posts/en/miyo-ace/`), the second `set()` call overwrites the first — last-write-wins by `readdirSync` order, which is alphabetical on macOS so `en` typically wins. Consequence: `resolveLocaleAwarePostUrl('miyo-ace')` returns the EN URL even when the call originates from a DE post. **Symptom**: cross-post wikilinks render to `/en/posts/<slug>` from DE pages (or vice versa). **Workaround in place** (commit `4eb89eb`): the resolver trusts an explicit locale prefix in the input (`de/miyo-ace/index` → `/posts/miyo-ace`), and the second-pass resolver in `remarkStandardLinks` skips already-resolved URLs (those without a `/` left after stripping `/posts/`). Both make the locale-blind map's wrong answers unreachable for path-prefixed wikilinks. **Real fix** (not done): change the map to key on `<lang>/<slug>` so both locales coexist, and have callers without an explicit locale fall back to the post-cache lookup or a "guess from current page" heuristic. Worth doing before any feature relies on bare-slug wikilinks (`[[miyo-ace]]`) round-tripping correctly across locales.
 
 ## `remark-obsidian-comments` doesn't strip `%%...%%` when comment contains inline code — Status: workaround (theme-fork fix backlog'd)
 <!-- 2026-05-12 — discovered while debugging DE homepage rendering -->
