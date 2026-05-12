@@ -7,6 +7,7 @@ import DocumentationCard from '@/components/DocumentationCard.astro';
 import Icon from '@/components/Icon.astro';
 import { optimizePostImagePath } from '@/utils/images';
 import { getHomeData } from '@/utils/home';
+import { t } from '@/i18n/strings';
 
 const locale = 'de' as const;
 const isDev = import.meta.env.DEV;
@@ -81,7 +82,7 @@ const {
             <section class="mb-12">
               <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                  {siteConfig.homeOptions.featuredPost.type === "latest" ? "Latest Post" : "Featured Post"}
+                  {siteConfig.homeOptions.featuredPost.type === "latest" ? t(locale, 'home.latestPost') : t(locale, 'home.featuredPost')}
                 </h2>
               </div>
 
@@ -95,13 +96,13 @@ const {
               {!useSpecialTreatment && (
                 <div class="flex items-center justify-between mb-6">
                   <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                    Recent Posts
+                    {t(locale, 'home.recentPosts')}
                   </h2>
                   <a
                     href="/posts"
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all posts →
+                    {t(locale, 'home.viewAllPosts')}
                   </a>
                 </div>
               )}
@@ -118,7 +119,7 @@ const {
                     href="/posts"
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all posts →
+                    {t(locale, 'home.viewAllPosts')}
                   </a>
                 </div>
               )}
@@ -131,13 +132,13 @@ const {
               {!useSpecialTreatment && (
                 <div class="flex items-center justify-between mb-6">
                   <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                    Projects
+                    {t(locale, 'home.projects')}
                   </h2>
                   <a
                     href="/projects"
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all projects →
+                    {t(locale, 'home.viewAllProjects')}
                   </a>
                 </div>
               )}
@@ -154,7 +155,7 @@ const {
                     href="/projects"
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all projects →
+                    {t(locale, 'home.viewAllProjects')}
                   </a>
                 </div>
               )}
@@ -167,13 +168,13 @@ const {
               {!useSpecialTreatment && (
                 <div class="flex items-center justify-between mb-6">
                   <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                    Documentation
+                    {t(locale, 'home.documentation')}
                   </h2>
                   <a
                     href="/docs"
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all docs →
+                    {t(locale, 'home.viewAllDocs')}
                   </a>
                 </div>
               )}
@@ -190,7 +191,7 @@ const {
                     href="/docs"
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all docs →
+                    {t(locale, 'home.viewAllDocs')}
                   </a>
                 </div>
               )}
@@ -211,10 +212,10 @@ const {
           <div class="max-w-md mx-auto">
             <Icon name="file-text" class="w-16 h-16 text-primary-400 dark:text-primary-500 mx-auto mb-6" />
             <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-4">
-              No Posts Yet
+              {t(locale, 'home.noPostsYet')}
             </h2>
             <p class="text-primary-600 dark:text-primary-300 mb-8">
-              This blog is just getting started. Check back soon for new content!
+              {t(locale, 'home.noPostsBody')}
             </p>
             {isDev && (
               <div class="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">

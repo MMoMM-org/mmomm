@@ -9,6 +9,7 @@ import Icon from '@/components/Icon.astro';
 import { optimizePostImagePath } from '@/utils/images';
 import { getHomeData } from '@/utils/home';
 import { LOCALES, DEFAULT_LOCALE, type Locale, localePrefix } from '@/utils/i18n';
+import { t } from '@/i18n/strings';
 
 // ADR-005 Phase 2: parameterised homepage for non-default locales.
 // Default-locale homepage lives at src/pages/index.astro (no prefix per
@@ -87,7 +88,7 @@ const {
             <section class="mb-12">
               <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                  {siteConfig.homeOptions.featuredPost.type === "latest" ? "Latest Post" : "Featured Post"}
+                  {siteConfig.homeOptions.featuredPost.type === "latest" ? t(locale, 'home.latestPost') : t(locale, 'home.featuredPost')}
                 </h2>
               </div>
 
@@ -100,13 +101,13 @@ const {
               {!useSpecialTreatment && (
                 <div class="flex items-center justify-between mb-6">
                   <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                    Recent Posts
+                    {t(locale, 'home.recentPosts')}
                   </h2>
                   <a
                     href={`${prefix}/posts`}
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all posts →
+                    {t(locale, 'home.viewAllPosts')}
                   </a>
                 </div>
               )}
@@ -123,7 +124,7 @@ const {
                     href={`${prefix}/posts`}
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all posts →
+                    {t(locale, 'home.viewAllPosts')}
                   </a>
                 </div>
               )}
@@ -135,13 +136,13 @@ const {
               {!useSpecialTreatment && (
                 <div class="flex items-center justify-between mb-6">
                   <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                    Projects
+                    {t(locale, 'home.projects')}
                   </h2>
                   <a
-                    href="/projects"
+                    href={`${prefix}/projects`}
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all projects →
+                    {t(locale, 'home.viewAllProjects')}
                   </a>
                 </div>
               )}
@@ -155,10 +156,10 @@ const {
               {useSpecialTreatment && (
                 <div class="mt-8 text-center">
                   <a
-                    href="/projects"
+                    href={`${prefix}/projects`}
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all projects →
+                    {t(locale, 'home.viewAllProjects')}
                   </a>
                 </div>
               )}
@@ -170,13 +171,13 @@ const {
               {!useSpecialTreatment && (
                 <div class="flex items-center justify-between mb-6">
                   <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-50">
-                    Documentation
+                    {t(locale, 'home.documentation')}
                   </h2>
                   <a
-                    href="/docs"
+                    href={`${prefix}/docs`}
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all docs →
+                    {t(locale, 'home.viewAllDocs')}
                   </a>
                 </div>
               )}
@@ -190,10 +191,10 @@ const {
               {useSpecialTreatment && (
                 <div class="mt-8 text-center">
                   <a
-                    href="/docs"
+                    href={`${prefix}/docs`}
                     class="text-primary-600 dark:text-primary-300 hover:text-highlight-600 dark:hover:text-highlight-400 font-medium transition-colors"
                   >
-                    View all docs →
+                    {t(locale, 'home.viewAllDocs')}
                   </a>
                 </div>
               )}
@@ -212,10 +213,10 @@ const {
           <div class="max-w-md mx-auto">
             <Icon name="file-text" class="w-16 h-16 text-primary-400 dark:text-primary-500 mx-auto mb-6" />
             <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-4">
-              No Posts Yet
+              {t(locale, 'home.noPostsYet')}
             </h2>
             <p class="text-primary-600 dark:text-primary-300 mb-8">
-              This blog is just getting started. Check back soon for new content!
+              {t(locale, 'home.noPostsBody')}
             </p>
             {isDev && (
               <div class="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">

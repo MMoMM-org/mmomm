@@ -23,6 +23,16 @@ type StringMap = {
   'nav.about': string;
   'nav.impressum': string;
   'nav.privacy': string;
+  'home.latestPost': string;
+  'home.featuredPost': string;
+  'home.recentPosts': string;
+  'home.viewAllPosts': string;
+  'home.projects': string;
+  'home.viewAllProjects': string;
+  'home.documentation': string;
+  'home.viewAllDocs': string;
+  'home.noPostsYet': string;
+  'home.noPostsBody': string;
 };
 
 const strings: Record<Locale, StringMap> = {
@@ -49,6 +59,16 @@ const strings: Record<Locale, StringMap> = {
     'nav.about': 'Über mich',
     'nav.impressum': 'Impressum',
     'nav.privacy': 'Datenschutz',
+    'home.latestPost': 'Aktuellster Beitrag',
+    'home.featuredPost': 'Ausgewählter Beitrag',
+    'home.recentPosts': 'Aktuelle Beiträge',
+    'home.viewAllPosts': 'Alle Beiträge ansehen →',
+    'home.projects': 'Projekte',
+    'home.viewAllProjects': 'Alle Projekte ansehen →',
+    'home.documentation': 'Dokumentation',
+    'home.viewAllDocs': 'Alle Docs ansehen →',
+    'home.noPostsYet': 'Noch keine Beiträge',
+    'home.noPostsBody': 'Dieser Blog beginnt gerade erst. Schau bald für neue Inhalte vorbei!',
   },
   en: {
     'linkedMentions.title': 'Linked Mentions',
@@ -73,6 +93,16 @@ const strings: Record<Locale, StringMap> = {
     'nav.about': 'About',
     'nav.impressum': 'Impressum',
     'nav.privacy': 'Privacy Policy',
+    'home.latestPost': 'Latest Post',
+    'home.featuredPost': 'Featured Post',
+    'home.recentPosts': 'Recent Posts',
+    'home.viewAllPosts': 'View all posts →',
+    'home.projects': 'Projects',
+    'home.viewAllProjects': 'View all projects →',
+    'home.documentation': 'Documentation',
+    'home.viewAllDocs': 'View all docs →',
+    'home.noPostsYet': 'No Posts Yet',
+    'home.noPostsBody': 'This blog is just getting started. Check back soon for new content!',
   },
 };
 
