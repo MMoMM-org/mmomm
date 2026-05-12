@@ -11,7 +11,8 @@
     "davidvkimball/obsidian-bases-cms",
     "davidvkimball/obsidian-oxygen-settings",
     "davidvkimball/obsidian-seo",
-    "davidvkimball/obsidian-astro-composer"
+    "davidvkimball/obsidian-astro-composer",
+    "MMoMM-org/astro-modular-settings-mmomm"
   ],
   "pluginSubListFrozenVersion": [
     {
@@ -60,6 +61,10 @@
     },
     {
       "repo": "davidvkimball/obsidian-astro-composer",
+      "version": "latest"
+    },
+    {
+      "repo": "MMoMM-org/astro-modular-settings-mmomm",
       "version": "latest"
     }
   ],
