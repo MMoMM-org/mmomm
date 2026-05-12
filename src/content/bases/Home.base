@@ -4,9 +4,9 @@ filters:
 formulas:
   Slug: |
     (
-      if(file.folder == "posts", "/posts/" + file.name.replace(".md", ""), 
-        if(file.folder == "projects", "/projects/" + file.name.replace(".md", ""), 
-          if(file.folder == "docs", "/docs/" + file.name.replace(".md", ""), 
+      if(file.folder == "posts", "/posts/" + file.name.replace(".md", ""),
+        if(file.folder == "projects", "/projects/" + file.name.replace(".md", ""),
+          if(file.folder == "docs", "/docs/" + file.name.replace(".md", ""),
             ("/" + file.folder + "/" + file.name.replace(".md", "")).replace("/pages/index", "/").replace("/pages/", "/").replace("/special/index", "/").replace("/special/", "/").replace("/home", "/").replace("/index", "")
           )
         )
@@ -26,6 +26,12 @@ formulas:
         "root"
       )
     )
+  Locale: |-
+    if(note.lang == "de", "🇩🇪 DE",
+      if(note.lang == "en", "🇬🇧 EN",
+        "❓ no lang"
+      )
+    )
 properties:
   note.title:
     displayName: Title
@@ -37,6 +43,12 @@ properties:
     displayName: Path
   note.draft:
     displayName: Draft
+  note.lang:
+    displayName: Lang
+  note.translationKey:
+    displayName: Translation Key
+  formula.Locale:
+    displayName: Locale
 views:
   - type: cms
     name: Posts
@@ -218,6 +230,39 @@ views:
     tagsProperty: note.tags
     customizeNewButton: true
     newNoteLocation: ""
+    cardSize: 250
+    imageAspectRatio: 0.55
+    maxTagsToShow: 2
+    hideQuickEditIcon: true
+  - type: cms
+    name: 🔴 Translation gaps
+    filters:
+      and:
+        - file.folder.startsWith("posts") || file.folder.startsWith("pages")
+        - note.translationKey == "" || note.translationKey == null
+    sort:
+      - property: lang
+        direction: ASC
+      - property: title
+        direction: ASC
+    imageProperty: note.image
+    fallbackToEmbeds: if-empty
+    propertyDisplay1: formula.Locale
+    propertyDisplay2: formula.Slug
+    showTextPreview: true
+    imageFormat: thumbnail
+    showDate: true
+    showDraftStatus: true
+    propertyLabels: above
+    titleProperty: note.title
+    dateProperty: note.date
+    draftStatusProperty: note.draft
+    descriptionProperty: note.description
+    propertyLayout12SideBySide: true
+    propertyLayout34SideBySide: false
+    showTags: false
+    tagsProperty: note.tags
+    customizeNewButton: false
     cardSize: 250
     imageAspectRatio: 0.55
     maxTagsToShow: 2
