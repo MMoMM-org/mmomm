@@ -1,0 +1,149 @@
+filters:
+  and:
+    - file.ext == "md"
+    - file.folder.startsWith("posts") || file.folder.startsWith("pages")
+formulas:
+  Translation Key or Missing: |-
+    if(note.translationKey == "",
+      "🔴 MISSING translation key — link this to its counterpart",
+      if(note.translationKey == null,
+        "🔴 MISSING translation key — link this to its counterpart",
+        note.translationKey
+      )
+    )
+  Locale: |-
+    if(note.lang == "de", "🇩🇪 DE",
+      if(note.lang == "en", "🇬🇧 EN",
+        "❓ no lang"
+      )
+    )
+  Slug: |
+    (
+      if(file.folder.startsWith("posts/de"), "/posts/" + file.name.replace(".md", ""),
+        if(file.folder.startsWith("posts/en"), "/en/posts/" + file.name.replace(".md", ""),
+          if(file.folder.startsWith("pages/de"), "/" + file.name.replace(".md", ""),
+            if(file.folder.startsWith("pages/en"), "/en/" + file.name.replace(".md", ""),
+              "/" + file.folder + "/" + file.name.replace(".md", "")
+            )
+          )
+        )
+      ) + "/"
+    ).replace("//", "/").replace("/index/", "/")
+properties:
+  note.title:
+    displayName: Title
+  note.lang:
+    displayName: Lang
+  note.translationKey:
+    displayName: Translation Key
+  formula.Translation Key or Missing:
+    displayName: Translation Pair
+  formula.Locale:
+    displayName: Locale
+  formula.Slug:
+    displayName: URL
+  note.draft:
+    displayName: Draft
+views:
+  - type: cms
+    name: Posts — Translation Pairs
+    filters:
+      and:
+        - file.folder.startsWith("posts")
+    groupBy:
+      property: formula.Translation Key or Missing
+      direction: ASC
+    sort:
+      - property: lang
+        direction: ASC
+      - property: title
+        direction: ASC
+    imageProperty: note.image
+    fallbackToEmbeds: if-empty
+    propertyDisplay1: formula.Locale
+    propertyDisplay2: formula.Slug
+    showTextPreview: true
+    imageFormat: thumbnail
+    showDate: true
+    showDraftStatus: true
+    propertyLabels: above
+    titleProperty: note.title
+    dateProperty: note.date
+    draftStatusProperty: note.draft
+    descriptionProperty: note.description
+    propertyLayout12SideBySide: true
+    propertyLayout34SideBySide: false
+    showTags: true
+    tagsProperty: note.tags
+    customizeNewButton: false
+    newNoteLocation: posts
+    cardSize: 250
+    imageAspectRatio: 0.55
+    maxTagsToShow: 2
+    dateIncludeTime: false
+    fallbackToContent: false
+    draftStatusReverse: false
+  - type: cms
+    name: Pages — Translation Pairs
+    filters:
+      and:
+        - file.folder.startsWith("pages")
+    groupBy:
+      property: formula.Translation Key or Missing
+      direction: ASC
+    sort:
+      - property: lang
+        direction: ASC
+      - property: title
+        direction: ASC
+    imageProperty: note.image
+    fallbackToEmbeds: if-empty
+    propertyDisplay1: formula.Locale
+    propertyDisplay2: formula.Slug
+    showTextPreview: true
+    imageFormat: thumbnail
+    showDate: false
+    showDraftStatus: true
+    propertyLabels: above
+    titleProperty: note.title
+    descriptionProperty: note.description
+    propertyLayout12SideBySide: true
+    propertyLayout34SideBySide: false
+    showTags: false
+    tagsProperty: note.tags
+    customizeNewButton: false
+    newNoteLocation: pages
+    cardSize: 250
+    imageAspectRatio: 0.55
+    maxTagsToShow: 2
+    draftStatusReverse: false
+  - type: cms
+    name: 🔴 Missing translation key (posts + pages)
+    filters:
+      and:
+        - file.folder.startsWith("posts") || file.folder.startsWith("pages")
+        - note.translationKey == "" || note.translationKey == null
+    sort:
+      - property: lang
+        direction: ASC
+      - property: title
+        direction: ASC
+    imageProperty: note.image
+    fallbackToEmbeds: if-empty
+    propertyDisplay1: formula.Locale
+    propertyDisplay2: formula.Slug
+    showTextPreview: true
+    imageFormat: thumbnail
+    showDate: true
+    showDraftStatus: true
+    propertyLabels: above
+    titleProperty: note.title
+    dateProperty: note.date
+    draftStatusProperty: note.draft
+    descriptionProperty: note.description
+    propertyLayout12SideBySide: true
+    showTags: false
+    customizeNewButton: false
+    cardSize: 250
+    imageAspectRatio: 0.55
+    maxTagsToShow: 2
