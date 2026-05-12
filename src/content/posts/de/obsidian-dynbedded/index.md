@@ -71,39 +71,39 @@ Und wie kann man Dynbedded nutzen?
 
 Für die einfachen Embedded reicht ein CodeBlock (z.b. Dataview)
 
-```
+````
 ```dynbedded
 [[Titel der Notiz]]
 ```
-```
+````
 
 Wenn man nur einen Teil einer Notiz einbinden will (z.b. Buttons - Heute):
 
-```
+````
 ```dynbedded
 [[Titel der Notiz#Teil]]
 ```
-```
+````
 
 ### Relative Datum Notizen
 
 Für HEUTE ist die Nutzung einfach, es reicht das angeben des Formates [basierend auf Moment.js Datum Format](https://momentjs.com/docs/#/displaying/format/).
 
-```
+````
 ```dynbedded
 [[{{YYYY-MM-DD}}]]
 ```
-```
+````
 
 Man gibt den kompletten Notiznamen innerhalb der {{}} an.
 
 Wenn man also Notizen hat die nicht nur ein Datum haben, muss man diese zusätzlichen Informationen auch mit angeben.
 
-```
+````
 ```dynbedded
 [[{{[DP-]YYYY-MM-DD}}]]
 ```
-```
+````
 
 Der Teil der Notiz die also statisch ist wird in [] gepackt.
 
@@ -121,19 +121,19 @@ Zuerst nutzt man ein P und dann entsprechend die Zeitdifferenz die man abziehen 
 
 Wenn ihr also euch eine Notiz von vor 7 Tagen anzeigen lassen wollt könnt ihr sowohl
 
-```
+````
 ```Dynbedded
 {{YYYY-MM-DD|P-1W}}
 ```
-```
+````
 
 oder auch
 
-```
+````
 ```dynbedded
 {{YYYY-MM-DD|P-7D}}
 ```
-```
+````
 
 nutzen.
 

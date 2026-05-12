@@ -78,26 +78,26 @@ Let's take a closer look:
 
 ### Command Button
 
-```
+````
 ```button
 name Open Previous Daily Note
 type command
 action Periodic Notes: Open previous daily note
 ```
-```
+````
 
 This button will open yesterday's daily note, if you have the Periodic Notes Plugin installed.
 
 And
 
-```
+````
 ```button
 name Open Previous Daily Note
 type command
 action Periodic Notes: Open previous daily note
 color blue
 ```
-```
+````
 
 gives you the same button in blue.
 
@@ -105,13 +105,13 @@ If you add a **^button-previous** under the codeblock you will have a Button-ID.
 
 ### Link Button
 
-```
+````
 ```button
 name To the Forum Batman!
 type link
 action https://forum.obsidian.md/
 ```
-```
+````
 
 This codeblock will create a button which opens an URL. But "action" in this case can open any URL or URI, so for example also "obsidian://open?vault=Test&file=TestFile"
 
@@ -124,13 +124,13 @@ So let's get more complicated. Above examples where quite easy but the calculate
 
 A simple example for starters:
 
-```
+````
 ```button
 name Add Em Up
 type calculate
 action 2+2
 ```
-```
+````
 
 creates a:
 
@@ -215,47 +215,47 @@ You have the following capabilities:
 
 An example for appending text:
 
-```
+````
 ```button
 name Log
 type append text
 action Text goes here
 ```
-```
+````
 
 and for the template:
 
-```
+````
 ```button
 name Log
 type append template
 action Hourly Log Template Note
 ```
-```
+````
 
 The template which is being used is called "Hourly Log Template Note".
 
 Add at Line is similar:
 
-```
+````
 ```button
 name Current Weather
 type line(1) template
 action Weather Template Note
 ```
-```
+````
 
 This will add the "Weather Template Note" template at the first line
 
 And if you want to create a new note you can also use split:
 
-```
+````
 ```button
 name New Meeting
 type note(Meeting, split) note
 action Meeting Note Template
 ```
-```
+````
 
 This creates a new note (called Meeting) in the area right of your current note.
 
@@ -359,25 +359,25 @@ into the button code block you can use templater functions.
 
 From
 
-```
+````
 ```button
 name Make an Hourly Note
 type note(<% tp.date.now("HH[_]MM") %>) template
 action Log Template Note
 templater true
 ```
-```
+````
 
 you will get if you click on the button at 16:20
 
-```
+````
 ```button
 name Make an Hourly Note
 type note(16_20) template
 action Log Template Note
 templater true
 ```
-```
+````
 
 and afterwards it reverts back again
 
@@ -427,13 +427,13 @@ I already talked about the Buttons for Todoist in [[obsidian-todoist|Obsidian: T
 
 In my repeating meetings I have a button which appends a template below the button with all the necessary entries for the next meeting.
 
-```
+````
 ```button
 name New Running Log Section
 type append template
 action i_repeatingMeeting
 ```
-```
+````
 
 There are more tips at the end….
 
@@ -476,11 +476,11 @@ BUT.... if you use Dynbedded you can also use this approach in Preview mode
 - Add above line and at least an empty line
 - Create a Dynbedded codeblock in your other note
 
-```
+````
 ```dynbedded
 [[40-06 Buttons#OneToThree]]
 ```
-```
+````
 
 Now your inline Buttons are working in Editing / PreView Mode.
 

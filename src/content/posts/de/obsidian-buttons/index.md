@@ -76,26 +76,26 @@ Schauen wir uns doch mal die einzelnen Möglichkeiten genauer an:
 
 ### Command Button
 
-```
+````
 ```button
 name Open Previous Daily Note
 type command
 action Periodic Notes: Open previous daily note
 ```
-```
+````
 
 Dieser Button öffnet die tägliche Notiz von gestern, wenn man das Periodic Notes Plugin installiert hat.
 
 Und
 
-```
+````
 ```button
 name Open Previous Daily Note
 type command
 action Periodic Notes: Open previous daily note
 color blue
 ```
-```
+````
 
 macht den Button blau.
 
@@ -103,13 +103,13 @@ Hängt man ein **^button-previous** unter den Codeblock hat man jetzt auch noch 
 
 ### Link Button
 
-```
+````
 ```button
 name To the Forum Batman!
 type link
 action https://forum.obsidian.md/
 ```
-```
+````
 
 Dieser Codeblock erzeugt einen Button der eine URL öffnet. Aber im Endeffekt kann die "action" jede beliebige URL oder URI aufrufen, also auch z.B. "obsidian://open?vault=Test&file=TestFile"
 
@@ -122,13 +122,13 @@ Und nun wird es ein wenig komplizierter. Die Beispiele oben waren ja noch recht 
 
 Zuerst einmal ein einfaches Beispiel:
 
-```
+````
 ```button
 name Add Em Up
 type calculate
 action 2+2
 ```
-```
+````
 
 erzeugt ein:
 
@@ -213,47 +213,47 @@ Euch stehen die folgenden Möglichkeiten zur Verfügung:
 
 Hier mal das Beispiel für Append für Text:
 
-```
+````
 ```button
 name Log
 type append text
 action Text goes here
 ```
-```
+````
 
 und für Template:
 
-```
+````
 ```button
 name Log
 type append template
 action Hourly Log Template Note
 ```
-```
+````
 
 Das Template welches benutzt wird heißt "Hourly Log Template Note".
 
 Add at Line ist ähnlich:
 
-```
+````
 ```button
 name Current Weather
 type line(1) template
 action Weather Template Note
 ```
-```
+````
 
 Hier wird in der ersten Zeile das "Weather Template Note" eingefügt.
 
 Und bei der neuen Notiz gibt es den Parameter split:
 
-```
+````
 ```button
 name New Meeting
 type note(Meeting, split) note
 action Meeting Note Template
 ```
-```
+````
 
 Dieses erzeugt die neue Notiz in einem neuen Bereich rechts von der Notiz.
 
@@ -359,25 +359,25 @@ in einen Button einfügt, könnt ihr Templater Funktionen nutzen.
 
 Aus
 
-```
+````
 ```button
 name Make an Hourly Note
 type note(<% tp.date.now("HH[_]MM") %>) template
 action Log Template Note
 templater true
 ```
-```
+````
 
 wird dann um 16:20 wenn ihr drauf clicked
 
-```
+````
 ```button
 name Make an Hourly Note
 type note(16_20) template
 action Log Template Note
 templater true
 ```
-```
+````
 
 und nach dem Click ist er wieder wie er vorher war.
 
@@ -424,13 +424,13 @@ Die Todoist Buttons habe ich ja schon in [[obsidian-todoist|Obsidian: Todoist]] 
 
 In meinen wiederkehrenden Meetings habe ich z.B. einen Button der ein Template in die Notiz einfügt mit den notwendigen Einträgen.
 
-```
+````
 ```button
 name New Running Log Section
 type append template
 action i_repeatingMeeting
 ```
-```
+````
 
 Später gibt es noch ein paar Tips….
 
@@ -473,11 +473,11 @@ ABER.... wenn ihr Dynbedded nutzt geht es auch im Preview Modus.
 - oben beschriebene Zeile einfügen danach mindestens eine Leerzeile
 - In anderer Notiz einen Dynbedded Codeblock erstellen
 
-```
+````
 ```dynbedded
 [[40-06 Buttons#EinsBisDrei]]
 ```
-```
+````
 
 Und dann funktionieren Inline Button auch im Lesemodus.
 

@@ -70,14 +70,14 @@ The Todoist Sync plugin has 2 functionalities:
 
 You display tasks with the help of a codeblock:
 
-```
+````
 ```todoist
 {
 "name": "All Tasks",
 "filter": "today | overdue"
 }
 ```
-```
+````
 
 You can modify this one quite a lot:
 
@@ -143,25 +143,25 @@ As we are talking about how to use Todoist with Obsidian let's take a look at a 
 
 For example you can create a new task:
 
-```
+````
 ```button
 name Create New Todoist Task
 type link
 class obsidian-button
 action todoist://addtask
 ```
-```
+````
 
 Or you can open a specific project:
 
-```
+````
 ```button
 name Open Todoist Privat Project
 type link
 class obsidian-button
 action todoist://project?id=2303822263
 ```
-```
+````
 
 The project ID which is needed for this can be found via the Todoist webpage. After selecting a project the project ID is in the URL.
 

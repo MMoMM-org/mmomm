@@ -71,39 +71,39 @@ What does it take to use Dynbedded?
 
 For an easy embedded a codeblock is sufficient. (e.g. Dataview)
 
-```
+````
 ```dynbedded
 [[Title of Note]]
 ```
-```
+````
 
 If you want to display only part of the note (z.B. Buttons- Today):
 
-```
+````
 ```dynbedded
 [[Title of Note#Header]]
 ```
-```
+````
 
 ### Date Substitution
 
 The usage for TODAY is quite simple, you only need to specify the format [based on Moment.js date format](https://momentjs.com/docs/#/displaying/format/).
 
-```
+````
 ```dynbedded
 [[{{YYYY-MM-DD}}]]
 ```
-```
+````
 
 You just need to specify the full note name inside the {{}}.
 
 If you have a notename which doesn't only consist of a date, you need to specify this additional information too.
 
-```
+````
 ```dynbedded
 [[{{[DP-]YYYY-MM-DD}}]]
 ```
-```
+````
 
 The other part of the name needs to be put into [].
 
@@ -123,19 +123,19 @@ First you use a P and afterward the difference of time you want to subtract or a
 
 If you want to show a note from 7 days ago you are either able to use:
 
-```
+````
 ```Dynbedded
 {{YYYY-MM-DD|P-1W}}
 ```
-```
+````
 
 or
 
-```
+````
 ```dynbedded
 {{YYYY-MM-DD|P-7D}}
 ```
-```
+````
 
 ## Usage Example
 
