@@ -13,12 +13,27 @@
   },
   "siteInfo": {
     "site": "https://www.mmomm.org",
-    "title": "MingleMangleOfMyMind",
-    "description": "PKM, Obsidian, MiYo, AI und anderes Gedöns",
+    "title": {
+      "de": "MingleMangleOfMyMind",
+      "en": "MingleMangleOfMyMind"
+    },
+    "description": {
+      "de": "PKM, Obsidian, MiYo, AI und anderes Gedöns",
+      "en": "PKM, Obsidian, MiYo, AI, and other oddments"
+    },
     "author": "Marcus Breiden",
     "language": "de",
     "faviconThemeAdaptive": true,
-    "defaultOgImageAlt": "MingleMangleOfMyMind logo."
+    "defaultOgImageAlt": "MingleMangleOfMyMind logo.",
+    "homepageTitle": {
+      "de": "",
+      "en": ""
+    },
+    "locales": [
+      "de",
+      "en"
+    ],
+    "defaultLocale": "de"
   },
   "layout": {
     "contentWidth": "45rem"
@@ -29,7 +44,10 @@
   },
   "footer": {
     "enabled": true,
-    "content": "© 2026 {author}. Built with <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a> (a bilingual fork of <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>).",
+    "content": {
+      "de": "© 2026 {author}. Gebaut mit <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a> (ein zweisprachiger Fork von <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>).",
+      "en": "© 2026 {author}. Built with <a href=\"https://github.com/MMoMM-org/astro-modular-mmomm\" target=\"_blank\">astro-modular-mmomm</a> (a bilingual fork of <a href=\"https://github.com/davidvkimball/astro-modular\" target=\"_blank\">Astro Modular</a>)."
+    },
     "showSocialIconsInFooter": true
   },
   "seo": {
@@ -42,24 +60,36 @@
     "pages": [
       {
         "title": "Beiträge",
+        "i18nKey": "nav.posts",
         "url": "/posts/"
       },
       {
         "title": "Videos",
+        "i18nKey": "nav.videos",
         "url": "/videos/"
       },
       {
         "title": "Jetzt",
-        "url": "/now/"
+        "i18nKey": "nav.now",
+        "url": "/now/",
+        "urlByLocale": {
+          "de": "/now/",
+          "en": "/now/"
+        }
       },
       {
         "title": "Über mich",
-        "url": "/ueber-mich/"
+        "i18nKey": "nav.about",
+        "url": "/ueber-mich/",
+        "urlByLocale": {
+          "en": "/en/about/"
+        }
       },
       {
         "title": "GitHub",
         "url": "https://github.com/MMoMM-org",
-        "icon": "github"
+        "icon": "github",
+        "external": true
       }
     ],
     "social": [
@@ -82,6 +112,21 @@
         "title": "Xing",
         "url": "https://www.xing.com/profile/Marcus_Breiden",
         "icon": "xing"
+      }
+    ],
+    "footer": [
+      {
+        "title": "Impressum",
+        "i18nKey": "nav.impressum",
+        "url": "/impressum/"
+      },
+      {
+        "title": "Datenschutz",
+        "i18nKey": "nav.privacy",
+        "url": "/datenschutz/",
+        "urlByLocale": {
+          "en": "/en/privacy-policy/"
+        }
       }
     ]
   },
