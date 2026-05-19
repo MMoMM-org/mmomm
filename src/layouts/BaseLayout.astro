@@ -84,6 +84,10 @@ if (post?.data.translationKey) {
     <link rel="alternate" hreflang={alt.hreflang} href={alt.href}>
   ))}
 
+  {/* Feed discovery — locale-aware so EN pages point at /en/rss.xml etc. */}
+  <link rel="alternate" type="application/rss+xml" title={`${lt(lang, siteConfig.title)} — RSS`} href={`${siteConfig.site}${lang === 'en' ? '/en' : ''}/rss.xml`}>
+  <link rel="alternate" type="application/atom+xml" title={`${lt(lang, siteConfig.title)} — Atom`} href={`${siteConfig.site}${lang === 'en' ? '/en' : ''}/feed.xml`}>
+
   <!-- Robots meta tag -->
   {seoData.noIndex && (
     <meta name="robots" content="noindex, nofollow">
