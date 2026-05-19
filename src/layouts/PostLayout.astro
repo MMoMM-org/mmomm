@@ -80,8 +80,10 @@ const hideTOC = post.data.hideTOC === true;
 const shouldShowTOC = !hideTOC && siteConfig.tableOfContents.enabled && headings.length > 0;
 const toc = shouldShowTOC ? await generateTOC(headings) : [];
 
-// Get adjacent posts for navigation
-const { prev: prevPost, next: nextPost } = getAdjacentPosts(visiblePosts, post.id);
+// Get adjacent posts for navigation — confined to the current post's locale so
+// older/newer links never cross from EN → DE or vice versa.
+const localeVisiblePosts = visiblePosts.filter((p) => p.data.lang === post.data.lang);
+const { prev: prevPost, next: nextPost } = getAdjacentPosts(localeVisiblePosts, post.id);
 
 // Check if current post has connections for LocalGraph
 let hasLocalGraphConnections = false;
