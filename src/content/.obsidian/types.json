@@ -7,6 +7,12 @@
     "draft": "checkbox",
     "noIndex": "checkbox",
     "featured": "checkbox",
-    "date": "date"
+    "date": "date",
+    "lt-language": "text",
+    "lt-picky": "checkbox",
+    "lt-autoCheck": "checkbox",
+    "lt-dictionary": "multitext",
+    "lt-disabledRules": "multitext",
+    "lt-disabledCategories": "multitext"
   }
 }

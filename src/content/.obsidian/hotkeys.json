@@ -286,5 +286,23 @@
       ],
       "key": "O"
     }
-  ]
+  ],
+  "file-explorer:new-file": [],
+  "astro-composer:create-content-type-posts-de-1765432337485": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "N"
+    }
+  ],
+  "astro-composer:create-content-type-posts-en-1765432337485": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "E"
+    }
+  ],
+  "markdown:toggle-preview": []
 }

@@ -158,6 +158,13 @@
       "type": "existing",
       "hidden": false,
       "mdOnly": false
+    },
+    {
+      "id": "plugin-languagetool-status-bar-item-icon-lt-status-bar-btn;1",
+      "name": "plugin-languagetool-status-bar-item-icon-lt-status",
+      "type": "existing",
+      "hidden": false,
+      "mdOnly": false
     }
   ],
   "explorerCommands": [],

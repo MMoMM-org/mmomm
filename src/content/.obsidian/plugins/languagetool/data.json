@@ -1,0 +1,18 @@
+{
+  "serverUrl": "https://api.languagetool.org",
+  "autoCheckDelay": 3000,
+  "shouldAutoCheck": false,
+  "languageVariety": {
+    "en": "en-US",
+    "de": "de-DE",
+    "pt": "pt-PT",
+    "ca": "ca-ES"
+  },
+  "dictionary": [],
+  "syncDictionary": false,
+  "remoteDictionary": [],
+  "pickyMode": false,
+  "longCheckNotification": true,
+  "injectProperties": true,
+  "motherTongue": "de"
+}
