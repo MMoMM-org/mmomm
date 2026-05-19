@@ -24,8 +24,10 @@
 
 | Path | Role |
 |---|---|
-| `src/content/posts/de/<slug>/index.md` | DE post body + frontmatter |
-| `src/content/posts/en/<slug>/index.md` | EN post body + frontmatter |
+| `src/content/posts/de/<slug>/index.md` | DE post — folder-based shape (post folder with `attachments/` sibling) |
+| `src/content/posts/de/<slug>.md` | DE post — file-based shape (single Markdown file; images go in shared `de/attachments/`) |
+| `src/content/posts/en/<slug>/index.md` | EN post — folder-based shape |
+| `src/content/posts/en/<slug>.md` | EN post — file-based shape |
 | `src/content/pages/de/<slug>.md` | DE static page (about, impressum, …) |
 | `src/content/pages/en/<slug>.md` | EN static page |
 | `src/content/special/` | Locale-neutral pages (404, home blurb, /now/) — no `lang` field |
@@ -70,6 +72,32 @@ are configured with per-locale content-types (ADR-004 Decision 1).
    header (the shared `translationKey`). Singletons mean either (a) only
    one half exists yet, or (b) a typo in one of the keys.
 
+#### File-based vs folder-based posts — pick by image count
+
+Both layouts are first-class. Pick by how many images your post will own:
+
+| Layout | When to use | Markdown lives at | Images live in |
+|---|---|---|---|
+| **Folder-based** | Post has its own ≥1 image, OR you want each post's images grouped on disk | `src/content/posts/<locale>/<slug>/index.md` | `src/content/posts/<locale>/<slug>/attachments/*` (per-post folder) |
+| **File-based** | Post has no own images, OR borrows from a shared pool | `src/content/posts/<locale>/<slug>.md` | `src/content/posts/<locale>/attachments/*` (locale-wide shared pool) |
+
+You can mix both in the same locale folder. Slugs across folder-based and file-based posts share the same namespace — pick a slug that is unique across the locale.
+
+**Wikilink form is the same for both**: `![[image.png|Alt text]]`. The image-resolver (`src/utils/internallinks.ts`) figures out where the asset lands based on the post's path on disk. No need to write `attachments/image.png` — the resolver adds the right prefix.
+
+**Sync output** (after `pnpm dev` or `pnpm build`):
+
+| Source | Synced to |
+|---|---|
+| `src/content/posts/de/<slug>/attachments/foo.png` (folder DE) | `public/posts/<slug>/foo.webp` |
+| `src/content/posts/de/attachments/foo.png` (file-based DE) | `public/posts/foo.webp` |
+| `src/content/posts/en/<slug>/attachments/foo.png` (folder EN) | `public/en/posts/<slug>/foo.webp` |
+| `src/content/posts/en/attachments/foo.png` (file-based EN) | `public/en/posts/foo.webp` |
+
+PNG/JPG/GIF/BMP/TIFF get converted to WebP (quality 85). Audio/video/PDF/SVG are copied as-is.
+
+**Gotcha — new images on a running dev server**: `scripts/sync-images.js` runs once at `pnpm dev` startup. If you add a new image (or a new EN post that references new images) while the server is running, the file won't be in `public/`. Two ways to refresh: re-run `node scripts/sync-images.js` manually, or restart `pnpm dev`. Same applies to newly-created content files (Astro 7 alpha doesn't pick them up live either).
+
 #### Slugs can differ; `translationKey` cannot
 
 The DE slug and EN slug may freely diverge — that's intentional, so each
@@ -85,6 +113,67 @@ is the whole reason `translationKey` exists.
 | `sitemap.xml` | Each member of the pair gets a `<xhtml:link rel="alternate" hreflang="…">` to the other |
 | Per-locale RSS/Atom (`/rss.xml`, `/en/rss.xml`) | Per-locale feed includes only that locale's posts |
 | Featured-post selection on homepage | If `siteConfig.homeOptions.featuredPost.slug` doesn't exist in the current locale, `findTranslation()` is queried via `translationKey` to find the locale-matched counterpart |
+
+### Frontmatter properties — what each field does
+
+The full schema is in `src/content.config.ts`. Every field listed here is parsed by Zod at content-load time — typos are surfaced as build errors, not silent fallbacks.
+
+#### Posts (`postsCollection`)
+
+| Field | Required | Type | What it does |
+|---|---|---|---|
+| `title` | yes | string | Post title. Used in `<h1>`, OG tags, RSS, sitemap, search index. Falls back to `"Untitled Post"`. |
+| `date` | yes | ISO date | Publication date. Drives sort order on list pages and feeds, and the visible "DD MMM YYYY" line in the post header. Future dates are valid but get treated as scheduled — they still render. |
+| `description` | recommended | string | Short summary. Used in the post's meta description, OG description, RSS `<description>`, and as the snippet on list cards. Empty → falls back to `"No description provided"`. |
+| `tags` | optional | string[] | Tag list. Each tag becomes a tag page at `/posts/tag/<tag>/` (DE) or `/en/posts/tag/<tag>/` (EN), and the post appears in those tag indices. Also shown as chips below the post body. |
+| `lang` | yes | `'de'` \| `'en'` | Locale. **Should match the folder** (`posts/de/*` → `lang: de`). Used by content filters (`getLocalisedPosts(locale)`) and for `<html lang>`. |
+| `translationKey` | recommended | string | Pairs this post to its translation. Two posts share the same value → they're a pair. Empty string is allowed but disables hreflang + language-switcher routing for this post. See "Author a bilingual post" above. |
+| `draft` | optional | boolean | When `true`, post is excluded from production builds (`pnpm build`). Dev server still renders drafts so you can preview them. Defaults to `false`. |
+| `image` | optional | string \| `[[wiki]]` | Cover image. Accepts a plain path (`attachments/cover.png`), a Wiki-style array (`[[cover.png]]`), or empty/null. The image-resolver routes it to `public/...` and `<PostHeader>` renders it above the body. |
+| `imageAlt` | optional | string | Alt text for the cover image. Required for accessibility if `image` is set — empty alt is treated as decorative. |
+| `imageOG` | optional | boolean | When `true`, use this cover as the post's OG image (Open Graph). When `false`/missing, the build falls back to `src/config.ts → seo.defaultOgImage`. |
+| `hideCoverImage` | optional | boolean | Render the post body without the cover image at the top (the image still drives OG/Twitter cards when `imageOG: true`). |
+| `hideTOC` / `showTOC` | optional | boolean | Force-disable or force-enable the table of contents for this post. Default behaviour follows `siteConfig.postOptions.showTableOfContents` in `src/config.ts`. `hideTOC` wins over `showTOC` if both are set. |
+| `targetKeyword` | optional | string | SEO keyword targeted by this post. Read by the SEO Obsidian plugin (audit highlights `<title>`/H1/body usage); not emitted to the page. |
+| `author` | optional | string | Per-post author override. When unset, the site default (`src/config.ts → seo.author`) is used. |
+| `noIndex` | optional | boolean | When `true`, emits `<meta name="robots" content="noindex">` and excludes the post from the sitemap. Use for unlisted/private content. |
+
+#### Static pages (`pagesCollection`)
+
+Most fields above also apply to pages. Key differences:
+
+| Field | Notes for pages |
+|---|---|
+| `date` | **Not on pages.** Pages have `lastModified` (ISO date) instead — drives "Last updated" lines and sitemap `<lastmod>`. |
+| `tags` | **Not on pages.** Pages aren't tagged. |
+| `imageOG` | **Not on pages.** Pages always use `seo.defaultOgImage` unless `image` is overridden. |
+| `targetKeyword`, `author` | **Not on pages.** |
+| `lang`, `translationKey` | Same as posts — required + recommended respectively. |
+
+#### Special pages (`specialCollection`)
+
+Single-purpose home-blurb / 404 / placeholder fragments under `src/content/special/<locale>/<name>.md`. Schema is minimal:
+
+| Field | Required | What it does |
+|---|---|---|
+| `title` | yes | Fragment title (rarely surfaces — most special fragments are body-only). |
+| `description` | optional | Used if a `<meta description>` is needed. |
+| `lang` | yes | Locale — `de` or `en`. The file id (e.g. `de/home`) is what consumers look up via `getEntry('special', \`${locale}/${name}\`)`. |
+| `hideTOC` | optional | Same as posts. |
+
+No `translationKey` here — special fragments pair by file name within their locale folder (`de/home` ↔ `en/home`).
+
+#### Quick-pick decisions
+
+| You want to … | Set |
+|---|---|
+| Hide a draft from production | `draft: true` |
+| Use a cover image | `image: "[[cover.png]]"` + `imageAlt: "Description"` |
+| Use that cover image on social shares too | also `imageOG: true` |
+| Suppress the cover image at the top but keep it for social shares | `hideCoverImage: true` + `imageOG: true` |
+| Disable the TOC for one long post | `hideTOC: true` |
+| Mark a post as not yet translated | leave `translationKey: ""` |
+| Hide from search engines and the sitemap | `noIndex: true` |
 
 ### Author a bilingual static page
 
