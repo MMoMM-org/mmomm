@@ -15,9 +15,14 @@ export interface Props {
 const { currentSlug, lang = DEFAULT_LOCALE } = Astro.props;
 const isCompact = (siteConfig.postOptions.linkedMentions as any).linkedMentionsCompact;
 
-// Get all posts and pages to find linked mentions
-const posts = await getCollection('posts');
-const pages = await getCollection('pages');
+// Get all posts and pages, then confine the linked-mentions search to the
+// current post's locale. Cross-locale backlinks (DE post pointing to EN, or
+// vice versa) would be misleading — translation pairs already link via the
+// language switcher.
+const allPosts = await getCollection('posts');
+const allPages = await getCollection('pages');
+const posts = allPosts.filter((p) => p.data.lang === lang);
+const pages = allPages.filter((p) => p.data.lang === lang);
 const linkedMentions = findLinkedMentions(posts as any[], currentSlug, posts as any[], pages as any[]);
 
 

@@ -449,8 +449,19 @@ import Icon from './Icon.astro';
         // Wait for all API calls to complete
         const [posts, pages, projects, docs] = await Promise.all(promises);
 
-        // Add items to the array
-        allItems.push(...posts, ...pages, ...projects, ...docs);
+        // Confine search results to the current page's locale (ADR-005). The
+        // JSON endpoints return all locales because they're built once and
+        // served at the root URL; deriving locale from the URL lets each
+        // locale's command palette show only its own posts/pages.
+        const currentLocale = window.location.pathname.startsWith('/en/') || window.location.pathname === '/en' ? 'en' : 'de';
+        const matchesLocale = (item: any) => !item.lang || item.lang === currentLocale;
+
+        allItems.push(
+          ...posts.filter(matchesLocale),
+          ...pages.filter(matchesLocale),
+          ...projects.filter(matchesLocale),
+          ...docs.filter(matchesLocale)
+        );
 
         this.items = allItems;
         // Don't initialize Fuse.js immediately - wait until first search

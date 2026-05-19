@@ -1,8 +1,4 @@
 ---
-import type { Post } from '@/types';
-import { getCollection } from 'astro:content';
-import { shouldShowPost } from '@/utils/markdown';
-import { siteConfig } from '@/config';
 import Icon from './Icon.astro';
 
 export interface Props {
@@ -15,14 +11,10 @@ export interface LocalGraphData {
 
 const { currentSlug } = Astro.props;
 
-// Get all posts for graph data
-const allPosts = await getCollection('posts');
-const isDev = import.meta.env.DEV;
-const visiblePosts = allPosts.filter(p => shouldShowPost(p, isDev));
-
-// Check if we should show the graph based on connections
-// This component should only be rendered when there are connections (checked in PostLayout)
-// But we'll add an additional client-side check as a safety measure
+// The graph itself is rendered client-side from `/graph/graph-data.json`
+// (built by scripts/generate-graph-data.js, which is already locale-aware
+// and tags each node with `lang`). The component is only mounted by
+// PostLayout when there are connections, so no further server-side gate.
 const shouldShowGraph = true;
 ---
 

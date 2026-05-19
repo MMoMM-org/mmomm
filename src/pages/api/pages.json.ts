@@ -19,6 +19,7 @@ export const GET: APIRoute = async () => {
       description: page.data.description || "",
       url: pageUrl(page),
       type: "page" as const,
+      lang: page.data.lang,
       lastModified: page.data.lastModified?.toISOString(),
     }));
 
