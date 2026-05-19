@@ -3,33 +3,25 @@
 > Open work items for the bilingual Astro rebuild of [www.mmomm.org](https://www.mmomm.org).
 > For day-to-day session state see [`docs/ai/memory/context.md`](docs/ai/memory/context.md).
 > For architectural decisions see [`docs/ai/memory/decisions.md`](docs/ai/memory/decisions.md) and [`docs/XDD/adr/`](docs/XDD/adr/).
-> Last reviewed: 2026-05-12.
+> Last reviewed: 2026-05-19 (post-cutover).
 
 ---
 
-## 🚀 Pre-deployment — blocking GitHub Pages go-live
+## 🟢 Post-cutover follow-ups
 
-These are the items between "Astro rebuild works locally" and "www.mmomm.org serves the rebuild".
+The Astro rebuild is now live on www.mmomm.org (cutover 2026-05-19, commit `605df51`). These are small loose ends from the switchover.
 
-### 1. GitHub Actions workflow for GH Pages deploy
-- Site config now declares `deployment.platform: "github-pages"` (`src/config.ts:263`) but no workflow file exists at `.github/workflows/`.
-- Need a `.github/workflows/deploy.yml` that runs `pnpm install && pnpm build` then publishes `dist/` to GH Pages.
-- Astro's official guide: [Deploy your Astro Site to GitHub Pages](https://docs.astro.build/en/guides/deploy/github/).
-- Decision needed: deploy from the `feat/astro-modular` feature branch directly (interim, before cutover) or wait until the merge to `main`.
+### 1. Toggle "Enforce HTTPS" in GH Pages settings *(user-only, 1 click)*
+- `https://www.mmomm.org/` and `http://www.mmomm.org/` both return 200, but `https_enforced: false` per `gh api repos/MMoMM-org/mmomm/pages`. GitHub Settings → Pages → tick "Enforce HTTPS".
+- Cert is already provisioned (Let's Encrypt via GH Pages); this just adds the HTTP→HTTPS redirect.
 
-### 2. Cutover plan — `feat/astro-modular` → `main`
-- The Astro rebuild lives on a long-lived feature branch. `main` still hosts the Hugo source serving production.
-- Branch is currently **~110 commits ahead** of `main` with no PR.
-- Sequence (when ready):
-  1. Open PR `feat/astro-modular` → `main` for review history.
-  2. Decide whether to squash or merge with full history (recommend merge to preserve Phase 2a/2b/Phase 3/Phase 4/Phase C narrative).
-  3. After merge, the workflow above (item 1) deploys the rebuild.
-  4. Old Hugo site content remains in git history; if needed for rollback, can revert the merge commit.
+### 2. Translation key for the HAL9000 AI-excuses pair
+- `src/content/posts/de/es-tut-mir-leid-dave-ich-fürchte-das-kann-ich-nicht-tun.md` and `src/content/posts/en/im-sorry-dave-i-cant-do-that.md` both ship with `translationKey: ""`, so the language switcher and hreflang fan-out skip this pair. Fill the same kebab-case string into both frontmatters (e.g. `ai-excuses`) when ready.
 
-### 3. Custom domain DNS
-- Once GH Pages serves `<MMoMM-org>.github.io/mmomm` (or wherever), point `www.mmomm.org` DNS at it.
-- Verify with HTTPS cert provisioning (Let's Encrypt via GH Pages).
-- Set GH Pages "Enforce HTTPS" once cert is live.
+### 3. Hugo rollback safety net
+- The pre-cutover Hugo `main` (commit `4d8de87`) is preserved as the annotated tag `archive/hugo-2026-05-19`.
+- Restore recipe (only if the Astro deploy goes catastrophically wrong): `git push origin archive/hugo-2026-05-19:main --force-with-lease`. This re-points main at the Hugo tip; the existing Hugo `deploy.yml` (still in that tag's tree) re-runs and the Hugo site comes back.
+- Keep the tag indefinitely — it's the only canonical ref for the pre-cutover state since main was force-pushed.
 
 ---
 
@@ -62,9 +54,9 @@ These are the items between "Astro rebuild works locally" and "www.mmomm.org ser
 - Worth doing for editor LSP cleanliness even if the build is happy.
 
 ### 8. `context.md` rollup is stale
-- Page count cited as "59 pages" (now 62 after Phase C).
-- Branch state cited as "58 commits ahead of main" (now ~110).
-- Theming + header + BRAT-fork-release work from 2026-05-12 is not summarised — only the Phase C section is up to date.
+- Page count cited as "59 pages" (now 65 post-cutover).
+- Branch-state language ("N commits ahead of main") is now obsolete — `feat/astro-modular` was force-pushed to `main` on 2026-05-19; both refs are equal at `605df51` and onward.
+- Theming + header + BRAT-fork-release work from 2026-05-12 plus the 2026-05-19 cutover session aren't summarised — only the Phase C section is current.
 - Run `/memory-cleanup` (or do it manually) to fold heavy entries into the archive and bring the rollup current.
 
 ### 9. `obsidian-buttons` posts: 2 swap-button-with-anchor cases + orphan-fence regions still confuse parser
@@ -106,17 +98,16 @@ Recommendation: spend 10 minutes manually inspecting `obsidian-buttons` source a
 
 ---
 
-## ✅ Recently shipped (2026-05-12 — this session)
+## ✅ Recently shipped (2026-05-19 — cutover session)
 
 For context. Move to git-history-only and trim from this file when this list reaches ~5+ entries.
 
-- **ADR-005 Phase C** (`f1dff84`) — bilingual special collection + `/now/` migrated to regular page pair
-- **Theme-fork sync** (`astro-modular-mmomm@3e663d7`, `4d6e0e0`, `fc5bf83`) — Phase B fixes, Phase C mirror, Header.astro accumulated i18n catch-up
-- **Plugin fork release** (`obsidian-astro-modular-settings-mmomm@0.5.4-mmomm.1`) — first BRAT-installable build, BRAT redirect committed in site
-- **Vault CMS gap closure** (`acd8be8`) — Special Pages DE/EN content types in vault-cms + astro-composer
-- **Theming pass** (`2fc72e4`) — favicons, OG card, profile picture, deployment platform → GH Pages
-- **Header refinements** (`adec8bc`, `7ab4244`) — profile picture in header, GitHub octocat out of nav, DE `%%` comment fix, dark favicon resize, centered site title row
-- **Memory updates** (`d14dc3b`, `230446e`, `88e5807`, `2428b33`) — durable lessons captured
+- **Production cutover** — tagged Hugo main as `archive/hugo-2026-05-19` (preserves full Hugo history), force-pushed `feat/astro-modular` to `origin/main`. GH Pages workflow ran green; www.mmomm.org now serves the Astro rebuild
+- **GH Pages CI + custom domain** (`605df51`) — `.github/workflows/deploy.yml` (pnpm 11 + node 22 → `actions/deploy-pages@v4`), `public/CNAME` ensures the deploy artifact preserves `www.mmomm.org`
+- **File-based i18n post layout support** (`f2afda3`) — wikilink resolver now handles `src/content/posts/<locale>/<slug>.md` with shared `<locale>/attachments/`, mirroring sync-images.js output (locale-aware URL with `attachments/` stripped)
+- **T11 cross-locale audit wave** (`6462b1d`, `ae9e909`, `08bbeba`) — confined to current locale: post prev/next nav, LinkedMentions backlinks, Command Palette search results, RSS/Atom auto-discovery `<link>` tags
+- **First DE/EN translation pair authored** (`84ced8a`) — HAL9000 AI-excuses post, three meme images per side, file-based layout (surfaced the wikilink bug above)
+- **Docs** (`a23ecd6`) — MULTILANG.md frontmatter property tables + file-based vs folder-based layout decision guide; memory updates (`e7486cd`, `40d1ec9`) for sync-images single-pass gotcha + T11 audit heuristic
 
 ---
 
