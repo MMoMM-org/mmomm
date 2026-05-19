@@ -1,7 +1,11 @@
 # Troubleshooting — astro-mmomm
-<!-- Known issues and proven fixes. Updated: 2026-05-12 (slug-lang-map locale-blind) -->
+<!-- Known issues and proven fixes. Updated: 2026-05-19 (file-based locale post image URL mismatch) -->
 <!-- Format: ## [Issue title] — Status: open/resolved — [fix description] -->
 <!-- Resolved entries are archived by /memory-cleanup, not deleted -->
+
+## Images 404 from file-based i18n posts (`/posts/attachments/<file>.webp` instead of `/posts/<file>.webp`) — Status: resolved
+<!-- 2026-05-19 — discovered while previewing first non-folder DE post on feat/astro-modular -->
+`remarkFolderImages()` in `src/utils/internallinks.ts` only set `detectedLocale` when the post was folder-based (`*/index.md`). For a single-file post in a locale subfolder — `src/content/posts/de/<slug>.md` referencing `![[hal9000.png]]` with images in a shared `src/content/posts/de/attachments/` — the locale stayed `null`, so the resolver fell through to the legacy single-file branch and emitted `/posts/attachments/hal9000.webp`. But `scripts/sync-images.js:113-130` strips every `attachments/` segment for locale subfolders (and prefixes EN output with `/en`), so the file actually lands at `/posts/hal9000.webp`. Result: all wikilink images in file-based DE posts hard-404; EN posts would 404 the same way at `/en/posts/attachments/<file>.webp`. **Fix** (commit pending, this turn): added `detectFileBasedLocale(collectionIndex)` so `detectedLocale` is populated for both folder- and file-based posts; rewrote the two single-file branches to apply `langPrefix` (`/en` for EN, empty for DE) and strip the `attachments/` segment when a locale is present. Folder-based posts and legacy non-locale posts are unchanged. **Audit pattern**: any other place that constructs an asset URL from a `src/content/<collection>/...` path and assumes "no locale = no prefix, attachments stays in URL" needs the same dual-mode treatment. Suspect candidates: `src/utils/remark-obsidian-embeds.ts` (handles audio/video/PDF/SVG/.base for the same wikilinks — uses similar shape, untested for file-based locale posts), `src/utils/images.ts` cover-image helpers, and `src/utils/feeds.ts`.
 
 ## `getSlugLangMap()` in internallinks.ts is locale-blind on duplicate slugs — Status: known-behaviour
 <!-- 2026-05-12 — discovered while fixing cross-locale wikilink resolution -->

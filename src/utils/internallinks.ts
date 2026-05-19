@@ -1903,6 +1903,15 @@ export function remarkFolderImages() {
           return { slug: next, locale: null as 'de' | 'en' | null };
         };
 
+        // For file-based posts in a locale subfolder, detect the locale
+        // (folder-based detection happens via detectSlugAndLocale below).
+        const detectFileBasedLocale = (collectionIndex: number) => {
+          const maybeLocale = pathParts[collectionIndex + 1];
+          if (maybeLocale === 'de' || maybeLocale === 'en') {
+            detectedLocale = maybeLocale;
+          }
+        };
+
         // Check for posts
         if (normalizedPath.includes("/posts/")) {
           collection = "posts";
@@ -1912,6 +1921,8 @@ export function remarkFolderImages() {
             const { slug, locale } = detectSlugAndLocale(postsIndex);
             contentSlug = slug;
             detectedLocale = locale;
+          } else {
+            detectFileBasedLocale(postsIndex);
           }
         }
         // Check for projects
@@ -1923,6 +1934,8 @@ export function remarkFolderImages() {
             const { slug, locale } = detectSlugAndLocale(projectsIndex);
             contentSlug = slug;
             detectedLocale = locale;
+          } else {
+            detectFileBasedLocale(projectsIndex);
           }
         }
         // Check for docs
@@ -1934,6 +1947,8 @@ export function remarkFolderImages() {
             const { slug, locale } = detectSlugAndLocale(docsIndex);
             contentSlug = slug;
             detectedLocale = locale;
+          } else {
+            detectFileBasedLocale(docsIndex);
           }
         }
         // Check for pages
@@ -1945,6 +1960,8 @@ export function remarkFolderImages() {
             const { slug, locale } = detectSlugAndLocale(pagesIndex);
             contentSlug = slug;
             detectedLocale = locale;
+          } else {
+            detectFileBasedLocale(pagesIndex);
           }
         }
         // Check for special pages (they also use pages collection paths)
@@ -1992,16 +2009,26 @@ export function remarkFolderImages() {
       }
       // Handle single-file content with attachments/ prefix
       else if (imagePath.startsWith("attachments/")) {
-        // Image uses shared attachments folder: /posts/attachments/image.png
-        let finalUrl = `/${collection}/${imagePath}`;
+        // i18n (ADR-002): for posts under src/content/<collection>/<locale>/*.md,
+        // sync-images.js strips `attachments/` from the output path and prefixes EN
+        // with `/en`. Match that so the wikilink resolves to the synced file.
+        const langPrefix = detectedLocale === 'en' ? '/en' : '';
+        const cleanPath = imagePath.replace(/^attachments\//, '');
+        let finalUrl = detectedLocale
+          ? `${langPrefix}/${collection}/${cleanPath}`
+          : `/${collection}/${imagePath}`;
         // Convert to WebP if applicable (sync-images.js creates WebP versions)
         finalUrl = convertToWebP(finalUrl);
         node.url = finalUrl;
       }
       // Handle single-file content with other relative paths
       else {
-        // Assume it's in the attachments folder
-        let finalUrl = `/${collection}/attachments/${imagePath}`;
+        // i18n (ADR-002): same shape as above; locale-based file posts skip the
+        // `/attachments/` segment and may carry an `/en` prefix.
+        const langPrefix = detectedLocale === 'en' ? '/en' : '';
+        let finalUrl = detectedLocale
+          ? `${langPrefix}/${collection}/${imagePath}`
+          : `/${collection}/attachments/${imagePath}`;
         // Convert to WebP if applicable (sync-images.js creates WebP versions)
         finalUrl = convertToWebP(finalUrl);
         node.url = finalUrl;
