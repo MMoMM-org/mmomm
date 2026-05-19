@@ -9,7 +9,7 @@
 - [domain.md](domain.md) — business rules, data models [updated: 2026-05-09]
 - [decisions.md](decisions.md) — architecture choices [updated: 2026-05-12 (Phase C)]
 - [context.md](context.md) — current focus [updated: 2026-05-12 (Phase C)]
-- [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-19 (file-based locale post image URL fix)]
+- [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-19 (sync-images single-pass + file-based locale image URL fix)]
 
 ## Archive
 <!-- Archived entries live in archive/YYYY-MM/. Not loaded at session start. -->
