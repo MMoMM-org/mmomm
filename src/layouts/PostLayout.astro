@@ -29,8 +29,9 @@ const { post } = Astro.props;
 // Check if we're in development mode
 const isDev = import.meta.env.DEV;
 
-// Generate SEO data
-const seoData = generatePostSEO(post, import.meta.env.SITE || '');
+// Generate SEO data — pass the actual post URL (not the site root) so canonical
+// and og:url reflect this page, not the homepage. PageLayout already does this.
+const seoData = generatePostSEO(post, Astro.url.href);
 
 
 

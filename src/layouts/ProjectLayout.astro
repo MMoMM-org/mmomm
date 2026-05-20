@@ -52,7 +52,7 @@ const isDev = import.meta.env.DEV;
 // today per ADR-004 Decision 4); use defaultLocale until projects gain
 // bilingual schema.
 const projectLocale = DEFAULT_LOCALE;
-const seoData = generateProjectSEO(project, import.meta.env.SITE || '', projectLocale);
+const seoData = generateProjectSEO(project, Astro.url.href, projectLocale);
 
 // Image handling is now done by ImageWrapper component
 
