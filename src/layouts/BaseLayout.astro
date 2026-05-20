@@ -2051,6 +2051,32 @@ if (post?.data.translationKey) {
         });
 
         swup.hooks.on('visit:end', () => {
+          // The Header lives outside #swup-container, so its language-switcher
+          // href doesn't change on Swup transitions — it would stay pinned to
+          // whatever counterpart the FIRST loaded page had. After every Swup
+          // visit, sync each switcher anchor with the current page's
+          // <link rel="alternate" hreflang="..."> in <head> (which Swup
+          // updates because of updateHead: true). Falls back to the locale
+          // root for pages without a translation pair.
+          const headerSwitchers = document.querySelectorAll('#main-header a[hreflang]');
+          headerSwitchers.forEach((switcher) => {
+            const lang = switcher.getAttribute('hreflang');
+            if (!lang) return;
+            const headLink = document.head.querySelector(`link[rel="alternate"][hreflang="${lang}"]`);
+            let newHref;
+            if (headLink) {
+              const href = headLink.getAttribute('href') || '';
+              try {
+                const url = new URL(href, location.origin);
+                newHref = url.pathname + url.search + url.hash;
+              } catch {
+                newHref = href;
+              }
+            } else {
+              newHref = lang === 'en' ? '/en/' : '/';
+            }
+            switcher.setAttribute('href', newHref);
+          });
           // Update navigation highlighting after page transition is complete
           updateNavigationHighlighting();
           // Initialize linked mentions after page transition is complete
