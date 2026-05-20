@@ -9,7 +9,7 @@
 - [domain.md](domain.md) — business rules, data models [updated: 2026-05-09]
 - [decisions.md](decisions.md) — architecture choices [updated: 2026-05-12 (Phase C)]
 - [context.md](context.md) — current focus [updated: 2026-05-12 (Phase C)]
-- [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-19 (T11 cross-locale audit wave + sync-images single-pass + file-based locale image URL fix)]
+- [troubleshooting.md](troubleshooting.md) — known issues [updated: 2026-05-20 (Swup header-state-stale class + canonical-URL bug + T11 audit wave + sync-images + file-based locale image fix)]
 
 ## Archive
 <!-- Archived entries live in archive/YYYY-MM/. Not loaded at session start. -->
